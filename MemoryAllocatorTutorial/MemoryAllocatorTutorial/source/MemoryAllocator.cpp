@@ -103,9 +103,11 @@ MemoryAllocator::MemoryBlock* MemoryAllocator::FindBlock(size_t size, SearchType
 		}
 		case MemoryAllocator::SearchType::NEXT_FIT:
 		{
-			MemoryBlock* result = NextFitSearch(size);
-			_nextFitLastLocation = result != nullptr ? result : _nextFitLastLocation;
-			return result;
+			return NextFitSearch(size);
+		}
+		case MemoryAllocator::SearchType::BEST_FIT:
+		{
+			return BestFitSearch(size);
 		}
 		default:
 		{
@@ -138,7 +140,7 @@ MemoryAllocator::MemoryBlock* MemoryAllocator::FirstFitSearch(size_t size)
 MemoryAllocator::MemoryBlock* MemoryAllocator::NextFitSearch(size_t size)
 {
 	//Same as First Fit but instead starts at the previous successful location, potentially skipping over blocks that are already allocated
-	MemoryBlock* currentBlock = _nextFitLastLocation != nullptr ? _nextFitLastLocation : reinterpret_cast<MemoryBlock*>(_memStart);
+	MemoryBlock* currentBlock = _lastSuccessLocation != nullptr ? _lastSuccessLocation : reinterpret_cast<MemoryBlock*>(_memStart);
 	MemoryBlock* initialBlock = currentBlock;
 
 	do
@@ -150,10 +152,62 @@ MemoryAllocator::MemoryBlock* MemoryAllocator::NextFitSearch(size_t size)
 			continue;
 		}
 
+		_lastSuccessLocation = currentBlock;
 		return currentBlock;
 	} while (currentBlock != initialBlock);
 
 	return nullptr;
+}
+
+MemoryAllocator::MemoryBlock* MemoryAllocator::BestFitSearch(size_t size)
+{
+	//Search through all the blocks similar to next best 
+	//get the first block that fits the size requested and cache it
+	//Carry on searching the list, if you find on thats smaller than the current choice but still can fit the requested amount replace
+	//If nothing is found return nullptr
+
+	MemoryBlock* currentBlock = _lastSuccessLocation != nullptr ? _lastSuccessLocation : reinterpret_cast<MemoryBlock*>(_memStart);
+	MemoryBlock* initialBlock = currentBlock;
+	MemoryBlock* currentBestOption = nullptr;
+
+	do
+	{
+		bool inUse = currentBlock->inUse;
+		size_t blockSize = currentBlock->dataSize;
+
+		//If the block isnt in use and it has a size bigger or equal to the size wanted
+		if (!inUse && blockSize >= size)
+		{
+			if (blockSize == size)
+			{
+				//If the size is the size requested then just return it
+				_lastSuccessLocation = currentBlock;
+				return currentBlock;
+			}
+			else if (currentBestOption == nullptr)
+			{
+				//If there isnt a current best option then apply this to the current best as this is the current best fit
+				//Set the next block up to continue
+				currentBestOption = currentBlock;
+				currentBlock = currentBlock->nextBlock != nullptr ? currentBlock->nextBlock : reinterpret_cast<MemoryBlock*>(_memStart);
+			}
+			else if (blockSize < currentBestOption->dataSize)
+			{
+				//IF the current block is better fit than the best block then assign that
+				//Set up the next block to continue
+				currentBestOption = currentBlock;
+				currentBlock = currentBlock->nextBlock != nullptr ? currentBlock->nextBlock : reinterpret_cast<MemoryBlock*>(_memStart);
+			}
+		}
+		else
+		{
+			//Otherwise just move onto the next block
+			currentBlock = currentBlock->nextBlock != nullptr ? currentBlock->nextBlock : reinterpret_cast<MemoryBlock*>(_memStart);
+		}
+	} while (currentBlock != initialBlock);
+
+	_lastSuccessLocation = currentBestOption != nullptr ? currentBestOption : _lastSuccessLocation;
+	return currentBestOption;
 }
 
 MemoryAllocator::MemoryBlock* MemoryAllocator::GetBlockHeader(void* data)

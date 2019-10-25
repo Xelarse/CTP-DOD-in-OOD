@@ -29,7 +29,8 @@ private:
 	enum class SearchType
 	{
 		FIRST_FIT,
-		NEXT_FIT
+		NEXT_FIT,
+		BEST_FIT
 	};
 
 	size_t Align(size_t n);
@@ -38,12 +39,13 @@ private:
 
 	MemoryBlock* FirstFitSearch(size_t size);
 	MemoryBlock* NextFitSearch(size_t size);
+	MemoryBlock* BestFitSearch(size_t size);
 
 	//Mem start holds the pointer location of the start of the memory allocated, offset is used to work out how far along to scrub to get the next allocation space
 	void* _memStart = nullptr;
 	void* _top = nullptr;
 
-	MemoryBlock* _nextFitLastLocation = nullptr;
+	MemoryBlock* _lastSuccessLocation = nullptr;
 
 	size_t _totalSize = 0;
 	size_t _currentlyAllocated = 0;
