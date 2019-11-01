@@ -31,7 +31,7 @@ void* MemoryAllocator::Allocate(size_t size)
 		nextAddress = reinterpret_cast<size_t>(_memStart);
 	}
 	//Check if there is already a block available to use thats been freed
-	else if (auto block = FindBlock(size, SearchType::FIRST_FIT))
+	else if (auto block = FindBlock(size, SearchType::BEST_FIT))
 	{
 		nextAddress = reinterpret_cast<size_t>(block);
 	}

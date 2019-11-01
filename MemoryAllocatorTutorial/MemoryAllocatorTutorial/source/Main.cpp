@@ -24,7 +24,8 @@ int main()
 
 	//Test case for block reuse gonna make another block and free the first one
 	memAllocator->Free(newDataPointer);
+	memAllocator->Free(newDataPointer2);
 	void* newDataPointer3 = memAllocator->Allocate(8);
-	std::cout << "Original start pointer: " << newDataPointer << std::endl << "New pointer: " << newDataPointer3 << std::endl;
-	std::cout << newDataPointer << " == Should equal == " << newDataPointer3 << std::endl;
+	std::cout << "Data Pointer 1: " << newDataPointer << std::endl << "Data Pointer 2: " << newDataPointer2 << std::endl << "Data Pointer 3: " << newDataPointer3 << std::endl;
+	std::cout << newDataPointer3 << " == Should equal == " << newDataPointer2 << std::endl;
 }
