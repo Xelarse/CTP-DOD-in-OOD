@@ -21,9 +21,15 @@
     <ClCompile Include="source\MemoryAllocator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\MemoryManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="includes\MemoryAllocator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\MemoryManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

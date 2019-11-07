@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <list>
 
 class MemoryAllocator
 {
@@ -31,7 +32,8 @@ private:
 	{
 		FIRST_FIT,
 		NEXT_FIT,
-		BEST_FIT
+		BEST_FIT,
+		FREE_LIST
 	};
 
 	size_t Align(size_t n);
@@ -41,6 +43,14 @@ private:
 	MemoryBlock* FirstFitSearch(size_t size);
 	MemoryBlock* NextFitSearch(size_t size);
 	MemoryBlock* BestFitSearch(size_t size);
+	MemoryBlock* FreeListSearch(size_t size);
+
+	MemoryBlock* SplitBlock(MemoryBlock* block, size_t size);
+	bool CanSplit(MemoryBlock* block, size_t size);
+	MemoryBlock* ListAllocate(MemoryBlock* block, size_t size);
+
+	MemoryBlock* MergeAdjacentBlocks(MemoryBlock* block);
+	bool CanMergeAdjacentBlocks(MemoryBlock* block);
 
 	//Mem start holds the pointer location of the start of the memory allocated, offset is used to work out how far along to scrub to get the next allocation space
 	void* _memStart = nullptr;
@@ -50,5 +60,8 @@ private:
 
 	size_t _totalSize = 0;
 	size_t _currentlyAllocated = 0;
+
+	//List of free blocks
+	std::list<MemoryBlock*> _freeList;
 };
 

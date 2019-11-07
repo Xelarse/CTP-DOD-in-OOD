@@ -20,9 +20,9 @@ public:
 			{
 				MemoryAllocator::MemoryBlock* memBlock = _pAllocator->GetBlockHeader(ea.dataPointer);
 				size_t baseDataPointer = reinterpret_cast<size_t>(memBlock->data);
-				size_t pointerLoc =  dataPointer + memBlock->currentOffset;
+				size_t pointerLoc = baseDataPointer + memBlock->currentOffset;
 				//Check to make sure adding a new variable will still be in range of this data block
-				if (pointerLoc < dataPointer + memBlock->dataSize)
+				if (pointerLoc < baseDataPointer + memBlock->dataSize)
 				{
 					T* dataPointer = reinterpret_cast<T*>(pointerLoc);
 					dataPointer = data;

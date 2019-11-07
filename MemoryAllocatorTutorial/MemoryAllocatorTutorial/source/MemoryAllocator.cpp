@@ -31,9 +31,9 @@ void* MemoryAllocator::Allocate(size_t size)
 		nextAddress = reinterpret_cast<size_t>(_memStart);
 	}
 	//Check if there is already a block available to use thats been freed
-	else if (auto block = FindBlock(size, SearchType::BEST_FIT))
+	else if (auto block = FindBlock(size, SearchType::FREE_LIST))
 	{
-		nextAddress = reinterpret_cast<size_t>(block);
+		return block->data;
 	}
 	//Get the next address of allocation by shifting the last pointer along by its allocation size
 	else
@@ -50,9 +50,9 @@ void* MemoryAllocator::Allocate(size_t size)
 	//cast the current address to a Mem block
 	auto block = reinterpret_cast<MemoryBlock*>(nextAddress);
 
+	block->nextBlock = nullptr;
 	block->dataSize = size;
 	block->inUse = true;
-	block->nextBlock = nullptr;
 	block->currentOffset = 0;
 
 	//Chain blocks
@@ -71,7 +71,13 @@ void* MemoryAllocator::Allocate(size_t size)
 void MemoryAllocator::Free(void* ptr)
 {
 	MemoryBlock* block = GetBlockHeader(ptr);
+	if (CanMergeAdjacentBlocks(block))
+	{
+		block = MergeAdjacentBlocks(block);
+	}
 	block->inUse = false;
+
+	_freeList.push_back(block);
 }
 
 void MemoryAllocator::Reset()
@@ -110,6 +116,10 @@ MemoryAllocator::MemoryBlock* MemoryAllocator::FindBlock(size_t size, SearchType
 		{
 			return BestFitSearch(size);
 		}
+		case MemoryAllocator::SearchType::FREE_LIST:
+		{
+			return FreeListSearch(size);
+		}
 		default:
 		{
 			return nullptr;
@@ -132,7 +142,7 @@ MemoryAllocator::MemoryBlock* MemoryAllocator::FirstFitSearch(size_t size)
 			continue;
 		}
 
-		return currentBlock;
+		return ListAllocate(currentBlock, size);
 	}
 
 	return nullptr;
@@ -154,7 +164,7 @@ MemoryAllocator::MemoryBlock* MemoryAllocator::NextFitSearch(size_t size)
 		}
 
 		_lastSuccessLocation = currentBlock;
-		return currentBlock;
+		return ListAllocate(currentBlock, size);
 	} while (currentBlock != initialBlock);
 
 	return nullptr;
@@ -208,7 +218,91 @@ MemoryAllocator::MemoryBlock* MemoryAllocator::BestFitSearch(size_t size)
 	} while (currentBlock != initialBlock);
 
 	_lastSuccessLocation = currentBestOption != nullptr ? currentBestOption : _lastSuccessLocation;
-	return currentBestOption;
+	if (currentBestOption != nullptr)
+	{
+		return ListAllocate(currentBestOption, size);
+	}
+	return nullptr;
+}
+
+MemoryAllocator::MemoryBlock* MemoryAllocator::FreeListSearch(size_t size)
+{
+	MemoryBlock* foundBlock = nullptr;
+	for (auto& block : _freeList)
+	{
+		//If the block is too small to use then continue searching
+		if (block->dataSize < size)
+		{
+			continue;
+		}
+		//If we get a block remove it from the list and run list allocate to shrink it
+		foundBlock = block;
+		_freeList.remove(block);
+		break;
+	}
+	if (foundBlock != nullptr)
+	{
+		return ListAllocate(foundBlock, size);
+	}
+	return nullptr;
+}
+
+MemoryAllocator::MemoryBlock* MemoryAllocator::SplitBlock(MemoryBlock* block, size_t size)
+{
+	size_t baseBlockPtr = reinterpret_cast<size_t>(block);
+	auto freeBlock = reinterpret_cast<MemoryBlock*>(baseBlockPtr + AllocSize(size));
+	freeBlock->dataSize = block->dataSize - size;
+	freeBlock->inUse = false;
+	freeBlock->nextBlock = block->nextBlock;
+
+	block->dataSize = size;
+	block->nextBlock = freeBlock;
+
+	//Add smaller free block that isnt being used to freelist
+	_freeList.push_back(freeBlock);
+
+	return block;
+}
+
+bool MemoryAllocator::CanSplit(MemoryBlock* block, size_t size)
+{
+	return AllocSize(block->dataSize) - size >= sizeof(block);
+}
+
+MemoryAllocator::MemoryBlock* MemoryAllocator::ListAllocate(MemoryBlock* block, size_t size)
+{
+	if (CanSplit(block, size))
+	{
+		block = SplitBlock(block, size);
+	}
+
+	block->inUse = true;
+	block->dataSize = size;
+
+	return block;
+}
+
+MemoryAllocator::MemoryBlock* MemoryAllocator::MergeAdjacentBlocks(MemoryBlock* block)
+{
+	//If the next block is not in use and the next block is the top, make this block the top block
+	if (!block->nextBlock->inUse)
+	{
+		if (block->nextBlock == _top)
+		{
+			_top = block;
+		}
+
+		block->dataSize += block->nextBlock->dataSize;
+		block->nextBlock = block->nextBlock->nextBlock;
+	}
+
+	return block;
+}
+
+bool MemoryAllocator::CanMergeAdjacentBlocks(MemoryBlock* block)
+{
+	//Can merge if there is a next block and its not being used
+	return block->nextBlock && !block->nextBlock->inUse;
 }
 
 MemoryAllocator::MemoryBlock* MemoryAllocator::GetBlockHeader(void* data)
