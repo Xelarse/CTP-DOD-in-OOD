@@ -71,10 +71,10 @@ void* MemoryAllocator::Allocate(size_t size)
 void MemoryAllocator::Free(void* ptr)
 {
 	MemoryBlock* block = GetBlockHeader(ptr);
-	if (CanMergeAdjacentBlocks(block))
-	{
-		block = MergeAdjacentBlocks(block);
-	}
+	//if (CanMergeAdjacentBlocks(block))
+	//{
+	//	block = MergeAdjacentBlocks(block);
+	//}
 	block->inUse = false;
 	block->currentOffset = 0;
 
