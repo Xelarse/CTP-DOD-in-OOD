@@ -76,6 +76,7 @@ void MemoryAllocator::Free(void* ptr)
 		block = MergeAdjacentBlocks(block);
 	}
 	block->inUse = false;
+	block->currentOffset = 0;
 
 	_freeList.push_back(block);
 }
@@ -249,19 +250,24 @@ MemoryAllocator::MemoryBlock* MemoryAllocator::FreeListSearch(size_t size)
 
 MemoryAllocator::MemoryBlock* MemoryAllocator::SplitBlock(MemoryBlock* block, size_t size)
 {
-	size_t baseBlockPtr = reinterpret_cast<size_t>(block);
-	auto freeBlock = reinterpret_cast<MemoryBlock*>(baseBlockPtr + AllocSize(size));
-	freeBlock->dataSize = block->dataSize - size;
-	freeBlock->inUse = false;
-	freeBlock->nextBlock = block->nextBlock;
+	size_t baseAddress = reinterpret_cast<size_t>(block);
 
-	block->dataSize = size;
-	block->nextBlock = freeBlock;
+	MemoryBlock* block1 = reinterpret_cast<MemoryBlock*>(baseAddress);
+	MemoryBlock* block2 = reinterpret_cast<MemoryBlock*>(baseAddress + AllocSize(size));
 
-	//Add smaller free block that isnt being used to freelist
-	_freeList.push_back(freeBlock);
+	block1->currentOffset = 0;
+	block1->inUse = false;
+	block1->dataSize = size;
+	block1->nextBlock = block->nextBlock;
 
-	return block;
+	block2->currentOffset = 0;
+	block2->inUse = false;
+	block2->dataSize = block->dataSize - size;
+	block2->nextBlock = block1;
+
+	_freeList.push_back(block2);
+
+	return block1;
 }
 
 bool MemoryAllocator::CanSplit(MemoryBlock* block, size_t size)
@@ -271,10 +277,10 @@ bool MemoryAllocator::CanSplit(MemoryBlock* block, size_t size)
 
 MemoryAllocator::MemoryBlock* MemoryAllocator::ListAllocate(MemoryBlock* block, size_t size)
 {
-	if (CanSplit(block, size))
-	{
-		block = SplitBlock(block, size);
-	}
+	//if (CanSplit(block, size))
+	//{
+	//	block = SplitBlock(block, size);
+	//}
 
 	block->inUse = true;
 	block->dataSize = size;

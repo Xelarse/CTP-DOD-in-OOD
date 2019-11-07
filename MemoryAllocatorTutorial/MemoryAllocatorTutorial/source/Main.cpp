@@ -28,4 +28,8 @@ int main()
 	void* newDataPointer3 = memAllocator->Allocate(8);
 	std::cout << "Data Pointer 1: " << newDataPointer << std::endl << "Data Pointer 2: " << newDataPointer2 << std::endl << "Data Pointer 3: " << newDataPointer3 << std::endl;
 	std::cout << newDataPointer3 << " == Should equal == " << newDataPointer2 << std::endl;
+
+	//Test case to see if block coalesses
+	void* newDataPointer4 = memAllocator->Allocate(10);
+	std::cout << "Data pointer 4: " << newDataPointer4;
 }
