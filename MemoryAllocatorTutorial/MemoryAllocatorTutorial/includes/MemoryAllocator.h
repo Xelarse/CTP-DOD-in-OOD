@@ -9,6 +9,7 @@ public:
 	{
 		//Object header
 		size_t dataSize;
+		size_t currentOffset;
 		bool inUse;
 		MemoryBlock* nextBlock;
 

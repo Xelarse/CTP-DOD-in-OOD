@@ -53,6 +53,7 @@ void* MemoryAllocator::Allocate(size_t size)
 	block->dataSize = size;
 	block->inUse = true;
 	block->nextBlock = nullptr;
+	block->currentOffset = 0;
 
 	//Chain blocks
 	if (_top != nullptr)
