@@ -11,48 +11,78 @@ public:
 
 	//If there is data thats already stored using the dataId then return the current offset for that data
 	template<typename T>
-	T* StoreData(std::string id, T data)
+	T* InitliaseVariable(std::string id, T data)
 	{
-		//Check if we already have like data stored and if we do get that block of data, add the variable to it then increase thats blocks offset for the next potential variable to be added
-		for (auto& ea : _existingAllocations)
+		//Check if theres already an existing block and if there is store it using that blocks paramters
+		for (int i = 0; i < _existingAllocations.size(); i++)
 		{
-			if (id == ea.dataId)
+			auto existingAlloc = _existingAllocations[i];
+
+			if (id == existingAlloc.dataId)
 			{
-				MemoryAllocator::MemoryBlock* memBlock = _pAllocator->GetBlockHeader(ea.dataPointer);
-				size_t baseDataPointer = reinterpret_cast<size_t>(memBlock->data);
-				size_t pointerLoc = baseDataPointer + memBlock->currentOffset;
-				//Check to make sure adding a new variable will still be in range of this data block
-				if (pointerLoc < baseDataPointer + memBlock->dataSize)
+				//Check if the allocation can actually fit and if it cant return null pointer
+				if (existingAlloc.currentCount + 1 > existingAlloc.maxCount)
 				{
-					T* dataPointer = reinterpret_cast<T*>(pointerLoc);
-					dataPointer = data;
-					memBlock->currentOffset += sizeof(T);
-					return dataPointer;
+					//TODO Add something here to enlargen the current block or make another block and join them
+					return nullptr;
+				}
+				else
+				{
+					//Figure out how far to stride along from the base pointer, store T into it and return the pointer to it
+					size_t baseBlockPointer = reinterpret_cast<size_t>(existingAlloc.dataPointer);
+					size_t newDataPointer = baseBlockPointer + existingAlloc.stride * (existingAlloc.currentCount + 1);
+
+					//Cast the newDataPointer to the desired variable, store the variable in it through dereferencing then finally return the casted ptr
+					T* castedDataPointer = reinterpret_cast<T*>(newDataPointer);
+					*castedDataPointer = data;
+					existingAlloc.currentCount++;
+					return castedDataPointer;
 				}
 			}
 		}
 
-		//If there wasnt a block found mem alloc a new block of memory and for storing it and add it to the existing allocations
-		void* dataPtr = _pAllocator->Allocate(sizeof(T));
-		_existingAllocations.push_back(ExistingData(id, dataPtr));
-		T* castedDataPtr = reinterpret_cast<T*>(dataPtr);
-		castedDataPtr = data;
-		return castedDataPtr;
+		//If there wasn't an existing block found return nullptr
+		return nullptr;
+	}
+
+	template<typename T>
+	void InitliaseNewMemoryBlock(std::string id, unsigned int maxCapacity)
+	{
+		void* dataPtr = _pAllocator->Allocate(sizeof(T) * maxCapacity);
+		_existingAllocations.push_back(ExistingBlocks(id, dataPtr, sizeof(T), maxCapacity));
+	}
+
+	bool CheckIfIdExists(std::string id)
+	{
+		for (const auto& ea : _existingAllocations)
+		{
+			if (ea.dataId == id)
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 private:
-	struct ExistingData
+	struct ExistingBlocks
 	{
-		ExistingData(std::string _id, void* _ptr)
+		ExistingBlocks(std::string _id, void* _ptr, size_t _stride, unsigned int _capacity)
 		{
 			dataId = _id;
+			currentCount = 0;
+			maxCount = 0;
+			stride = _stride;
 			dataPointer = _ptr;
 		}
 
 		std::string dataId;
+		unsigned int currentCount;
+		unsigned int maxCount;
+		size_t stride;
 		void* dataPointer;
 	};
 
 	std::unique_ptr<MemoryAllocator> _pAllocator;
-	std::vector<ExistingData> _existingAllocations;
+	std::vector<ExistingBlocks> _existingAllocations;
 };

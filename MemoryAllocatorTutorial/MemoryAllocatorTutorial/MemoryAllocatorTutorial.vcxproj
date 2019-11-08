@@ -19,11 +19,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\JobManager.cpp" />
     <ClCompile Include="source\Main.cpp" />
     <ClCompile Include="source\MemoryAllocator.cpp" />
     <ClCompile Include="source\MemoryManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="includes\JobManager.h" />
     <ClInclude Include="includes\MemoryAllocator.h" />
     <ClInclude Include="includes\MemoryManager.h" />
   </ItemGroup>

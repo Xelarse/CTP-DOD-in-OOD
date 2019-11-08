@@ -53,7 +53,6 @@ void* MemoryAllocator::Allocate(size_t size)
 	block->nextBlock = nullptr;
 	block->dataSize = size;
 	block->inUse = true;
-	block->currentOffset = 0;
 
 	//Chain blocks
 	if (_top != nullptr)
@@ -76,7 +75,6 @@ void MemoryAllocator::Free(void* ptr)
 	//	block = MergeAdjacentBlocks(block);
 	//}
 	block->inUse = false;
-	block->currentOffset = 0;
 
 	_freeList.push_back(block);
 }
@@ -255,12 +253,10 @@ MemoryAllocator::MemoryBlock* MemoryAllocator::SplitBlock(MemoryBlock* block, si
 	MemoryBlock* block1 = reinterpret_cast<MemoryBlock*>(baseAddress);
 	MemoryBlock* block2 = reinterpret_cast<MemoryBlock*>(baseAddress + AllocSize(size));
 
-	block1->currentOffset = 0;
 	block1->inUse = false;
 	block1->dataSize = size;
 	block1->nextBlock = block->nextBlock;
 
-	block2->currentOffset = 0;
 	block2->inUse = false;
 	block2->dataSize = block->dataSize - size;
 	block2->nextBlock = block1;
