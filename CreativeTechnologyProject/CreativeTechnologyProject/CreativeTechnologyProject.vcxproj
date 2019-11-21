@@ -84,6 +84,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -109,6 +110,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -132,6 +134,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="includes\NpcManager.cpp" />
+    <ClCompile Include="sourceNpcManager.cpp" />
+    <ClCompile Include="source\JobManager.cpp" />
+    <ClCompile Include="source\Main.cpp" />
+    <ClCompile Include="source\MemoryAllocator.cpp" />
+    <ClCompile Include="source\MemoryManager.cpp" />
+    <ClCompile Include="source\Npc.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="includes\JobManager.h" />
+    <ClInclude Include="includes\MemoryAllocator.h" />
+    <ClInclude Include="includes\MemoryManager.h" />
+    <ClInclude Include="includes\Npc.h" />
+    <ClInclude Include="includes\NpcManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
