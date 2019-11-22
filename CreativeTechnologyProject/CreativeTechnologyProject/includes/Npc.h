@@ -7,6 +7,7 @@ public:
 	~Npc();
 
 	void printHPandArmour();
+	static void sizeOfNpcPrint();
 
 private:
 	float* _health;

@@ -3,8 +3,9 @@
 #include <algorithm>		//max
 #include <cassert>			//asserts on the free
 
-MemoryAllocator::MemoryAllocator(const std::size_t totalSize) : _totalSize(totalSize)
+MemoryAllocator::MemoryAllocator(const std::size_t elementSize, const size_t elementCount)
 {
+	_totalSize = (elementSize + sizeof(MemoryBlock)) * elementCount;
 }
 
 void MemoryAllocator::Init()
@@ -24,11 +25,11 @@ void* MemoryAllocator::Allocate(size_t size)
 	//Full allocation size
 	size_t fullSize = AllocSize(size);
 
-	size_t nextAddress;
+	char* nextAddress;
 	//Check if its the first memory allocation and if it is use the start address
 	if (_top == nullptr)
 	{
-		nextAddress = reinterpret_cast<size_t>(_memStart);
+		nextAddress = reinterpret_cast<char*>(_memStart);
 	}
 	//Check if there is already a block available to use thats been freed
 	else if (auto block = FindBlock(size, SearchType::FREE_LIST))
@@ -38,7 +39,7 @@ void* MemoryAllocator::Allocate(size_t size)
 	//Get the next address of allocation by shifting the last pointer along by its allocation size
 	else
 	{
-		nextAddress = reinterpret_cast<size_t>(_top) + AllocSize(reinterpret_cast<MemoryBlock*>(_top)->dataSize);
+		nextAddress = reinterpret_cast<char*>(_top) + AllocSize(reinterpret_cast<MemoryBlock*>(_top)->dataSize);
 	}
 
 	//Check if we can fit in another MemBlock of said size 
@@ -248,10 +249,11 @@ MemoryAllocator::MemoryBlock* MemoryAllocator::FreeListSearch(size_t size)
 
 MemoryAllocator::MemoryBlock* MemoryAllocator::SplitBlock(MemoryBlock* block, size_t size)
 {
-	size_t baseAddress = reinterpret_cast<size_t>(block);
+	char* baseAddress = reinterpret_cast<char*>(block);
 
 	MemoryBlock* block1 = reinterpret_cast<MemoryBlock*>(baseAddress);
-	MemoryBlock* block2 = reinterpret_cast<MemoryBlock*>(baseAddress + AllocSize(size));
+	char* block2Address = baseAddress + AllocSize(size);
+	MemoryBlock* block2 = reinterpret_cast<MemoryBlock*>(block2Address);
 
 	block1->inUse = false;
 	block1->dataSize = size;
@@ -310,6 +312,6 @@ bool MemoryAllocator::CanMergeAdjacentBlocks(MemoryBlock* block)
 MemoryAllocator::MemoryBlock* MemoryAllocator::GetBlockHeader(void* data)
 {
 	//Get the pointer position of the start of the memory block and cast it back to MemoryBlock
-	const size_t address = reinterpret_cast<size_t>(data) + sizeof(std::declval<MemoryBlock>().data) - sizeof(MemoryBlock);
+	char* address = reinterpret_cast<char*>(data) + sizeof(std::declval<MemoryBlock>().data) - sizeof(MemoryBlock);
 	return reinterpret_cast<MemoryBlock*>(address);
 }

@@ -6,7 +6,7 @@ class MemoryManager
 {
 public:
 	MemoryManager() = delete;
-	MemoryManager(size_t poolSize);
+	MemoryManager(const size_t elementSize, const size_t elementCount);
 	~MemoryManager();
 
 	//If there is data thats already stored using the dataId then return the current offset for that data
@@ -29,8 +29,8 @@ public:
 				else
 				{
 					//Figure out how far to stride along from the base pointer, store T into it and return the pointer to it
-					size_t baseBlockPointer = reinterpret_cast<size_t>(existingAlloc.dataPointer);
-					size_t newDataPointer = baseBlockPointer + existingAlloc.stride * (existingAlloc.currentCount + 1);
+					char* baseBlockPointer = reinterpret_cast<char*>(existingAlloc.dataPointer);
+					char* newDataPointer = baseBlockPointer + existingAlloc.stride * (existingAlloc.currentCount);
 
 					//Cast the newDataPointer to the desired variable, store the variable in it through dereferencing then finally return the casted ptr
 					T* castedDataPointer = reinterpret_cast<T*>(newDataPointer);
@@ -46,11 +46,11 @@ public:
 	}
 
 	template<typename T>
-	void* InitliaseNewMemoryBlock(const char* id, unsigned int maxCapacity)
+	T* InitliaseNewMemoryBlock(const char* id, unsigned int maxCapacity)
 	{
 		void* dataPtr = _pAllocator->Allocate(sizeof(T) * maxCapacity);
 		_existingAllocations.push_back(ExistingBlocks(id, dataPtr, sizeof(T), maxCapacity));
-		return dataPtr;
+		return reinterpret_cast<T*>(dataPtr);
 	}
 
 	bool CheckIfIdExists(const char* id)
