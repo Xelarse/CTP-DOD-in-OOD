@@ -16,7 +16,7 @@ public:
 		//Check if theres already an existing block and if there is store it using that blocks paramters
 		for (int i = 0; i < _existingAllocations.size(); i++)
 		{
-			auto existingAlloc = _existingAllocations[i];
+			auto& existingAlloc = _existingAllocations[i];
 
 			if (id == existingAlloc.dataId)
 			{
