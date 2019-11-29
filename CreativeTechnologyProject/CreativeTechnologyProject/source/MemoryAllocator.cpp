@@ -262,13 +262,16 @@ MemoryAllocator::MemoryBlock* MemoryAllocator::SplitBlock(MemoryBlock* block, si
 	char* block2Address = baseAddress + AllocSize(size);
 	MemoryBlock* block2 = reinterpret_cast<MemoryBlock*>(block2Address);
 
+	auto block2DataSize = block->dataSize - size;
+	MemoryBlock* block2NextBlock = block->nextBlock;
+
 	block1->inUse = false;
 	block1->dataSize = size;
 	block1->nextBlock = block2;
 
 	block2->inUse = false;
-	block2->dataSize = block->dataSize - size;
-	block2->nextBlock = block->nextBlock;
+	block2->dataSize = block2DataSize;
+	block2->nextBlock = block2NextBlock;
 
 	_freeList.push_back(block2);
 
