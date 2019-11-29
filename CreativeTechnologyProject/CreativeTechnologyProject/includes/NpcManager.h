@@ -19,6 +19,8 @@ private:
 	const char*	_npcHealthId = "NPCHEALTH";
 	const char* _npcArmourId = "NPCARMOUR";
 
+	std::vector<const char*> _classIds;
+
 	float* _npcHealthBase = nullptr;
 	int* _npcArmourBase = nullptr;
 };

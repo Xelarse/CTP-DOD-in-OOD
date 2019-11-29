@@ -12,4 +12,6 @@ int main()
 	MemoryManager* memoryManager = new MemoryManager(sizeof(Npc), 50);
 	
 	NpcManager* npcManager = new NpcManager(50, memoryManager);
+
+	delete npcManager;
 }

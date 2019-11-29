@@ -6,6 +6,9 @@ NpcManager::NpcManager(int npcAmount, MemoryManager* memManager) : _memManager(m
 	_npcHealthBase = memManager->InitliaseNewMemoryBlock<float>(_npcHealthId, npcAmount);
 	_npcArmourBase = memManager->InitliaseNewMemoryBlock<int>(_npcArmourId, npcAmount);
 
+	_classIds.push_back(_npcHealthId);
+	_classIds.push_back(_npcArmourId);
+
 	Npc::sizeOfNpcPrint();
 
 	for (size_t i = 0; i < npcAmount; i++)
@@ -25,4 +28,10 @@ NpcManager::NpcManager(int npcAmount, MemoryManager* memManager) : _memManager(m
 
 NpcManager::~NpcManager()
 {
+	for (const auto& id : _classIds)
+	{
+		_memManager->FreeExistingBlock(id);
+	}
+
+	_npcs.clear();
 }

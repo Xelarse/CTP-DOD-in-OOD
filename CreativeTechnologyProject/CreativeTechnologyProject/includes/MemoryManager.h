@@ -65,6 +65,53 @@ public:
 		return false;
 	}
 
+	int GetIndexOfId(const char* id)
+	{
+		for (size_t i = 0; i < _existingAllocations.size(); i++)
+		{
+			if (_existingAllocations[i].dataId == id)
+			{
+				return i;
+			}
+		}
+
+		return -1;
+	}
+
+	void FreeExistingBlock(const char* id)
+	{
+		int index = GetIndexOfId(id);
+
+		if (index != -1)
+		{
+			ExistingBlocks removedAllocation = _existingAllocations[index];
+			void* dataPtr = removedAllocation.dataPointer;
+			_pAllocator->Free(dataPtr);
+			
+			if (_existingAllocations.size() - 1 == 0)
+			{
+				_existingAllocations.clear();
+			}
+			else
+			{
+				std::vector<ExistingBlocks> remainingAllocations;
+				remainingAllocations.reserve(_existingAllocations.size() - 1);
+
+				for (const auto ea : _existingAllocations)
+				{
+					if (ea.dataId != removedAllocation.dataId)
+					{
+						remainingAllocations.push_back(ea);
+					}
+				}
+
+				_existingAllocations.clear();
+				_existingAllocations.reserve(remainingAllocations.size());
+				_existingAllocations = std::move(remainingAllocations);
+			}
+		}
+	}
+
 private:
 	struct ExistingBlocks
 	{

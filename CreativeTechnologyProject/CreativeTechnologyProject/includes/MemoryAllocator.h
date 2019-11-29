@@ -18,6 +18,7 @@ public:
 	};
 
 	MemoryAllocator(const std::size_t elementSize, const size_t elementCount);
+	~MemoryAllocator();
 
 	void Init();
 	void* Allocate(size_t size);

@@ -8,6 +8,14 @@ MemoryAllocator::MemoryAllocator(const std::size_t elementSize, const size_t ele
 	_totalSize = (elementSize + sizeof(MemoryBlock)) * elementCount;
 }
 
+MemoryAllocator::~MemoryAllocator()
+{
+	if (_memStart != nullptr)
+	{
+		Free(_memStart);
+	}
+}
+
 void MemoryAllocator::Init()
 {
 	if (_memStart != nullptr)
