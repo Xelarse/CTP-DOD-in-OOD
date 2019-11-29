@@ -30,9 +30,6 @@
     <ClCompile Include="source\Npc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sourceNpcManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="includes\NpcManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

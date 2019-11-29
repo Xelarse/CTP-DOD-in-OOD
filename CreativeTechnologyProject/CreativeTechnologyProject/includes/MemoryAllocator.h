@@ -18,6 +18,7 @@ public:
 	};
 
 	MemoryAllocator(const std::size_t elementSize, const size_t elementCount);
+	MemoryAllocator(const MemoryAllocator&) = delete;
 	~MemoryAllocator();
 
 	void Init();
@@ -51,6 +52,7 @@ private:
 
 	MemoryBlock* MergeAdjacentBlocks(MemoryBlock* block);
 	bool CanMergeAdjacentBlocks(MemoryBlock* block);
+	void RemoveOldMergedBlockFromFreeList(MemoryBlock* block);
 
 	//Mem start holds the pointer location of the start of the memory allocated, offset is used to work out how far along to scrub to get the next allocation space
 	void* _memStart = nullptr;

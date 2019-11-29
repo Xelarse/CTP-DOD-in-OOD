@@ -135,7 +135,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="includes\NpcManager.cpp" />
-    <ClCompile Include="sourceNpcManager.cpp" />
     <ClCompile Include="source\JobManager.cpp" />
     <ClCompile Include="source\Main.cpp" />
     <ClCompile Include="source\MemoryAllocator.cpp" />

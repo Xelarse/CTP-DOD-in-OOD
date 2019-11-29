@@ -79,10 +79,10 @@ void* MemoryAllocator::Allocate(size_t size)
 void MemoryAllocator::Free(void* ptr)
 {
 	MemoryBlock* block = GetBlockHeader(ptr);
-	//if (CanMergeAdjacentBlocks(block))
-	//{
-	//	block = MergeAdjacentBlocks(block);
-	//}
+	if (CanMergeAdjacentBlocks(block))
+	{
+		block = MergeAdjacentBlocks(block);
+	}
 	block->inUse = false;
 
 	_freeList.push_back(block);
@@ -258,18 +258,17 @@ MemoryAllocator::MemoryBlock* MemoryAllocator::FreeListSearch(size_t size)
 MemoryAllocator::MemoryBlock* MemoryAllocator::SplitBlock(MemoryBlock* block, size_t size)
 {
 	char* baseAddress = reinterpret_cast<char*>(block);
-
 	MemoryBlock* block1 = reinterpret_cast<MemoryBlock*>(baseAddress);
 	char* block2Address = baseAddress + AllocSize(size);
 	MemoryBlock* block2 = reinterpret_cast<MemoryBlock*>(block2Address);
 
 	block1->inUse = false;
 	block1->dataSize = size;
-	block1->nextBlock = block->nextBlock;
+	block1->nextBlock = block2;
 
 	block2->inUse = false;
 	block2->dataSize = block->dataSize - size;
-	block2->nextBlock = block1;
+	block2->nextBlock = block->nextBlock;
 
 	_freeList.push_back(block2);
 
@@ -278,15 +277,15 @@ MemoryAllocator::MemoryBlock* MemoryAllocator::SplitBlock(MemoryBlock* block, si
 
 bool MemoryAllocator::CanSplit(MemoryBlock* block, size_t size)
 {
-	return AllocSize(block->dataSize) - size >= sizeof(block);
+	return static_cast<int>(AllocSize(block->dataSize) - size) >= static_cast<int>(sizeof(block));
 }
 
 MemoryAllocator::MemoryBlock* MemoryAllocator::ListAllocate(MemoryBlock* block, size_t size)
 {
-	//if (CanSplit(block, size))
-	//{
-	//	block = SplitBlock(block, size);
-	//}
+	if (CanSplit(block, size))
+	{
+		block = SplitBlock(block, size);
+	}
 
 	block->inUse = true;
 	block->dataSize = size;
@@ -296,6 +295,7 @@ MemoryAllocator::MemoryBlock* MemoryAllocator::ListAllocate(MemoryBlock* block, 
 
 MemoryAllocator::MemoryBlock* MemoryAllocator::MergeAdjacentBlocks(MemoryBlock* block)
 {
+	MemoryBlock* mergedBlock = nullptr;
 	//If the next block is not in use and the next block is the top, make this block the top block
 	if (!block->nextBlock->inUse)
 	{
@@ -303,9 +303,14 @@ MemoryAllocator::MemoryBlock* MemoryAllocator::MergeAdjacentBlocks(MemoryBlock* 
 		{
 			_top = block;
 		}
-
+		mergedBlock = block->nextBlock;
 		block->dataSize += block->nextBlock->dataSize;
 		block->nextBlock = block->nextBlock->nextBlock;
+	}
+
+	if (mergedBlock != nullptr)
+	{
+		RemoveOldMergedBlockFromFreeList(mergedBlock);
 	}
 
 	return block;
@@ -315,6 +320,11 @@ bool MemoryAllocator::CanMergeAdjacentBlocks(MemoryBlock* block)
 {
 	//Can merge if there is a next block and its not being used
 	return block->nextBlock && !block->nextBlock->inUse;
+}
+
+void MemoryAllocator::RemoveOldMergedBlockFromFreeList(MemoryBlock* block)
+{
+	_freeList.remove(block);
 }
 
 MemoryAllocator::MemoryBlock* MemoryAllocator::GetBlockHeader(void* data)
