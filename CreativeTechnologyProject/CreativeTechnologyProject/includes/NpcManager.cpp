@@ -35,3 +35,11 @@ NpcManager::~NpcManager()
 
 	_npcs.clear();
 }
+
+void NpcManager::LoopAndPrintTest()
+{
+	for (int i = _npcs.size() - 1; i >= 0; i--)
+	{
+		_npcs[i]->printHPandArmour();
+	}
+}

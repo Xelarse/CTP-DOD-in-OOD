@@ -11,6 +11,8 @@ public:
 	NpcManager() = delete;
 	~NpcManager();
 
+	void LoopAndPrintTest();
+
 private:
 	class MemoryManager* _memManager = nullptr;
 
