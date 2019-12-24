@@ -9,7 +9,7 @@ NpcManager::NpcManager(int npcAmount, MemoryManager* memManager) : _memManager(m
 	_classIds.push_back(_npcHealthId);
 	_classIds.push_back(_npcArmourId);
 
-	Npc::sizeOfNpcPrint();
+	Npc::SizeOfNpcPrint();
 
 	for (size_t i = 0; i < npcAmount; i++)
 	{
@@ -21,7 +21,7 @@ NpcManager::NpcManager(int npcAmount, MemoryManager* memManager) : _memManager(m
 	for (size_t i = 0; i < npcAmount; i++)
 	{
 		std::cout << "NPC " << i << ": ";
-		_npcs[i]->printHPandArmour();
+		_npcs[i]->PrintHPandArmour();
 		std::cout << std::endl;
 	}
 }
@@ -40,6 +40,6 @@ void NpcManager::LoopAndPrintTest()
 {
 	for (int i = _npcs.size() - 1; i >= 0; i--)
 	{
-		_npcs[i]->printHPandArmour();
+		_npcs[i]->PrintHPandArmour();
 	}
 }

@@ -9,12 +9,12 @@ Npc::~Npc()
 {
 }
 
-void Npc::printHPandArmour()
+void Npc::PrintHPandArmour()
 {
 	std::cout << "Health: " << *_health << " --- Armour: " << *_armour << std::endl;
 }
 
-void Npc::sizeOfNpcPrint()
+void Npc::SizeOfNpcPrint()
 {
 	std::cout << "Size of NPC: " << sizeof(Npc) << std::endl;
 	std::cout << "Size of float*: " << sizeof(float*) << " Size of int*: " << sizeof(int*) << std::endl;

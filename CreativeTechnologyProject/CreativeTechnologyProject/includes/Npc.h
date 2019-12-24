@@ -6,8 +6,8 @@ public:
 	Npc() = delete;
 	~Npc();
 
-	void printHPandArmour();
-	static void sizeOfNpcPrint();
+	void PrintHPandArmour();
+	static void SizeOfNpcPrint();
 
 private:
 	float* _health;

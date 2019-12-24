@@ -1,24 +1,44 @@
 #pragma once
 #include <functional>
-#include <queue>
+#include <list>
+#include <mutex>
+#include <thread>
+
+//When switching jobs to a pool of threads look at this https://www.bfilipek.com/2019/12/threading-loopers-cpp17.html
+//For now this will help https://thispointer.com/c11-multithreading-part-2-joining-and-detaching-threads/
 
 class JobManager
 {
 public:
+
+	JobManager() = delete;
+	JobManager(int jobQueueSize);
+	~JobManager();
+
+
 	class Job
 	{
-		void* _dataPtr;
-		size_t _dataSetLength;
-		std::function<void(void*, size_t)> dataProcessingFunction;
+	public:
+		Job() = delete;
+		Job(std::function<void()> func) : dataProcessingFunction(func) {};
+
+		std::function<void()> dataProcessingFunction;
 	};
 
 	void AddJobToQueue(Job job);
-	void ProcessJobsOnThreads();
+	void ProcessJobs();
+
+	void TestJobManager();
+
+
+	static void threadTestFunc();
 
 private:
+	std::mutex _jobQueueMutex;
 
-	std::queue<Job> _jobQueue;
+	//List for ease right now, might switch to queue later and handle deleting allocations in the middle of it with something fancy
+	std::list<Job> _jobQueue;
 
-	//thread pool here
+	//thread pool here Will be implemented after the base implementation is in place
 };
 
