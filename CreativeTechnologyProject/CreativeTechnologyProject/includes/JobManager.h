@@ -33,6 +33,8 @@ public:
 
 	static void threadTestFunc();
 
+	static void threadTest10Secs();
+
 private:
 	std::mutex _jobQueueMutex;
 
