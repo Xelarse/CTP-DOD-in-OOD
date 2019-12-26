@@ -4,6 +4,7 @@
 #include "MemoryManager.h"
 #include "NpcManager.h"
 #include "JobManager.h"
+#include "Timer.h"
 
 // Carry on from here
 // http://dmitrysoshnikov.com/compilers/writing-a-memory-allocator/?fbclid=IwAR1riXugjt6f8_VB2V37c-nkgj-kDvBwJIHz2Gg_rDXBzpxor68fvKUhmvg#best-fit-search
@@ -46,8 +47,14 @@ void TestMemoryAlloc()
 	std::cout << newDataPointer3 << " == Should equal == " << newDataPointer2 << std::endl;
 }
 
+void TimerPrintTest(long long duration)
+{
+	std::cout << "Duration it took for Job Manager to do its test: " << duration << std::endl;
+}
+
 void JobManagerTest()
 {
+	Timer jobTestTimer = Timer(TimerPrintTest);
 	std::unique_ptr<JobManager> jobManager = std::make_unique<JobManager>(10);
 	jobManager->TestJobManager();
 }

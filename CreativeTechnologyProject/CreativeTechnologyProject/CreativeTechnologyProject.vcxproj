@@ -150,6 +150,7 @@
     <ClCompile Include="source\MemoryAllocator.cpp" />
     <ClCompile Include="source\MemoryManager.cpp" />
     <ClCompile Include="source\Npc.cpp" />
+    <ClCompile Include="source\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="includes\JobManager.h" />
@@ -157,6 +158,7 @@
     <ClInclude Include="includes\MemoryManager.h" />
     <ClInclude Include="includes\Npc.h" />
     <ClInclude Include="includes\NpcManager.h" />
+    <ClInclude Include="includes\Timer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
