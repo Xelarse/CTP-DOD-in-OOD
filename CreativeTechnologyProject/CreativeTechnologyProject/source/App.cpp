@@ -1,6 +1,6 @@
 #include "..\includes\App.h"
 
-App::App() : _wnd(800, 600, "AT Task1 Proc Plants")
+App::App() : _wnd(800, 600, "Creative Tech: DoD in OOP")
 {
 }
 

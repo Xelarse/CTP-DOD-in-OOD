@@ -46,7 +46,7 @@ private:
 		~WindowClass();
 		WindowClass(const WindowClass&) = delete;
 		WindowClass& operator=(const WindowClass&) = delete;
-		static constexpr const char* _windowClassName = "AT Task 1 Plantu";
+		static constexpr const char* _windowClassName = "Creative Tech: DoD in OOP";
 		static WindowClass _windowClass;
 		HINSTANCE _hInstance;
 	};

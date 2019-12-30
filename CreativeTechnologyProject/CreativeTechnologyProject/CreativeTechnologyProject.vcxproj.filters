@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\DXHeaders">
+      <UniqueIdentifier>{f009a883-71ce-4f5c-809b-22b34d141fc7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DXSource">
+      <UniqueIdentifier>{b3c2b1c7-557f-49c1-a335-84d525f3a3a1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\JobManager.cpp">
@@ -30,11 +36,35 @@
     <ClCompile Include="source\Npc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="includes\NpcManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="source\Timer.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\NpcManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\App.cpp">
+      <Filter>Source Files\DXSource</Filter>
+    </ClCompile>
+    <ClCompile Include="source\ExceptionHandler.cpp">
+      <Filter>Source Files\DXSource</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics.cpp">
+      <Filter>Source Files\DXSource</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Keyboard.cpp">
+      <Filter>Source Files\DXSource</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Mouse.cpp">
+      <Filter>Source Files\DXSource</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Window.cpp">
+      <Filter>Source Files\DXSource</Filter>
+    </ClCompile>
+    <ClCompile Include="source\WinMain.cpp">
+      <Filter>Source Files\DXSource</Filter>
+    </ClCompile>
+    <ClCompile Include="source\DeltaTimer.cpp">
+      <Filter>Source Files\DXSource</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -55,6 +85,30 @@
     </ClInclude>
     <ClInclude Include="includes\Timer.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\App.h">
+      <Filter>Header Files\DXHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\ExceptionHandler.h">
+      <Filter>Header Files\DXHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\Graphics.h">
+      <Filter>Header Files\DXHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\Keyboard.h">
+      <Filter>Header Files\DXHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\Mouse.h">
+      <Filter>Header Files\DXHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\Window.h">
+      <Filter>Header Files\DXHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\WindowsCustomInclude.h">
+      <Filter>Header Files\DXHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\DeltaTimer.h">
+      <Filter>Header Files\DXHeaders</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

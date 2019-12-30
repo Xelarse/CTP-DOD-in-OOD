@@ -59,7 +59,7 @@ void JobManagerTest()
 	jobManager->TestJobManager();
 }
 
-int main()
-{
-	JobManagerTest();
-}
+//int main()
+//{
+//	JobManagerTest();
+//}
