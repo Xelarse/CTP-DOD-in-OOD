@@ -1,8 +1,10 @@
 #include "..\includes\App.h"
+#include <memory>
 #include "imgui/imgui.h"
 
 App::App() : _wnd(800, 600, "Creative Tech: DoD in OOP")
 {
+	_wnd.Gfx().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 3.0f / 4.0f, 0.5f, 40.0f));
 }
 
 int App::Go()

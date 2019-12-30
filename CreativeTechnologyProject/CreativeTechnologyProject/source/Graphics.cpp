@@ -32,7 +32,7 @@ Graphics::Graphics(HWND hWnd)
 	HRESULT hr;
 
 	//create device and front/back buffers, swapchain and rendering context
-	GFX_THROW_FAILED( D3D11CreateDeviceAndSwapChain(
+	GFX_THROW_FAILED(D3D11CreateDeviceAndSwapChain(
 		nullptr,
 		D3D_DRIVER_TYPE_HARDWARE,
 		nullptr,
@@ -48,15 +48,62 @@ Graphics::Graphics(HWND hWnd)
 	));
 
 	//gain access to texture subresource in swapchain (back buffer)
-	wrl::ComPtr<ID3D11Texture2D> pBackBuffer;
-	GFX_THROW_FAILED( _pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), &pBackBuffer));
-	GFX_THROW_FAILED( _pDevice->CreateRenderTargetView(
+	Microsoft::WRL::ComPtr<ID3D11Texture2D> pBackBuffer;
+	GFX_THROW_FAILED(_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), &pBackBuffer));
+	GFX_THROW_FAILED(_pDevice->CreateRenderTargetView(
 		pBackBuffer.Get(),
 		nullptr,
 		&_pTarget
 	));
 
-	//Init imgui d3d implementation 
+	//Create z buffer / depth buffer
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> pDDState;
+	D3D11_DEPTH_STENCIL_DESC dsd = {};
+	dsd.DepthEnable = TRUE;
+	dsd.StencilEnable = FALSE;
+	dsd.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	dsd.DepthFunc = D3D11_COMPARISON_LESS;
+
+	GFX_THROW_FAILED(_pDevice->CreateDepthStencilState(&dsd, &pDDState));
+
+	//bind depth state
+	_pContext->OMSetDepthStencilState(pDDState.Get(), 1u);
+
+	//Create depth stensil texture
+	Microsoft::WRL::ComPtr<ID3D11Texture2D> pDepthStencil;
+	D3D11_TEXTURE2D_DESC td = {};
+	td.Width = 800u;
+	td.Height = 600u;
+	td.MipLevels = 1u;
+	td.ArraySize = 1u;
+	td.Format = DXGI_FORMAT_D32_FLOAT;
+	td.SampleDesc.Count = 1u;			//SampleDesc values must match swapchains values!!!
+	td.SampleDesc.Quality = 0u;
+	td.Usage = D3D11_USAGE_DEFAULT;
+	td.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	GFX_THROW_FAILED(_pDevice->CreateTexture2D(&td, nullptr, &pDepthStencil));
+
+	//Create view of depth stencil texture
+	CD3D11_DEPTH_STENCIL_VIEW_DESC dsvd = {};
+	dsvd.Format = DXGI_FORMAT_D32_FLOAT;
+	dsvd.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	dsvd.Texture2D.MipSlice = 0u;
+	GFX_THROW_FAILED(_pDevice->CreateDepthStencilView(pDepthStencil.Get(), &dsvd, &_pDepthStencilView));
+
+	//Bind the depth stencil view to OM
+	_pContext->OMSetRenderTargets(1u, _pTarget.GetAddressOf(), _pDepthStencilView.Get());
+
+	//Configure viewport
+	D3D11_VIEWPORT vp;
+	vp.Width = 800.0f;
+	vp.Height = 600.0f;
+	vp.MinDepth = 0.0f;
+	vp.MaxDepth = 1.0f;
+	vp.TopLeftX = 0.0f;
+	vp.TopLeftY = 0.0f;
+	_pContext->RSSetViewports(1u, &vp);
+
+	//Init imgui d3d implementation
 	ImGui_ImplDX11_Init(_pDevice.Get(), _pContext.Get());
 }
 
@@ -111,6 +158,16 @@ void Graphics::DisableImgui() noexcept
 bool Graphics::IsImguiEnabled() const noexcept
 {
 	return _imguiEnabled;
+}
+
+DirectX::XMMATRIX Graphics::GetProjection() const noexcept
+{
+	return _projectionMatrix;
+}
+
+void Graphics::SetProjection(DirectX::FXMMATRIX proj) noexcept
+{
+	_projectionMatrix = proj;
 }
 
 //Exception handling below here

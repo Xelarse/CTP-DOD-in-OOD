@@ -1,15 +1,18 @@
 #pragma once
 
-#pragma comment(lib, "d3d11.lib")
-#pragma comment(lib, "dxgi.lib")
-#pragma comment(lib, "d3dcompiler.lib")
-
-#include "WindowsCustomInclude.h"
+#include <wrl.h>
 #include <d3d11.h>
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
+#include <vector>
+#include <memory>
+
+#pragma comment(lib, "d3d11.lib")
+#pragma comment(lib, "dxgi.lib")
+#pragma comment(lib, "D3Dcompiler.lib")
+
+#include "WindowsCustomInclude.h"
 #include "ExceptionHandler.h"
-#include <wrl.h>
 
 class Graphics
 {
@@ -49,12 +52,17 @@ public:
 	void DisableImgui() noexcept;
 	bool IsImguiEnabled() const noexcept;
 
+	DirectX::XMMATRIX GetProjection() const noexcept;
+	void SetProjection(DirectX::FXMMATRIX proj) noexcept;
+
 private:
 	Microsoft::WRL::ComPtr<ID3D11Device> _pDevice;
 	Microsoft::WRL::ComPtr<IDXGISwapChain> _pSwapChain;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> _pContext;
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> _pTarget;
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> _pDepthStencilView;
 
 	bool _imguiEnabled = true;
+	DirectX::XMMATRIX _projectionMatrix;
 };
 

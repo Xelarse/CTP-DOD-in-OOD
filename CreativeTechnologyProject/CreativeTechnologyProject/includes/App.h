@@ -11,9 +11,10 @@ public:
 private:
 	void DoFrame();
 private:
+
+	ImguiManager _imgui;
 	Window _wnd;
 	DeltaTimer timer;
-	ImguiManager _imgui;
 
 	bool _showDemoWindow = true;
 };
