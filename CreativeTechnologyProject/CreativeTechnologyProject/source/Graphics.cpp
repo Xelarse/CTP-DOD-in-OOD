@@ -1,6 +1,8 @@
 #include "..\includes\Graphics.h"
 #include "dxerr/dxerr.h"
 #include <sstream>
+#include "imgui/imgui_impl_dx11.h" 
+#include "imgui/imgui_impl_win32.h" 
 
 #define GFX_THROW_FAILED(hrcall) if( FAILED( hr = (hrcall) ) ) throw Graphics::HrException( __LINE__,__FILE__,hr )
 #define GFX_DEVICE_REMOVED_EXCEPT(hr) Graphics::DeviceRemovedException( __LINE__,__FILE__,(hr) )
@@ -53,10 +55,34 @@ Graphics::Graphics(HWND hWnd)
 		nullptr,
 		&_pTarget
 	));
+
+	//Init imgui d3d implementation 
+	ImGui_ImplDX11_Init(_pDevice.Get(), _pContext.Get());
+}
+
+void Graphics::BeginFrame(float r, float g, float b) noexcept
+{
+	//Imgui begin frame 
+	if (_imguiEnabled)
+	{
+		ImGui_ImplDX11_NewFrame();
+		ImGui_ImplWin32_NewFrame();
+		ImGui::NewFrame();
+	}
+
+	const float color[] = { r,g,b,1.0f };
+	_pContext->ClearRenderTargetView(_pTarget.Get(), color);
 }
 
 void Graphics::EndFrame()
 {
+	//Imgui Frame End
+	if (_imguiEnabled)
+	{
+		ImGui::Render();
+		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+	}
+
 	HRESULT hr;
 
 	if (FAILED(hr = _pSwapChain->Present(1u, 0u)))
@@ -72,12 +98,20 @@ void Graphics::EndFrame()
 	}
 }
 
-void Graphics::ClearBuffer(float r, float g, float b) noexcept
+void Graphics::EnableImgui() noexcept
 {
-	const float color[] = { r,g,b,1.0f };
-	_pContext->ClearRenderTargetView(_pTarget.Get(), color);
+	_imguiEnabled = true;
 }
 
+void Graphics::DisableImgui() noexcept
+{
+	_imguiEnabled = false;
+}
+
+bool Graphics::IsImguiEnabled() const noexcept
+{
+	return _imguiEnabled;
+}
 
 //Exception handling below here
 Graphics::HrException::HrException(int line, const char* file, HRESULT hr) noexcept

@@ -1,4 +1,5 @@
 #include "..\includes\App.h"
+#include "imgui/imgui.h"
 
 App::App() : _wnd(800, 600, "Creative Tech: DoD in OOP")
 {
@@ -22,7 +23,25 @@ int App::Go()
 void App::DoFrame()
 {
 	const float c = sin(timer.Peek()) / 2.0f + 0.5f;
-	_wnd.Gfx().ClearBuffer(c, c, 1.0f);
 
+	//Check input to toggle imgui 
+	if (_wnd._keyboard.KeyIsPressed(VK_SPACE))
+	{
+		_wnd.Gfx().DisableImgui();
+	}
+	else
+	{
+		_wnd.Gfx().EnableImgui();
+	}
+
+	//Start DirectX frame 
+	_wnd.Gfx().BeginFrame(c, c, 1.0f);
+
+	if (_showDemoWindow)
+	{
+		ImGui::ShowDemoWindow(&_showDemoWindow);
+	}
+
+	//present 
 	_wnd.Gfx().EndFrame();
 }

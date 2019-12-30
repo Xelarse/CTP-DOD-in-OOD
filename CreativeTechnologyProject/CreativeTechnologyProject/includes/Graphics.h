@@ -42,13 +42,19 @@ public:
 	Graphics& operator=(const Graphics&) = delete;
 	~Graphics() = default;
 
+	void BeginFrame(float red, float green, float blue) noexcept;
 	void EndFrame();
-	void ClearBuffer(float r, float g, float b) noexcept;
+
+	void EnableImgui() noexcept;
+	void DisableImgui() noexcept;
+	bool IsImguiEnabled() const noexcept;
 
 private:
 	Microsoft::WRL::ComPtr<ID3D11Device> _pDevice;
 	Microsoft::WRL::ComPtr<IDXGISwapChain> _pSwapChain;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> _pContext;
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> _pTarget;
+
+	bool _imguiEnabled = true;
 };
 

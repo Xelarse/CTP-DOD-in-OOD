@@ -1,6 +1,7 @@
 #pragma once
 #include "Window.h"
 #include "DeltaTimer.h"
+#include "ImguiManager.h"
 
 class App
 {
@@ -12,5 +13,7 @@ private:
 private:
 	Window _wnd;
 	DeltaTimer timer;
-};
+	ImguiManager _imgui;
 
+	bool _showDemoWindow = true;
+};
