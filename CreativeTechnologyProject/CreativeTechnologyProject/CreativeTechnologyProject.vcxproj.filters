@@ -19,6 +19,9 @@
     <Filter Include="Source Files\DXSource">
       <UniqueIdentifier>{b3c2b1c7-557f-49c1-a335-84d525f3a3a1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DxError">
+      <UniqueIdentifier>{4f5783be-7bc6-4dab-a1be-e9cb8061eead}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\JobManager.cpp">
@@ -66,6 +69,9 @@
     <ClCompile Include="source\DeltaTimer.cpp">
       <Filter>Source Files\DXSource</Filter>
     </ClCompile>
+    <ClCompile Include="libs\dxerr\dxerr.cpp">
+      <Filter>DxError</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="includes\JobManager.h">
@@ -110,5 +116,19 @@
     <ClInclude Include="includes\DeltaTimer.h">
       <Filter>Header Files\DXHeaders</Filter>
     </ClInclude>
+    <ClInclude Include="libs\dxerr\dxerr.h">
+      <Filter>DxError</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="libs\dxerr\DXGetErrorDescription.inl">
+      <Filter>DxError</Filter>
+    </None>
+    <None Include="libs\dxerr\DXGetErrorString.inl">
+      <Filter>DxError</Filter>
+    </None>
+    <None Include="libs\dxerr\DXTrace.inl">
+      <Filter>DxError</Filter>
+    </None>
   </ItemGroup>
 </Project>

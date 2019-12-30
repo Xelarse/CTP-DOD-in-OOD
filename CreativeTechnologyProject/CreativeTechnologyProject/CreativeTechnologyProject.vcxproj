@@ -157,6 +157,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="libs\dxerr\dxerr.cpp" />
     <ClCompile Include="source\App.cpp" />
     <ClCompile Include="source\DeltaTimer.cpp" />
     <ClCompile Include="source\ExceptionHandler.cpp" />
@@ -188,6 +189,12 @@
     <ClInclude Include="includes\Timer.h" />
     <ClInclude Include="includes\Window.h" />
     <ClInclude Include="includes\WindowsCustomInclude.h" />
+    <ClInclude Include="libs\dxerr\dxerr.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="libs\dxerr\DXGetErrorDescription.inl" />
+    <None Include="libs\dxerr\DXGetErrorString.inl" />
+    <None Include="libs\dxerr\DXTrace.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
