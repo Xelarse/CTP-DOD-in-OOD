@@ -10,6 +10,11 @@ public:
 	int Go();
 private:
 	void DoFrame();
+
+	void PreUpdate(float dt);
+	void Update(float dt);
+	void PostUpdate(float dt);
+
 private:
 
 	ImguiManager _imgui;

@@ -24,26 +24,31 @@ int App::Go()
 
 void App::DoFrame()
 {
-	const float c = sin(timer.Peek()) / 2.0f + 0.5f;
-
-	//Check input to toggle imgui 
-	if (_wnd._keyboard.KeyIsPressed(VK_SPACE))
-	{
-		_wnd.Gfx().DisableImgui();
-	}
-	else
-	{
-		_wnd.Gfx().EnableImgui();
-	}
+	const float dt = timer.Mark();
 
 	//Start DirectX frame 
-	_wnd.Gfx().BeginFrame(c, c, 1.0f);
+	_wnd.Gfx().BeginFrame(0.08f, 0.24f, 0.32f);
 
+	PreUpdate(dt);
+	Update(dt);
+	PostUpdate(dt);
+
+	//present 
+	_wnd.Gfx().EndFrame();
+}
+
+void App::PreUpdate(float dt)
+{
+}
+
+void App::Update(float dt)
+{
 	if (_showDemoWindow)
 	{
 		ImGui::ShowDemoWindow(&_showDemoWindow);
 	}
+}
 
-	//present 
-	_wnd.Gfx().EndFrame();
+void App::PostUpdate(float dt)
+{
 }
