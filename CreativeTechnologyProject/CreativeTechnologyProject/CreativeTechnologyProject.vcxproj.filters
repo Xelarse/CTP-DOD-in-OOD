@@ -25,6 +25,12 @@
     <Filter Include="ImGui">
       <UniqueIdentifier>{8e3a7cff-a081-4b1d-a96a-bb5099f25b6c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Tests">
+      <UniqueIdentifier>{823a0a79-32dc-4fa2-828c-5e8f2aad19f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Tests">
+      <UniqueIdentifier>{3ca79b9a-8dd4-4660-ade8-d6e922dc8a85}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\JobManager.cpp">
@@ -95,6 +101,12 @@
     </ClCompile>
     <ClCompile Include="source\ImguiManager.cpp">
       <Filter>Source Files\DXSource</Filter>
+    </ClCompile>
+    <ClCompile Include="source\BaseTest.cpp">
+      <Filter>Source Files\Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="source\AllSystemsTest.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -169,6 +181,12 @@
     </ClInclude>
     <ClInclude Include="includes\ImguiManager.h">
       <Filter>Header Files\DXHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\BaseTest.h">
+      <Filter>Header Files\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\AllSystemsTest.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

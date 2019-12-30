@@ -1,7 +1,7 @@
 #include "..\includes\Npc.h"
 #include <iostream>
 
-Npc::Npc(float* healthPtr, int* armourPtr) : _health(healthPtr), _armour(armourPtr)
+Npc::Npc(float* healthPtr, int* armourPtr, float* shieldPtr) : _health(healthPtr), _armour(armourPtr), _shield(shieldPtr)
 {
 }
 

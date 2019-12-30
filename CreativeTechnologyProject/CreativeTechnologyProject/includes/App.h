@@ -2,6 +2,7 @@
 #include "Window.h"
 #include "DeltaTimer.h"
 #include "ImguiManager.h"
+#include "AllSystemsTest.h"
 
 class App
 {
@@ -21,5 +22,7 @@ private:
 	Window _wnd;
 	DeltaTimer timer;
 
-	bool _showDemoWindow = true;
+	std::unique_ptr<AllSystemsTest> _allSysTest = nullptr;
+
+	bool _showDemoWindow = false;
 };

@@ -5,17 +5,20 @@ NpcManager::NpcManager(int npcAmount, MemoryManager* memManager) : _memManager(m
 {
 	_npcHealthBase = memManager->InitliaseNewMemoryBlock<float>(_npcHealthId, npcAmount);
 	_npcArmourBase = memManager->InitliaseNewMemoryBlock<int>(_npcArmourId, npcAmount);
+	_npcShieldBase = memManager->InitliaseNewMemoryBlock<float>(_npcShieldId, npcAmount);
 
 	_classIds.push_back(_npcHealthId);
 	_classIds.push_back(_npcArmourId);
+	_classIds.push_back(_npcShieldId);
 
 	Npc::SizeOfNpcPrint();
 
 	for (size_t i = 0; i < npcAmount; i++)
 	{
 		float* health = memManager->InitliaseVariable(_npcHealthId, static_cast<float>(i * 10));
+		float* shield = memManager->InitliaseVariable(_npcShieldId, static_cast<float>(i * 100));
 		int* armour = memManager->InitliaseVariable(_npcArmourId, static_cast<int>(i));
-		_npcs.emplace_back(std::make_unique<Npc>(health, armour));
+		_npcs.emplace_back(std::make_unique<Npc>(health, armour, shield));
 	}
 
 	for (size_t i = 0; i < npcAmount; i++)

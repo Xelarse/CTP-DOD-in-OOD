@@ -2,7 +2,7 @@
 class Npc
 {
 public:
-	Npc(float* healthPtr, int* armourPtr);
+	Npc(float* healthPtr, int* armourPtr, float* shieldPtr);
 	Npc() = delete;
 	~Npc();
 
@@ -10,6 +10,7 @@ public:
 	static void SizeOfNpcPrint();
 
 private:
+	float* _shield;
 	float* _health;
 	int* _armour;
 };

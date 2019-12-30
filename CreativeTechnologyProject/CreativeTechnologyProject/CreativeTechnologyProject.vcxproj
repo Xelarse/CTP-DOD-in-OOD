@@ -164,7 +164,9 @@
     <ClCompile Include="libs\imgui\imgui_impl_dx11.cpp" />
     <ClCompile Include="libs\imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="libs\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="source\AllSystemsTest.cpp" />
     <ClCompile Include="source\App.cpp" />
+    <ClCompile Include="source\BaseTest.cpp" />
     <ClCompile Include="source\DeltaTimer.cpp" />
     <ClCompile Include="source\ExceptionHandler.cpp" />
     <ClCompile Include="source\Graphics.cpp" />
@@ -182,7 +184,9 @@
     <ClCompile Include="source\WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="includes\AllSystemsTest.h" />
     <ClInclude Include="includes\App.h" />
+    <ClInclude Include="includes\BaseTest.h" />
     <ClInclude Include="includes\DeltaTimer.h" />
     <ClInclude Include="includes\ExceptionHandler.h" />
     <ClInclude Include="includes\Graphics.h" />

@@ -13,6 +13,12 @@ public:
 
 	void LoopAndPrintTest();
 
+	int GetNpcCount() const { return _npcs.size(); }
+
+	float* _npcHealthBase = nullptr;
+	int* _npcArmourBase = nullptr;
+	float* _npcShieldBase = nullptr;
+
 private:
 	class MemoryManager* _memManager = nullptr;
 
@@ -20,10 +26,8 @@ private:
 
 	const char*	_npcHealthId = "NPCHEALTH";
 	const char* _npcArmourId = "NPCARMOUR";
+	const char* _npcShieldId = "NPCSHIELD";
 
 	std::vector<const char*> _classIds;
-
-	float* _npcHealthBase = nullptr;
-	int* _npcArmourBase = nullptr;
 };
 
