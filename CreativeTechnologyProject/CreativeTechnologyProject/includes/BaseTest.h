@@ -26,8 +26,8 @@ protected:
 
 	int _runCount = 1;
 
-	int _queueLength = 10;
-	std::queue<long long> _results;
+	const int _queueLength = 200;
+	std::deque<long long> _results;
 	
 };
 

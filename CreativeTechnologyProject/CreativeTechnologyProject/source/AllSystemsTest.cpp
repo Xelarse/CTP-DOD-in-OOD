@@ -5,15 +5,18 @@
 AllSystemsTest::AllSystemsTest()
 {
 	//Init the managers for the test
-	_memManager = std::make_unique<MemoryManager>(sizeof(Npc), 1001);
-	_npcManager = std::make_unique<NpcManager>(1000, _memManager.get());
-	_jobManager = std::make_unique<JobManager>(10);
+	_memManager = new MemoryManager(sizeof(Npc), 11000);
+	_npcManager = new NpcManager(10000, _memManager);
+	_jobManager = new JobManager(10);
 
 	SafetyCheckRunCount();
 }
 
 AllSystemsTest::~AllSystemsTest()
 {
+	delete _jobManager;
+	delete _npcManager;
+	delete _memManager;
 }
 
 void AllSystemsTest::PreUpdate(float dt)
@@ -38,13 +41,23 @@ void AllSystemsTest::RenderImguiWindow()
 {
 	if (_results.size() > 0)
 	{
+		std::vector<float> results;
+		results.reserve(_queueLength);
+
+		for (size_t i = 0; i < _results.size(); i++)
+		{
+			results.push_back(_results[i]);
+		}
+
 		if (ImGui::Begin("Queue Vals"))
 		{
-			std::string val = "Back of Queue: " + std::to_string(_results.back());
-			ImGui::Text(val.c_str());
+			ImGui::InputInt("Job Iterations Count:", &_runCount);
+			ImGui::PlotLines("Time taken, milliseconds:", results.data(), results.size(), 0, 0, 0.0f, 20.0f, ImVec2(0, 400));
 		}
 		ImGui::End();
 	}
+
+	SafetyCheckRunCount();
 }
 
 void AllSystemsTest::NpcShieldTest()
@@ -79,5 +92,10 @@ void AllSystemsTest::SafetyCheckRunCount()
 	if (_runCount > _npcManager->GetNpcCount())
 	{
 		_runCount = _npcManager->GetNpcCount();
+	}
+
+	if (_runCount < 0)
+	{
+		_runCount = 0;
 	}
 }

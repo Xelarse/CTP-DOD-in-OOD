@@ -9,11 +9,11 @@ void BaseTest::AddTimeToQueue(long long duration)
 	{
 		while (_results.size() > _queueLength)
 		{
-			_results.pop();
+			_results.pop_front();
 		}
 	}
 
-	_results.push(duration);
+	_results.push_back(duration);
 }
 
 void BaseTest::ShieldAdjustment(float* shieldVal)

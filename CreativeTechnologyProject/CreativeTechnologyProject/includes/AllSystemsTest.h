@@ -24,8 +24,8 @@ private:
 
 	void SafetyCheckRunCount();
 
-	std::unique_ptr<MemoryManager> _memManager = nullptr;
-	std::unique_ptr<JobManager> _jobManager = nullptr;
-	std::unique_ptr<NpcManager> _npcManager = nullptr;
+	MemoryManager* _memManager = nullptr;
+	JobManager* _jobManager = nullptr;
+	NpcManager* _npcManager = nullptr;
 };
 

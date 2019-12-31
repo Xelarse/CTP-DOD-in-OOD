@@ -33,6 +33,7 @@ void App::DoFrame()
 	//Start DirectX frame 
 	_wnd.Gfx().BeginFrame(0.08f, 0.24f, 0.32f);
 
+	if(_testActive)
 	{
 		Timer timer = Timer([&](long long dura){_allSysTest->AddTimeToQueue(dura);});
 		PreUpdate(dt);
@@ -41,6 +42,12 @@ void App::DoFrame()
 	}
 
 	_allSysTest->RenderImguiWindow();
+
+	if (ImGui::Begin("Update Active"))
+	{
+		ImGui::Checkbox("Is Active", &_testActive);
+	}
+	ImGui::End();
 
 	if (_showDemoWindow)
 	{

@@ -24,5 +24,7 @@ private:
 
 	std::unique_ptr<AllSystemsTest> _allSysTest = nullptr;
 
-	bool _showDemoWindow = false;
+	bool _testActive = true;
+
+	bool _showDemoWindow = true;
 };
