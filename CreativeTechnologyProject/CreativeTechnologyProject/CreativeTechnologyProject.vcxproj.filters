@@ -106,7 +106,10 @@
       <Filter>Source Files\Tests</Filter>
     </ClCompile>
     <ClCompile Include="source\AllSystemsTest.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="source\NoSystemsTest.cpp">
+      <Filter>Source Files\Tests</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -186,7 +189,10 @@
       <Filter>Header Files\Tests</Filter>
     </ClInclude>
     <ClInclude Include="includes\AllSystemsTest.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\NoSystemsTest.h">
+      <Filter>Header Files\Tests</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

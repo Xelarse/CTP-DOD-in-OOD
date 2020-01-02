@@ -177,6 +177,7 @@
     <ClCompile Include="source\MemoryAllocator.cpp" />
     <ClCompile Include="source\MemoryManager.cpp" />
     <ClCompile Include="source\Mouse.cpp" />
+    <ClCompile Include="source\NoSystemsTest.cpp" />
     <ClCompile Include="source\Npc.cpp" />
     <ClCompile Include="source\NpcManager.cpp" />
     <ClCompile Include="source\Timer.cpp" />
@@ -196,6 +197,7 @@
     <ClInclude Include="includes\MemoryAllocator.h" />
     <ClInclude Include="includes\MemoryManager.h" />
     <ClInclude Include="includes\Mouse.h" />
+    <ClInclude Include="includes\NoSystemsTest.h" />
     <ClInclude Include="includes\Npc.h" />
     <ClInclude Include="includes\NpcManager.h" />
     <ClInclude Include="includes\Timer.h" />

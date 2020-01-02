@@ -5,8 +5,8 @@
 AllSystemsTest::AllSystemsTest()
 {
 	//Init the managers for the test
-	_memManager = new MemoryManager(sizeof(Npc), 11000);
-	_npcManager = new NpcManager(10000, _memManager);
+	_memManager = new MemoryManager(sizeof(Npc), 200000);
+	_npcManager = new NpcManager(200000, _memManager);
 	_jobManager = new JobManager(10);
 
 	SafetyCheckRunCount();
