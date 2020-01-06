@@ -1,5 +1,7 @@
 #include "..\includes\BaseTest.h"
+#include "imgui/imgui.h"
 #include <cmath>
+#include <string>
 
 void BaseTest::AddTimeToQueue(long long duration)
 {
@@ -14,6 +16,25 @@ void BaseTest::AddTimeToQueue(long long duration)
 	}
 
 	_results.push_back(duration);
+}
+
+void BaseTest::RenderImguiWindow()
+{
+	if (_results.size() > 0)
+	{
+		std::vector<float> results;
+		results.reserve(_queueLength);
+
+		for (size_t i = 0; i < _results.size(); i++)
+		{
+			results.push_back(_results[i]);
+		}
+		ImGui::InputInt("NPC's processed per update", &_runCount);
+		SanityCheckRunCount();
+		std::string desc = "Most recent update: " + std::to_string(results.back()) + "ms";
+		ImGui::Text(desc.c_str());
+		ImGui::PlotLines("Time taken, milliseconds:", results.data(), results.size(), 0, 0, 0.0f, 100.0f, ImVec2(0, 500));
+	}
 }
 
 void BaseTest::ShieldAdjustment(float* shieldVal)

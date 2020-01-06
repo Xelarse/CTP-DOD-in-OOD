@@ -15,7 +15,6 @@ public:
 	virtual void PreUpdate(float dt) override;
 	virtual void Update(float dt) override;
 	virtual void PostUpdate(float dt) override;
-	virtual void RenderImguiWindow() override;
 
 
 private:
@@ -24,7 +23,7 @@ private:
 	void NpcHealthTest();
 	void NpcArmourTest();
 
-	void SafetyCheckRunCount();
+	void SanityCheckRunCount() override;
 
 	std::vector<std::unique_ptr<Npc>> _npcVec;
 };

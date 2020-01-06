@@ -19,7 +19,7 @@ JustJobTest::JustJobTest(int npcMax)
 		_npcShieldVec.push_back(npc->GetShield());
 	}
 
-	SafetyCheckRunCount();
+	SanityCheckRunCount();
 }
 
 JustJobTest::~JustJobTest()
@@ -41,29 +41,6 @@ void JustJobTest::Update(float dt)
 void JustJobTest::PostUpdate(float dt)
 {
 	_jobManager->ProcessJobs();
-}
-
-void JustJobTest::RenderImguiWindow()
-{
-	if (_results.size() > 0)
-	{
-		std::vector<float> results;
-		results.reserve(_queueLength);
-
-		for (size_t i = 0; i < _results.size(); i++)
-		{
-			results.push_back(_results[i]);
-		}
-
-		if (ImGui::Begin("Queue Vals"))
-		{
-			ImGui::InputInt("Job Iterations Count:", &_runCount);
-			ImGui::PlotLines("Time taken, milliseconds:", results.data(), results.size(), 0, 0, 0.0f, 20.0f, ImVec2(0, 400));
-		}
-		ImGui::End();
-	}
-
-	SafetyCheckRunCount();
 }
 
 void JustJobTest::NpcShieldTest()
@@ -90,7 +67,7 @@ void JustJobTest::NpcArmourTest()
 	}
 }
 
-void JustJobTest::SafetyCheckRunCount()
+void JustJobTest::SanityCheckRunCount()
 {
 	if (_runCount > _npcVec.size())
 	{

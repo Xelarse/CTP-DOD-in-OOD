@@ -9,7 +9,7 @@ AllSystemsTest::AllSystemsTest(int npcMax)
 	_npcManager = new NpcManager(npcMax, _memManager);
 	_jobManager = new JobManager(10);
 
-	SafetyCheckRunCount();
+	SanityCheckRunCount();
 }
 
 AllSystemsTest::~AllSystemsTest()
@@ -35,29 +35,6 @@ void AllSystemsTest::Update(float dt)
 void AllSystemsTest::PostUpdate(float dt)
 {
 	_jobManager->ProcessJobs();
-}
-
-void AllSystemsTest::RenderImguiWindow()
-{
-	if (_results.size() > 0)
-	{
-		std::vector<float> results;
-		results.reserve(_queueLength);
-
-		for (size_t i = 0; i < _results.size(); i++)
-		{
-			results.push_back(_results[i]);
-		}
-
-		if (ImGui::Begin("Queue Vals"))
-		{
-			ImGui::InputInt("Job Iterations Count:", &_runCount);
-			ImGui::PlotLines("Time taken, milliseconds:", results.data(), results.size(), 0, 0, 0.0f, 20.0f, ImVec2(0, 400));
-		}
-		ImGui::End();
-	}
-
-	SafetyCheckRunCount();
 }
 
 void AllSystemsTest::NpcShieldTest()
@@ -87,7 +64,7 @@ void AllSystemsTest::NpcArmourTest()
 	}
 }
 
-void AllSystemsTest::SafetyCheckRunCount()
+void AllSystemsTest::SanityCheckRunCount()
 {
 	if (_runCount > _npcManager->GetNpcCount())
 	{

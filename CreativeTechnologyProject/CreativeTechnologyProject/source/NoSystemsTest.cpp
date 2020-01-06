@@ -13,7 +13,7 @@ NoSystemsTest::NoSystemsTest(int npcMax)
 		_npcVec.emplace_back(std::make_unique<Npc>(generator));
 	}
 
-	SafetyCheckRunCount();
+	SanityCheckRunCount();
 }
 
 NoSystemsTest::~NoSystemsTest()
@@ -33,29 +33,6 @@ void NoSystemsTest::Update(float dt)
 
 void NoSystemsTest::PostUpdate(float dt)
 {
-}
-
-void NoSystemsTest::RenderImguiWindow()
-{
-	if (_results.size() > 0)
-	{
-		std::vector<float> results;
-		results.reserve(_queueLength);
-
-		for (size_t i = 0; i < _results.size(); i++)
-		{
-			results.push_back(_results[i]);
-		}
-
-		if (ImGui::Begin("Queue Vals"))
-		{
-			ImGui::InputInt("Job Iterations Count:", &_runCount);
-			ImGui::PlotLines("Time taken, milliseconds:", results.data(), results.size(), 0, 0, 0.0f, 20.0f, ImVec2(0, 400));
-		}
-		ImGui::End();
-	}
-
-	SafetyCheckRunCount();
 }
 
 void NoSystemsTest::NpcShieldTest()
@@ -82,7 +59,7 @@ void NoSystemsTest::NpcArmourTest()
 	}
 }
 
-void NoSystemsTest::SafetyCheckRunCount()
+void NoSystemsTest::SanityCheckRunCount()
 {
 	if (_runCount > _npcVec.size())
 	{

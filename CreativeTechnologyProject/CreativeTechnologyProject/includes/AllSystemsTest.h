@@ -16,14 +16,12 @@ public:
 	virtual void Update(float dt) override;
 	virtual void PostUpdate(float dt) override;
 
-	virtual void RenderImguiWindow() override;
-
 private:
 	void NpcShieldTest();
 	void NpcHealthTest();
 	void NpcArmourTest();
 
-	void SafetyCheckRunCount();
+	void SanityCheckRunCount() override;
 
 	MemoryManager* _memManager = nullptr;
 	JobManager* _jobManager = nullptr;

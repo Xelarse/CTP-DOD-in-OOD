@@ -17,12 +17,14 @@ public:
 	void RunCount(int x) { _runCount = x; }
 
 	void AddTimeToQueue(long long duration);
-	virtual void RenderImguiWindow() = 0;
+	void RenderImguiWindow();
 
 protected:
 	void ShieldAdjustment(float* shieldVal);
 	void HealthAdjustment(float* healthVal);
 	void ArmourAdjustment(int* armourVal);
+
+	virtual void SanityCheckRunCount() = 0;
 
 	int _runCount = 1;
 

@@ -52,6 +52,7 @@ void App::DoFrame()
 				callback = [&](long long dura){_justJobTest->AddTimeToQueue(dura);};
 				break;
 			case App::TestTypes::JUST_MEMORY:
+				callback = [](long long dura){return;};
 				break;
 			default:
 				break;
@@ -63,33 +64,12 @@ void App::DoFrame()
 		PostUpdate(dt);
 	}
 
-	switch (_activeTest)
-	{
-		case App::TestTypes::NO_SYSTEMS:
-			_noSysTest->RenderImguiWindow();
-			break;
-		case App::TestTypes::ALL_SYSTEMS:
-			_allSysTest->RenderImguiWindow();
-			break;
-		case App::TestTypes::JUST_JOB:
-			_justJobTest->RenderImguiWindow();
-			break;
-		case App::TestTypes::JUST_MEMORY:
-			break;
-		default:
-			break;
-	}
+	RenderImguiWindow();
 
-	if (ImGui::Begin("Update Active"))
-	{
-		ImGui::Checkbox("Is Active", &_testActive);
-	}
-	ImGui::End();
-
-	if (_showDemoWindow)
-	{
-		ImGui::ShowDemoWindow(&_showDemoWindow);
-	}
+	//if (_showDemoWindow)
+	//{
+	//	ImGui::ShowDemoWindow(&_showDemoWindow);
+	//}
 
 	//present 
 	_wnd.Gfx().EndFrame();
@@ -153,4 +133,38 @@ void App::PostUpdate(float dt)
 		default:
 			break;
 	}
+}
+
+void App::RenderImguiWindow()
+{
+	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Always);
+	ImGui::SetNextWindowSize(ImVec2(800, 600), ImGuiCond_Always);
+
+	if (ImGui::Begin("CTP DOD in OOP", NULL, _guiFlags))
+	{
+		ImGui::Checkbox("Test Active", &_testActive);
+		ImGui::Combo("Current Test", &_imguiActiveTest, "NO_SYSTEMS\0ALL_SYSTEMS\0JUST_JOB\0JUST_MEMORY");
+
+		switch (_activeTest)
+		{
+			case App::TestTypes::NO_SYSTEMS:
+				_noSysTest->RenderImguiWindow();
+				break;
+			case App::TestTypes::ALL_SYSTEMS:
+				_allSysTest->RenderImguiWindow();
+				break;
+			case App::TestTypes::JUST_JOB:
+				_justJobTest->RenderImguiWindow();
+				break;
+			case App::TestTypes::JUST_MEMORY:
+				break;
+			default:
+				break;
+		}
+		
+	}
+	ImGui::End();
+
+	//Update the current active test based of combo from imgui
+	_activeTest = static_cast<App::TestTypes>(_imguiActiveTest);
 }
