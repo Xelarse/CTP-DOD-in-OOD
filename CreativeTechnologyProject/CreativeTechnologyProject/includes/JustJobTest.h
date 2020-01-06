@@ -1,32 +1,39 @@
 #pragma once
+#include <memory>
 #include "BaseTest.h"
+#include "Npc.h"
 #include "JobManager.h"
-#include "NpcManager.h"
-#include "MemoryManager.h"
 
-class AllSystemsTest : public BaseTest
+class JustJobTest : public BaseTest
 {
-public:
-	AllSystemsTest() = delete;
-	AllSystemsTest(int npcMax);
-	~AllSystemsTest() override;
 
-	// Inherited via BaseTest
+public:
+
+	JustJobTest() = delete;
+	JustJobTest(int npcMax);
+	~JustJobTest() override;
+
 	virtual void PreUpdate(float dt) override;
 	virtual void Update(float dt) override;
 	virtual void PostUpdate(float dt) override;
-
 	virtual void RenderImguiWindow() override;
 
+
 private:
+
 	void NpcShieldTest();
 	void NpcHealthTest();
 	void NpcArmourTest();
 
 	void SafetyCheckRunCount();
 
-	MemoryManager* _memManager = nullptr;
 	JobManager* _jobManager = nullptr;
-	NpcManager* _npcManager = nullptr;
+	std::vector<std::unique_ptr<Npc>> _npcVec;
+
+	std::vector<float*> _npcHealthVec;
+	std::vector<float*> _npcShieldVec;
+	std::vector<int*> _npcArmourVec;
+
+
 };
 

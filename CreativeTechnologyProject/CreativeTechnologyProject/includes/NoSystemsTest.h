@@ -7,7 +7,8 @@ class NoSystemsTest : public BaseTest
 {
 public:
 
-	NoSystemsTest();
+	NoSystemsTest() = delete;
+	NoSystemsTest(int npcMax);
 	~NoSystemsTest() override;
 
 	// Inherited via BaseTest

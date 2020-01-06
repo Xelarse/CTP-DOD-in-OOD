@@ -2,11 +2,11 @@
 #include "imgui/imgui.h"
 #include <string>
 
-AllSystemsTest::AllSystemsTest()
+AllSystemsTest::AllSystemsTest(int npcMax)
 {
 	//Init the managers for the test
-	_memManager = new MemoryManager(sizeof(Npc), 200000);
-	_npcManager = new NpcManager(200000, _memManager);
+	_memManager = new MemoryManager(sizeof(Npc), npcMax);
+	_npcManager = new NpcManager(npcMax, _memManager);
 	_jobManager = new JobManager(10);
 
 	SafetyCheckRunCount();

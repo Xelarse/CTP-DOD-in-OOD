@@ -4,6 +4,7 @@
 #include "ImguiManager.h"
 #include "AllSystemsTest.h"
 #include "NoSystemsTest.h"
+#include "JustJobTest.h"
 
 class App
 {
@@ -19,7 +20,7 @@ private:
 
 private:
 
-	enum TestTypes
+	enum class TestTypes
 	{
 		NO_SYSTEMS,
 		ALL_SYSTEMS,
@@ -33,9 +34,11 @@ private:
 
 	std::unique_ptr<AllSystemsTest> _allSysTest = nullptr;
 	std::unique_ptr<NoSystemsTest> _noSysTest = nullptr;
+	std::unique_ptr<JustJobTest> _justJobTest = nullptr;
 
 	bool _testActive = true;
 	bool _showDemoWindow = true;
+	int _maxNpcInstances = 200000;
 
 	TestTypes _activeTest = TestTypes::ALL_SYSTEMS;
 };
