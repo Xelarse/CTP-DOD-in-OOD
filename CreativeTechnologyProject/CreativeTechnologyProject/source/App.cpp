@@ -12,6 +12,7 @@ App::App() : _wnd(800, 600, "Creative Tech: DoD in OOP")
 	_allSysTest = std::make_unique<AllSystemsTest>(_maxNpcInstances);
 	_noSysTest = std::make_unique<NoSystemsTest>(_maxNpcInstances);
 	_justJobTest = std::make_unique<JustJobTest>(_maxNpcInstances);
+	_justMemoryTest = std::make_unique<JustMemoryTest>(_maxNpcInstances);
 }
 
 int App::Go()
@@ -52,7 +53,7 @@ void App::DoFrame()
 				callback = [&](long long dura){_justJobTest->AddTimeToQueue(dura);};
 				break;
 			case App::TestTypes::JUST_MEMORY:
-				callback = [](long long dura){return;};
+				callback = [&](long long dura){_justMemoryTest->AddTimeToQueue(dura);};
 				break;
 			default:
 				break;
@@ -89,6 +90,7 @@ void App::PreUpdate(float dt)
 			_justJobTest->PreUpdate(dt);
 			break;
 		case App::TestTypes::JUST_MEMORY:
+			_justMemoryTest->PreUpdate(dt);
 			break;
 		default:
 			break;
@@ -109,6 +111,7 @@ void App::Update(float dt)
 			_justJobTest->Update(dt);
 			break;
 		case App::TestTypes::JUST_MEMORY:
+			_justMemoryTest->Update(dt);
 			break;
 		default:
 			break;
@@ -129,6 +132,7 @@ void App::PostUpdate(float dt)
 			_justJobTest->PostUpdate(dt);
 			break;
 		case App::TestTypes::JUST_MEMORY:
+			_justMemoryTest->PostUpdate(dt);
 			break;
 		default:
 			break;
@@ -157,6 +161,7 @@ void App::RenderImguiWindow()
 				_justJobTest->RenderImguiWindow();
 				break;
 			case App::TestTypes::JUST_MEMORY:
+				_justMemoryTest->RenderImguiWindow();
 				break;
 			default:
 				break;

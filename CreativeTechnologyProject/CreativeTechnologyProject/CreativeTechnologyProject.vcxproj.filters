@@ -114,6 +114,9 @@
     <ClCompile Include="source\JustJobTest.cpp">
       <Filter>Source Files\Tests</Filter>
     </ClCompile>
+    <ClCompile Include="source\JustMemoryTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="includes\JobManager.h">
@@ -199,6 +202,9 @@
     </ClInclude>
     <ClInclude Include="includes\JustJobTest.h">
       <Filter>Header Files\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\JustMemoryTest.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
