@@ -147,6 +147,7 @@ void App::RenderImguiWindow()
 	if (ImGui::Begin("CTP DOD in OOP", NULL, _guiFlags))
 	{
 		ImGui::Checkbox("Test Active", &_testActive);
+		if(ImGui::Button("Clear Graph")) { ClearExistingResults(); }
 		ImGui::Combo("Current Test", &_imguiActiveTest, "NO_SYSTEMS\0ALL_SYSTEMS\0JUST_JOB\0JUST_MEMORY");
 
 		switch (_activeTest)
@@ -172,4 +173,25 @@ void App::RenderImguiWindow()
 
 	//Update the current active test based of combo from imgui
 	_activeTest = static_cast<App::TestTypes>(_imguiActiveTest);
+}
+
+void App::ClearExistingResults()
+{
+	switch (_activeTest)
+	{
+		case App::TestTypes::NO_SYSTEMS:
+			_noSysTest->ClearResults();
+			break;
+		case App::TestTypes::ALL_SYSTEMS:
+			_allSysTest->ClearResults();
+			break;
+		case App::TestTypes::JUST_JOB:
+			_justJobTest->ClearResults();
+			break;
+		case App::TestTypes::JUST_MEMORY:
+			_justMemoryTest->ClearResults();
+			break;
+		default:
+			break;
+	}
 }

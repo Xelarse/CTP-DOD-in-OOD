@@ -18,6 +18,7 @@ public:
 
 	void AddTimeToQueue(long long duration);
 	void RenderImguiWindow();
+	void ClearResults();
 
 protected:
 	void ShieldAdjustment(float* shieldVal);

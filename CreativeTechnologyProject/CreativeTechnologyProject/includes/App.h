@@ -23,6 +23,7 @@ private:
 private:
 
 	void RenderImguiWindow();
+	void ClearExistingResults();
 
 	enum class TestTypes
 	{
