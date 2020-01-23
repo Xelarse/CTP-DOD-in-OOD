@@ -31,24 +31,30 @@
     <Filter Include="Source Files\Tests">
       <UniqueIdentifier>{3ca79b9a-8dd4-4660-ade8-d6e922dc8a85}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Job System">
+      <UniqueIdentifier>{999da293-cc31-4cc9-b223-4013b547f90f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Job System">
+      <UniqueIdentifier>{b427fb84-1689-4e24-a528-1ecc10f5c41b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Memory System">
+      <UniqueIdentifier>{76e27887-95a6-4b16-a4d4-f41657230161}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Memory System">
+      <UniqueIdentifier>{a1636428-073c-41a8-ab02-8af1ad89e179}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Utilities">
+      <UniqueIdentifier>{2e93fb53-8601-4c67-96aa-6782b0536c45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Utilities">
+      <UniqueIdentifier>{c402a2df-dc74-4d5f-9b9f-77024145d808}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\JobManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\MemoryManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\MemoryAllocator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="source\Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Npc.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Timer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\NpcManager.cpp">
@@ -115,26 +121,29 @@
       <Filter>Source Files\Tests</Filter>
     </ClCompile>
     <ClCompile Include="source\JustMemoryTest.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="source\JobManager.cpp">
+      <Filter>Source Files\Job System</Filter>
+    </ClCompile>
+    <ClCompile Include="source\MemoryAllocator.cpp">
+      <Filter>Source Files\Memory System</Filter>
+    </ClCompile>
+    <ClCompile Include="source\MemoryManager.cpp">
+      <Filter>Source Files\Memory System</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Timer.cpp">
+      <Filter>Source Files\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="source\PoolableThread.cpp">
+      <Filter>Source Files\Job System</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="includes\JobManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\MemoryAllocator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\MemoryManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="includes\Npc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="includes\NpcManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\Timer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="includes\App.h">
@@ -204,7 +213,22 @@
       <Filter>Header Files\Tests</Filter>
     </ClInclude>
     <ClInclude Include="includes\JustMemoryTest.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\JobManager.h">
+      <Filter>Header Files\Job System</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\MemoryAllocator.h">
+      <Filter>Header Files\Memory System</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\MemoryManager.h">
+      <Filter>Header Files\Memory System</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\Timer.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\PoolableThread.h">
+      <Filter>Header Files\Job System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -51,15 +51,3 @@ void TimerPrintTest(long long duration)
 {
 	std::cout << "Duration it took for Job Manager to do its test: " << duration << std::endl;
 }
-
-void JobManagerTest()
-{
-	Timer jobTestTimer = Timer(TimerPrintTest);
-	std::unique_ptr<JobManager> jobManager = std::make_unique<JobManager>(10);
-	jobManager->TestJobManager();
-}
-
-//int main()
-//{
-//	JobManagerTest();
-//}

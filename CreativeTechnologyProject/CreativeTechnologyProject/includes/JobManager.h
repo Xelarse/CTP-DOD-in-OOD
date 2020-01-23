@@ -28,13 +28,6 @@ public:
 	void AddJobToQueue(Job job);
 	void ProcessJobs();
 
-	void TestJobManager();
-
-
-	static void threadTestFunc();
-
-	static void threadTest10Secs();
-
 private:
 	std::mutex _jobQueueMutex;
 

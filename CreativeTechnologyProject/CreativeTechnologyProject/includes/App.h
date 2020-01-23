@@ -7,6 +7,7 @@
 #include "NoSystemsTest.h"
 #include "JustJobTest.h"
 #include "JustMemoryTest.h"
+#include "PoolableThread.h"
 
 class App
 {
@@ -41,7 +42,6 @@ private:
 	std::unique_ptr<NoSystemsTest> _noSysTest = nullptr;
 	std::unique_ptr<JustJobTest> _justJobTest = nullptr;
 	std::unique_ptr<JustMemoryTest> _justMemoryTest = nullptr;
-
 
 	//ImGui related stuff
 	bool _testActive = true;
