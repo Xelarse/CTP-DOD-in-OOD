@@ -27,6 +27,7 @@ bool PoolableThread::IsThreadIdle()
 void PoolableThread::RunTaskOnThread(std::function<void()> task)
 {
 	_task = task;
+	_threadIdle = false;
 }
 
 void PoolableThread::KillThread()
@@ -41,7 +42,6 @@ void PoolableThread::ThreadLoop()
 		
 		if (_task != nullptr)
 		{
-			_threadIdle = false;
 			_task();
 			_testCounter = 0;
 			_task = nullptr;
@@ -49,9 +49,8 @@ void PoolableThread::ThreadLoop()
 		}
 		else
 		{
-			//TODO see whats the sweetspot for sleeping a thread
 			_testCounter++;
-			std::this_thread::sleep_for(std::chrono::milliseconds(200));
+			std::this_thread::sleep_for(std::chrono::milliseconds(1));
 		}
 	}
 }

@@ -44,8 +44,8 @@ private:
 	std::unique_ptr<JustMemoryTest> _justMemoryTest = nullptr;
 
 	//TODO PoolableThread test stuff, delete later
-	std::unique_ptr<PoolableThread> _testThread = nullptr;
-	void RenderThreadTestGui();
+	//std::unique_ptr<PoolableThread> _testThread = nullptr;
+	//void RenderThreadTestGui();
 
 	//ImGui related stuff
 	bool _testActive = true;

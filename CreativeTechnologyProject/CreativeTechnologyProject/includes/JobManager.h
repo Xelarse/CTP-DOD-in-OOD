@@ -2,7 +2,7 @@
 #include <functional>
 #include <list>
 #include <mutex>
-#include <thread>
+#include "PoolableThread.h"
 
 //When switching jobs to a pool of threads look at this https://www.bfilipek.com/2019/12/threading-loopers-cpp17.html
 //For now this will help https://thispointer.com/c11-multithreading-part-2-joining-and-detaching-threads/
@@ -31,9 +31,9 @@ public:
 private:
 	std::mutex _jobQueueMutex;
 
-	//List for ease right now, might switch to queue later and handle deleting allocations in the middle of it with something fancy
+	//TODO List for ease right now, might switch to queue later and handle deleting allocations in the middle of it with something fancy
 	std::list<Job> _jobQueue;
 
-	//thread pool here Will be implemented after the base implementation is in place
+	std::vector<std::unique_ptr<PoolableThread>> _threads;
 };
 

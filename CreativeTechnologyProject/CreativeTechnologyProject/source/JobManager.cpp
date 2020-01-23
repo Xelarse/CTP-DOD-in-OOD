@@ -6,7 +6,13 @@
 
 JobManager::JobManager(int jobQueueSize)
 {
-	//TODO use the size if we switch to a contiguious container later for better performance
+	//TODO temp override for testing, will probably do a benchmark here later to determine optimal thread count
+	_threads.reserve(jobQueueSize);
+
+	for (size_t i = 0; i < jobQueueSize; i++)
+	{
+		_threads.emplace_back(std::make_unique<PoolableThread>());
+	}
 }
 
 JobManager::~JobManager()
@@ -22,23 +28,35 @@ void JobManager::AddJobToQueue(Job job)
 
 void JobManager::ProcessJobs()
 {
-	//TODO make this more efficient by using a thread pool instead of creating threads each and every update
-
-	std::vector<std::thread> threads;
-	threads.reserve(_jobQueue.size());
-
+	//First we send jobs onto the pooled threads by checking if the thread is idle and if so giving it the job
 	std::list<Job>::iterator jobIter = _jobQueue.begin();
 
-	//Iterate through all the jobs in the queue and add their functions to a thread and remove them from the queue
 	while (jobIter != _jobQueue.end())
 	{
-		threads.emplace_back(std::thread(jobIter->dataProcessingFunction));
-		jobIter = _jobQueue.erase(jobIter);
+		for (auto& thread : _threads)
+		{
+			if (thread->IsThreadIdle())
+			{
+				thread->RunTaskOnThread(jobIter->dataProcessingFunction);
+				jobIter = _jobQueue.erase(jobIter);
+				break;
+			}
+		}
 	}
 
-	//Wait for all the threads to join before continued execution
-	std::cout << "Waiting for all workers to finish" << std::endl;
-	std::for_each(threads.begin(), threads.end(), std::mem_fn(&std::thread::join));
-	std::cout << "All workers finished and joined" << std::endl;
-	std::cout << "Job queue size after processing threads = " << _jobQueue.size() << std::endl;
+	//When all threads return to idle then continue processing
+	bool doneProcessing = false;
+	while (!doneProcessing)
+	{
+		doneProcessing = true;
+
+		for (auto& thread : _threads)
+		{
+			if (!thread->IsThreadIdle())
+			{
+				doneProcessing = false;
+				break;
+			}
+		}
+	}
 }
