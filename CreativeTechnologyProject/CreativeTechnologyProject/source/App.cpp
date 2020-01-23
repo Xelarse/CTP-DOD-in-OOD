@@ -13,6 +13,8 @@ App::App() : _wnd(800, 600, "Creative Tech: DoD in OOP")
 	_noSysTest = std::make_unique<NoSystemsTest>(_maxNpcInstances);
 	_justJobTest = std::make_unique<JustJobTest>(_maxNpcInstances);
 	_justMemoryTest = std::make_unique<JustMemoryTest>(_maxNpcInstances);
+
+	_testThread = std::make_unique<PoolableThread>();
 }
 
 int App::Go()
@@ -146,6 +148,7 @@ void App::RenderImguiWindow()
 
 	if (ImGui::Begin("CTP DOD in OOP", NULL, _guiFlags))
 	{
+		RenderThreadTestGui();
 		ImGui::Checkbox("Test Active", &_testActive);
 		if(ImGui::Button("Clear Graph")) { ClearExistingResults(); }
 		ImGui::Combo("Current Test", &_imguiActiveTest, "NO_SYSTEMS\0ALL_SYSTEMS\0JUST_JOB\0JUST_MEMORY");
@@ -193,5 +196,25 @@ void App::ClearExistingResults()
 			break;
 		default:
 			break;
+	}
+}
+
+void App::RenderThreadTestGui()
+{
+	std::string currentAmount = "Current thread count: " + std::to_string(_testThread->_testCounter);
+	ImGui::Text(currentAmount.c_str());
+	if (ImGui::Button("Pause Test thread and reset count"))
+	{
+		if (_testThread->IsThreadIdle())
+		{
+			_testThread->RunTaskOnThread([]()
+				{
+					std::this_thread::sleep_for(std::chrono::seconds(2));
+				});
+		}
+	}
+	if (ImGui::Button("Kill Thread"))
+	{
+		_testThread->KillThread();
 	}
 }

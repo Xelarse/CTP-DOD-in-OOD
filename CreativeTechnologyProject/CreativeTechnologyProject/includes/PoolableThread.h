@@ -16,6 +16,7 @@ public:
 
 	bool IsThreadIdle();
 	void RunTaskOnThread(std::function<void()> task);
+	void KillThread();
 
 	std::atomic<int> _testCounter = 0;
 

@@ -4,16 +4,19 @@
 PoolableThread::PoolableThread()
 {
 	//TODO theres gotta be a cleaner way of doing this.
+	//TODO not sure if the detach is needed here?
 	_thread = std::thread([&]()
 		{
 			ThreadLoop();
 		});
+
+	_thread.detach();
 }
 
 PoolableThread::~PoolableThread()
 {
 	//TODO need to confirm if the thread will still pick this up or if the detached thread gets left hanging
-	_threadAlive = false;
+	KillThread();
 }
 
 bool PoolableThread::IsThreadIdle()
@@ -26,10 +29,16 @@ void PoolableThread::RunTaskOnThread(std::function<void()> task)
 	_task = task;
 }
 
+void PoolableThread::KillThread()
+{
+	_threadAlive = false;
+}
+
 void PoolableThread::ThreadLoop()
 {
 	while (_threadAlive)
 	{
+		
 		if (_task != nullptr)
 		{
 			_threadIdle = false;
