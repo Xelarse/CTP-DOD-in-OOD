@@ -3,20 +3,16 @@
 
 PoolableThread::PoolableThread()
 {
-	//TODO theres gotta be a cleaner way of doing this.
-	//TODO not sure if the detach is needed here?
-	_thread = std::thread([&]()
-		{
-			ThreadLoop();
-		});
+	std::promise<void> exitPromise;
+	_exitFuture = exitPromise.get_future();
 
+	_thread = std::thread(&PoolableThread::ThreadLoop, this, std::move(exitPromise));
 	_thread.detach();
 }
 
 PoolableThread::~PoolableThread()
 {
-	//TODO need to confirm if the thread will still pick this up or if the detached thread gets left hanging
-	KillThread();
+	WaitForThreadToExit();
 }
 
 bool PoolableThread::IsThreadIdle()
@@ -30,12 +26,13 @@ void PoolableThread::RunTaskOnThread(std::function<void()> task)
 	_threadIdle = false;
 }
 
-void PoolableThread::KillThread()
+void PoolableThread::WaitForThreadToExit()
 {
 	_threadAlive = false;
+	_exitFuture.wait();
 }
 
-void PoolableThread::ThreadLoop()
+void PoolableThread::ThreadLoop(std::promise<void> exitPromise)
 {
 	while (_threadAlive)
 	{
@@ -53,4 +50,5 @@ void PoolableThread::ThreadLoop()
 			std::this_thread::sleep_for(std::chrono::milliseconds(1));
 		}
 	}
+	exitPromise.set_value();
 }

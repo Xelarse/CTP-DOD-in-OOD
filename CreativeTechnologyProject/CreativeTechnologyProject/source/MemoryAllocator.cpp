@@ -12,7 +12,7 @@ MemoryAllocator::~MemoryAllocator()
 {
 	if (_memStart != nullptr)
 	{
-		Free(_memStart);
+		free(_memStart);
 	}
 }
 
