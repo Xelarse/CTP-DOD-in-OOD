@@ -19,20 +19,32 @@ public:
 	class Job
 	{
 	public:
-		Job() = delete;
-		Job(std::function<void()> func) : dataProcessingFunction(func) {};
+		enum class JobPriority
+		{
+			UNORDERED,
+			ORDERED
+		};
 
-		std::function<void()> dataProcessingFunction;
+		Job() = delete;
+		Job(std::function<void()> func, JobPriority priority = JobPriority::UNORDERED, int priorityOrder = -1) : _dataProcessingFunction(func),  _priority(priority), _prioritryOrder(priorityOrder){};
+
+		const std::function<void()> _dataProcessingFunction;
+		const JobPriority _priority;
+		const int _prioritryOrder;
 	};
 
 	void AddJobToQueue(Job job);
 	void ProcessJobs();
 
 private:
-	std::mutex _jobQueueMutex;
+	void OrderedJobComplete();
+	void ProgressBatch();
 
-	//TODO List for ease right now, might switch to queue later and handle deleting allocations in the middle of it with something fancy
+	std::mutex _jobQueueMutex;
 	std::list<Job> _jobQueue;
+
+	std::atomic<int> _currentBatch = 0;
+	std::atomic<int> _currentBatchProgress = 0;
 
 	std::vector<std::unique_ptr<PoolableThread>> _threads;
 };

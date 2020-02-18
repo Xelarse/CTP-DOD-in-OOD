@@ -1,7 +1,7 @@
 #include "..\includes\PoolableThread.h"
 #include <chrono>
 
-PoolableThread::PoolableThread()
+PoolableThread::PoolableThread(std::function<void()> orderedJobCallback) : _orderedJobComplete(orderedJobCallback)
 {
 	std::promise<void> exitPromise;
 	_exitFuture = exitPromise.get_future();
@@ -20,10 +20,11 @@ bool PoolableThread::IsThreadIdle()
 	return _threadIdle;
 }
 
-void PoolableThread::RunTaskOnThread(std::function<void()> task)
+void PoolableThread::RunTaskOnThread(std::function<void()> task, bool orderedTask)
 {
-	_task = task;
 	_threadIdle = false;
+	_processingOrderedJob = orderedTask;
+	_task = task;
 }
 
 void PoolableThread::WaitForThreadToExit()
@@ -43,6 +44,7 @@ void PoolableThread::ThreadLoop(std::promise<void> exitPromise)
 			_testCounter = 0;
 			_task = nullptr;
 			_threadIdle = true;
+			if(_processingOrderedJob) { _orderedJobComplete(); }
 		}
 		else
 		{
