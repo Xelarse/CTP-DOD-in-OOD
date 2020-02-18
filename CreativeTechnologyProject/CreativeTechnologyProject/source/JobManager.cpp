@@ -14,6 +14,14 @@ JobManager::JobManager(int jobQueueSize)
 	{
 		_threads.emplace_back(std::make_unique<PoolableThread>([&](){OrderedJobComplete();}));
 	}
+
+	//TODO REMOVE - Temp thing to test sort
+	//AddJobToQueue(Job([](){OutputDebugString("\nJob 2\n"); return;}, Job::JobPriority::ORDERED, 2));
+	//AddJobToQueue(Job([](){OutputDebugString("\nJob 1\n"); return;}, Job::JobPriority::ORDERED, 1));
+	//AddJobToQueue(Job([](){OutputDebugString("\nUNORDERED\n"); return;}, Job::JobPriority::UNORDERED));
+	//AddJobToQueue(Job([](){OutputDebugString("\nJob 2\n"); return;}, Job::JobPriority::ORDERED, 2));
+	//AddJobToQueue(Job([](){OutputDebugString("\nJob 3\n"); return;}, Job::JobPriority::ORDERED, 3));
+	//ProcessJobs();
 }
 
 JobManager::~JobManager()
