@@ -10,11 +10,17 @@
 class JobManager
 {
 public:
+	//Used to configure a percentage of the max usable threads before the computer starts locking up
+	enum class JobCpuIntensity
+	{
+		LOW,
+		MEDIUM,
+		HIGH
+	};
 
 	JobManager() = delete;
-	JobManager(int jobQueueSize);
+	JobManager(JobCpuIntensity intensity);
 	~JobManager();
-
 
 	class Job
 	{
@@ -36,9 +42,13 @@ public:
 	void AddJobToQueue(Job job);
 	void ProcessJobs();
 
+ 	inline const int GetTotalThreads() { return _threads.size(); }
+
 private:
 	void OrderedJobComplete();
 	void ProgressBatch();
+
+	int CalculateThreadCount(JobCpuIntensity intensity);
 
 	std::mutex _jobQueueMutex;
 	std::list<Job> _jobQueue;
@@ -47,5 +57,9 @@ private:
 	std::atomic<int> _currentBatchProgress = 0;
 
 	std::vector<std::unique_ptr<PoolableThread>> _threads;
+
+	//Once the time taken to create the threads gets worse than this it treats the previous value as threadMax
+	const float _performanceThreshold = 1.5f;
+
 };
 

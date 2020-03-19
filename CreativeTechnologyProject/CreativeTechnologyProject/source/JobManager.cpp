@@ -5,12 +5,14 @@
 #include <random>
 #include <Window.h>
 
-JobManager::JobManager(int jobQueueSize)
+JobManager::JobManager(JobCpuIntensity intensity)
 {
-	//TODO temp override for testing, will probably do a benchmark here later to determine optimal thread count
-	_threads.reserve(jobQueueSize);
+	
+	const int poolSize = CalculateThreadCount(intensity);
 
-	for (size_t i = 0; i < jobQueueSize; ++i)
+	_threads.reserve(poolSize);
+
+	for (size_t i = 0; i < poolSize; ++i)
 	{
 		_threads.emplace_back(std::make_unique<PoolableThread>([&](){OrderedJobComplete();}));
 	}
@@ -122,5 +124,77 @@ void JobManager::ProgressBatch()
 	{
 		_currentBatch = _jobQueue.front()._prioritryOrder;
 		_currentBatchProgress = std::count_if(_jobQueue.begin(), _jobQueue.end(), [&](const Job& lhs){ return lhs._prioritryOrder == _currentBatch;});
+	}
+}
+
+int JobManager::CalculateThreadCount(JobCpuIntensity intensity)
+{
+	int currentTotal = 1;
+	double currentTimeTaken = INFINITY;	//First step will evaluate lower than this so 1 thread is always at least the minimum
+
+	//Define the test function to be used on the threads
+	std::function<void()> testFunc = []()
+	{
+		const int vectorSize = 500000;
+
+		std::random_device gen;
+		std::mt19937 seed(gen());
+		std::uniform_int_distribution<std::mt19937::result_type> dist(1, 10000);
+
+		//make a vector and allot the space for many numbers
+		std::vector<int> randomNumbers;
+		randomNumbers.reserve(vectorSize);
+
+		//Fill the vector with random numbers
+		for (size_t i = 0; i < vectorSize; ++i)
+		{
+			randomNumbers.push_back(dist(seed));
+		}
+
+		//Sort the vector
+		std::sort(randomNumbers.begin(), randomNumbers.end());
+	};
+
+	while (true)
+	{
+		double testTime = 0;
+
+		//Create a vector of threads
+		std::vector<std::thread> threads;
+		threads.reserve(currentTotal);
+
+		for (size_t i = 0; i < currentTotal; ++i)
+		{
+			threads.emplace_back(std::thread(testFunc));
+		}
+
+		//Run a job on the threads and benchmark the time taken for the threads to join
+		std::chrono::time_point<std::chrono::high_resolution_clock> timeStamp;
+		std::for_each(threads.begin(), threads.end(), std::mem_fn(&std::thread::join));
+		testTime = std::chrono::duration_cast<std::chrono::duration<double, std::ratio<1>>>(std::chrono::high_resolution_clock::now() - timeStamp).count();
+
+		//Compare the time with the last current taken
+		//If the time was worse than the last time taken multiplied by the threshold we found the max
+		if (testTime > currentTimeTaken * _performanceThreshold)
+		{
+			switch (intensity)
+			{
+				case JobManager::JobCpuIntensity::LOW:
+					return floor(currentTotal * 0.25f);
+					break;
+				case JobManager::JobCpuIntensity::MEDIUM:
+					return floor(currentTotal * 0.5f);
+					break;
+				case JobManager::JobCpuIntensity::HIGH:
+					return floor(currentTotal * 0.75f);
+					break;
+			}
+		}
+		//Otherwise iterate again increasing the current total and caching the time taken
+		else
+		{
+			++currentTotal;
+			currentTimeTaken = testTime;
+		}
 	}
 }
