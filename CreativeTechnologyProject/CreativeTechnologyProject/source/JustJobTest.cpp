@@ -4,7 +4,7 @@
 
 JustJobTest::JustJobTest(int npcMax)
 {
-	_jobManager = new JobManager(10);
+	_jobManager = new JobManager(JobManager::JobCpuIntensity::HIGH);
 	_npcVec.reserve(npcMax);
 	std::random_device rd;
 	std::mt19937 generator(rd());

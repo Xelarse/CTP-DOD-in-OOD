@@ -129,26 +129,42 @@ void JobManager::ProgressBatch()
 
 int JobManager::CalculateThreadCount(JobCpuIntensity intensity)
 {
-	int currentTotal = 1;
-	double currentTimeTaken = INFINITY;	//First step will evaluate lower than this so 1 thread is always at least the minimum
+	//const int totalConcurrentThreads = std::thread::hardware_concurrency();
 
-	//Define the test function to be used on the threads
+	//switch (intensity)
+	//{
+	//	case JobManager::JobCpuIntensity::LOW:
+	//		return floor(totalConcurrentThreads * 0.4f);
+	//		break;
+	//	case JobManager::JobCpuIntensity::MEDIUM:
+	//		return floor(totalConcurrentThreads * 0.6f);
+	//		break;
+	//	case JobManager::JobCpuIntensity::HIGH:
+	//		return floor(totalConcurrentThreads * 0.9f);
+	//		break;
+	//}
+
+	//Tried this but never seems to give an actual result
+	int currentTotal = 2;	//start with 2 as computers these days have at least 1 core 2 threads
+	float currentTimeTaken = INFINITY;
+
+		//Define the test function to be used on the threads
 	std::function<void()> testFunc = []()
 	{
-		const int vectorSize = 500000;
+		const int vectorSize = 1000000;
 
 		std::random_device gen;
 		std::mt19937 seed(gen());
 		std::uniform_int_distribution<std::mt19937::result_type> dist(1, 10000);
 
 		//make a vector and allot the space for many numbers
-		std::vector<int> randomNumbers;
+		std::vector<std::unique_ptr<int>> randomNumbers;
 		randomNumbers.reserve(vectorSize);
 
 		//Fill the vector with random numbers
 		for (size_t i = 0; i < vectorSize; ++i)
 		{
-			randomNumbers.push_back(dist(seed));
+			randomNumbers.push_back(std::make_unique<int>(dist(seed)));
 		}
 
 		//Sort the vector
@@ -193,7 +209,7 @@ int JobManager::CalculateThreadCount(JobCpuIntensity intensity)
 		//Otherwise iterate again increasing the current total and caching the time taken
 		else
 		{
-			++currentTotal;
+			currentTotal += 2;
 			currentTimeTaken = testTime;
 		}
 	}

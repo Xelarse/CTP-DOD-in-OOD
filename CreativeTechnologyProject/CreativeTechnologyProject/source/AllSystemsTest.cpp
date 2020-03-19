@@ -7,7 +7,7 @@ AllSystemsTest::AllSystemsTest(int npcMax)
 	//Init the managers for the test
 	_memManager = new MemoryManager(sizeof(Npc), npcMax);
 	_npcManager = new NpcManager(npcMax, _memManager);
-	_jobManager = new JobManager(10);
+	_jobManager = new JobManager(JobManager::JobCpuIntensity::HIGH);
 
 	SanityCheckRunCount();
 }
