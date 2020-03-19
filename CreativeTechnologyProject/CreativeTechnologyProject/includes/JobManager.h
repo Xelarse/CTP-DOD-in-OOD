@@ -59,7 +59,8 @@ private:
 	std::vector<std::unique_ptr<PoolableThread>> _threads;
 
 	//Once the time taken to create the threads gets worse than this it treats the previous value as threadMax
-	const float _performanceThreshold = 1.5f;
+	const float _performanceThreshold = 0.1f;
+	const int _threadsPerStep = 2;
 
 };
 

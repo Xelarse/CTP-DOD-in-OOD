@@ -129,29 +129,17 @@ void JobManager::ProgressBatch()
 
 int JobManager::CalculateThreadCount(JobCpuIntensity intensity)
 {
-	//const int totalConcurrentThreads = std::thread::hardware_concurrency();
-
-	//switch (intensity)
-	//{
-	//	case JobManager::JobCpuIntensity::LOW:
-	//		return floor(totalConcurrentThreads * 0.4f);
-	//		break;
-	//	case JobManager::JobCpuIntensity::MEDIUM:
-	//		return floor(totalConcurrentThreads * 0.6f);
-	//		break;
-	//	case JobManager::JobCpuIntensity::HIGH:
-	//		return floor(totalConcurrentThreads * 0.9f);
-	//		break;
-	//}
-
 	//Tried this but never seems to give an actual result
-	int currentTotal = 2;	//start with 2 as computers these days have at least 1 core 2 threads
-	float currentTimeTaken = INFINITY;
+	int currentTotal = std::thread::hardware_concurrency();	//Starts with the max concurrent threads of the CPU
+	double previousTimeTaken = 0;
+	double previousDiff = 0;
+	double currentTimeTaken = 0;
+	double currentDiff = 0;
 
 		//Define the test function to be used on the threads
 	std::function<void()> testFunc = []()
 	{
-		const int vectorSize = 1000000;
+		const int vectorSize = 500000;
 
 		std::random_device gen;
 		std::mt19937 seed(gen());
@@ -171,9 +159,13 @@ int JobManager::CalculateThreadCount(JobCpuIntensity intensity)
 		std::sort(randomNumbers.begin(), randomNumbers.end());
 	};
 
-	while (true)
+	std::vector<std::pair<int, double>> results;
+
+	do
 	{
-		double testTime = 0;
+		//Switch the vars
+		previousTimeTaken = currentTimeTaken;
+		previousDiff = currentDiff;
 
 		//Create a vector of threads
 		std::vector<std::thread> threads;
@@ -187,30 +179,25 @@ int JobManager::CalculateThreadCount(JobCpuIntensity intensity)
 		//Run a job on the threads and benchmark the time taken for the threads to join
 		std::chrono::time_point<std::chrono::high_resolution_clock> timeStamp;
 		std::for_each(threads.begin(), threads.end(), std::mem_fn(&std::thread::join));
-		testTime = std::chrono::duration_cast<std::chrono::duration<double, std::ratio<1>>>(std::chrono::high_resolution_clock::now() - timeStamp).count();
+		currentTimeTaken = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - timeStamp).count();
+		currentDiff = currentTimeTaken - previousTimeTaken;
+		previousDiff = previousDiff == 0 ? currentDiff : previousDiff;
 
-		//Compare the time with the last current taken
-		//If the time was worse than the last time taken multiplied by the threshold we found the max
-		if (testTime > currentTimeTaken * _performanceThreshold)
-		{
-			switch (intensity)
-			{
-				case JobManager::JobCpuIntensity::LOW:
-					return floor(currentTotal * 0.25f);
-					break;
-				case JobManager::JobCpuIntensity::MEDIUM:
-					return floor(currentTotal * 0.5f);
-					break;
-				case JobManager::JobCpuIntensity::HIGH:
-					return floor(currentTotal * 0.75f);
-					break;
-			}
-		}
-		//Otherwise iterate again increasing the current total and caching the time taken
-		else
-		{
-			currentTotal += 2;
-			currentTimeTaken = testTime;
-		}
+		results.push_back(std::pair<int, double>(currentTotal, previousTimeTaken));
+		currentTotal += _threadsPerStep;
+	} while (previousDiff / currentDiff > (1.0 - _performanceThreshold));
+
+
+	switch (intensity)
+	{
+		case JobManager::JobCpuIntensity::LOW:
+			return floor( (currentTotal - _threadsPerStep) * 0.4f);
+			break;
+		case JobManager::JobCpuIntensity::MEDIUM:
+			return floor( (currentTotal - _threadsPerStep) * 0.6f);
+			break;
+		case JobManager::JobCpuIntensity::HIGH:
+			return floor( (currentTotal - _threadsPerStep) * 0.9f);
+			break;
 	}
 }
