@@ -19,7 +19,7 @@ public:
 	};
 
 	JobManager() = delete;
-	JobManager(JobCpuIntensity intensity);
+	JobManager(JobCpuIntensity intensity, bool quickSetup = false);
 	~JobManager();
 
 	class Job
@@ -48,7 +48,8 @@ private:
 	void OrderedJobComplete();
 	void ProgressBatch();
 
-	int CalculateThreadCount(JobCpuIntensity intensity);
+	int CalculateThreadCountWithBenchmarking(JobCpuIntensity intensity);
+	int CalculateThreadCountWithoutBenchmarking(JobCpuIntensity intensity);
 
 	std::mutex _jobQueueMutex;
 	std::list<Job> _jobQueue;

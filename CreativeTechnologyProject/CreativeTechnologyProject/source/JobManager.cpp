@@ -5,10 +5,10 @@
 #include <random>
 #include <Window.h>
 
-JobManager::JobManager(JobCpuIntensity intensity)
+JobManager::JobManager(JobCpuIntensity intensity, bool quickSetup)
 {
 	
-	const int poolSize = CalculateThreadCount(intensity);
+	const int poolSize = !quickSetup ? CalculateThreadCountWithBenchmarking(intensity) : CalculateThreadCountWithoutBenchmarking(intensity);
 
 	_threads.reserve(poolSize);
 
@@ -127,7 +127,7 @@ void JobManager::ProgressBatch()
 	}
 }
 
-int JobManager::CalculateThreadCount(JobCpuIntensity intensity)
+int JobManager::CalculateThreadCountWithBenchmarking(JobCpuIntensity intensity)
 {
 	//Tried this but never seems to give an actual result
 	int currentTotal = std::thread::hardware_concurrency();	//Starts with the max concurrent threads of the CPU
@@ -139,7 +139,7 @@ int JobManager::CalculateThreadCount(JobCpuIntensity intensity)
 		//Define the test function to be used on the threads
 	std::function<void()> testFunc = []()
 	{
-		const int vectorSize = 500000;
+		const int vectorSize = 700000;
 
 		std::random_device gen;
 		std::mt19937 seed(gen());
@@ -198,6 +198,22 @@ int JobManager::CalculateThreadCount(JobCpuIntensity intensity)
 			break;
 		case JobManager::JobCpuIntensity::HIGH:
 			return floor( (currentTotal - _threadsPerStep) * 0.9f);
+			break;
+	}
+}
+
+int JobManager::CalculateThreadCountWithoutBenchmarking(JobCpuIntensity intensity)
+{
+	switch (intensity)
+	{
+		case JobManager::JobCpuIntensity::LOW:
+			return floor(std::thread::hardware_concurrency() * 0.4f);
+			break;
+		case JobManager::JobCpuIntensity::MEDIUM:
+			return floor(std::thread::hardware_concurrency() * 0.6f);
+			break;
+		case JobManager::JobCpuIntensity::HIGH:
+			return floor(std::thread::hardware_concurrency() * 0.9f);
 			break;
 	}
 }
