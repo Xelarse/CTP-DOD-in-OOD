@@ -1,26 +1,27 @@
 #pragma once
 #include <random>
+#include "AAVariable.h"
 
 class Npc
 {
 public:
-	Npc(float* healthPtr, int* armourPtr, float* shieldPtr);
+	Npc(float health, int armour, float shield);
 	Npc() = delete;
-	Npc(std::mt19937 ranGen);
-	~Npc();
+	~Npc() = default;
 
 	void PrintHPandArmour();
 	static void SizeOfNpcPrint();
 
-	float* GetShield() { return _shield; }
-	float* GetHealth() { return _health; }
-	int* GetArmour() { return _armour; }
-
 private:
-	float* _shield;
-	float* _health;
-	int* _armour;
+	static std::string _healthTag;
+	static std::string _shieldTag;
+	static std::string _armourTag;
 
-	bool _selfCleanup;
+	AA::Variable<float, _healthTag> _health;
+	AA::Variable<float, _shieldTag> _shield;
+	AA::Variable<int, _armourTag> _armour;
 };
 
+std::string Npc::_healthTag = "NPCHEALTH";
+std::string Npc::_shieldTag = "NPCSHIELD";
+std::string Npc::_armourTag = "NPCARMOUR";
