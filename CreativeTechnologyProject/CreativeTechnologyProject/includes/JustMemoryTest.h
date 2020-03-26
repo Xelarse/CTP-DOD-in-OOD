@@ -1,7 +1,7 @@
 #pragma once
 #include "BaseTest.h"
 #include "MemoryManager.h"
-#include "NpcManager.h"
+#include "Npc.h"
 
 class JustMemoryTest : public BaseTest
 {
@@ -22,7 +22,6 @@ private:
 	void NpcHealthTest();
 	void NpcArmourTest();
 
-	MemoryManager* _memManager = nullptr;
-	NpcManager* _npcManager = nullptr;
+	std::vector<Npc> _npcs;
 };
 

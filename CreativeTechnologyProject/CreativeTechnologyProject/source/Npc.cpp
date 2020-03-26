@@ -18,15 +18,3 @@ Npc::Npc(std::mt19937 ranGen)
 	_shield = AA::Variable<float, _shieldTag>(shieldGen(ranGen));
 	_armour = AA::Variable<int, _armourTag>(armourGen(ranGen));
 }
-
-
-void Npc::PrintHPandArmour()
-{
-	std::cout << "Health: " << _health.Get() << " --- Armour: " << _armour.Get() << std::endl;
-}
-
-void Npc::SizeOfNpcPrint()
-{
-	std::cout << "Size of NPC: " << sizeof(Npc) << std::endl;
-	std::cout << "Size of float*: " << sizeof(float*) << " Size of int*: " << sizeof(int*) << std::endl;
-}

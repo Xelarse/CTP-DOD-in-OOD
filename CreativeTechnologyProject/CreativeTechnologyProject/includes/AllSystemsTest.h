@@ -23,7 +23,6 @@ private:
 
 	void SanityCheckRunCount() override;
 
-	MemoryManager* _memManager = nullptr;
 	JobManager* _jobManager = nullptr;
 	std::vector<Npc> _npcs;
 };
