@@ -5,52 +5,107 @@
 class MemoryManager
 {
 public:
-	MemoryManager() = delete;
-	MemoryManager(const size_t elementSize, const size_t elementCount);
-	~MemoryManager();
+	//This allows the variable to access the existing data struct for referencing data blocks
+	friend class AAVariable;
 
-	//If there is data thats already stored using the dataId then return the current offset for that data
-	template<typename T>
-	T* InitliaseVariable(const char* id, T data)
+	inline static void InitialiseManager(const size_t elementSize, const size_t elementCount)
 	{
-		//Check if theres already an existing block and if there is store it using that blocks paramters
-		for (int i = 0; i < _existingAllocations.size(); i++)
+		if (MemoryManager::_pInstance != nullptr)
 		{
-			auto& existingAlloc = _existingAllocations[i];
+			return;
+		}
+		_pInstance = new MemoryManager();
+		_pInstance->_totalObjectCount = elementCount;
+		_pInstance->InitialiseAllocator(elementSize, elementCount);
+	}
 
-			if (id == existingAlloc.dataId)
-			{
-				//Check if the allocation can actually fit and if it cant return null pointer
-				if (existingAlloc.currentCount + 1 > existingAlloc.maxCount)
-				{
-					//TODO Add something here to enlargen the current block or make another block and join them
-					return nullptr;
-				}
-				else
-				{
-					//Figure out how far to stride along from the base pointer, store T into it and return the pointer to it
-					char* baseBlockPointer = reinterpret_cast<char*>(existingAlloc.dataPointer);
-					char* newDataPointer = baseBlockPointer + existingAlloc.stride * (existingAlloc.currentCount);
+	inline static void ReleaseManager()
+	{
+		if (_pInstance != nullptr)
+		{
+			delete _pInstance;
+			_pInstance = nullptr;
+		}
+	}
 
-					//Cast the newDataPointer to the desired variable, store the variable in it through dereferencing then finally return the casted ptr
-					T* castedDataPointer = reinterpret_cast<T*>(newDataPointer);
-					*castedDataPointer = data;
-					existingAlloc.currentCount++;
-					return castedDataPointer;
-				}
-			}
+private:
+	struct ExistingBlocks
+	{
+		ExistingBlocks(const char* _id, void* _ptr, size_t _stride, unsigned int _capacity)
+		{
+			dataId = _id;
+			currentCount = 0;
+			maxCount = _capacity;
+			stride = _stride;
+			dataPointer = _ptr;
 		}
 
-		//If there wasn't an existing block found return nullptr
-		return nullptr;
+		const char* dataId;
+		unsigned int currentCount;
+		unsigned int maxCount;
+		size_t stride;
+		void* dataPointer;
+	};
+
+	MemoryManager() = default;
+	~MemoryManager()
+	{
+		FreeAllExistingBlocks();
+	}
+
+	template <typename T>
+	T* InitialiseVariable(const char* id)
+	{
+		//First check if an id exists, if it doesnt, create it
+		if (!CheckIfIdExists(id))
+		{
+			InitialiseNewMemoryBlock(id, _totalObjectCount);
+		}
+
+		auto& existingBlock = _existingAllocations[GetIndexOfId(id)];
+
+		//Check if the block has space for another allocation
+		if (existingBlock.currentCount + 1 > existingBlock.maxCount)
+		{
+			//TODO Add something here to make a new block of data and link them
+			return nullptr;
+		}
+		else
+		{
+			//Figure out how far to stride along from the base pointer, store T into it and return the pointer to it
+			char* baseBlockPointer = reinterpret_cast<char*>(existingBlock.dataPointer);
+			char* newDataPointer = baseBlockPointer + existingBlock.stride * (existingBlock.currentCount);
+
+			//Cast the newDataPointer to the desired variable and return the ptr after uping the count
+			T* castedDataPointer = reinterpret_cast<T*>(newDataPointer);
+			++existingBlock.currentCount;
+			return castedDataPointer;
+		}
 	}
 
 	template<typename T>
-	T* InitliaseNewMemoryBlock(const char* id, unsigned int maxCapacity)
+	T* InitialiseVariable(const char* id, T data)
+	{
+		T* outPtr = InitialiseVariable(id);
+		if (outPtr != nullptr)
+		{
+			*outPtr = data;
+		}
+		return outPtr;
+	}
+
+	//Initilises the memory block and returns the base ptr
+	template<typename T>
+	T* InitialiseNewMemoryBlock(const char* id, unsigned int maxCapacity)
 	{
 		void* dataPtr = _pAllocator->Allocate(sizeof(T) * maxCapacity);
 		_existingAllocations.push_back(ExistingBlocks(id, dataPtr, sizeof(T), maxCapacity));
 		return reinterpret_cast<T*>(dataPtr);
+	}
+
+	const ExistingBlocks& GetBlockInfo(const char* id)
+	{
+		return _existingAllocations[GetIndexOfId(id)];
 	}
 
 	bool CheckIfIdExists(const char* id)
@@ -112,25 +167,27 @@ public:
 		}
 	}
 
-private:
-	struct ExistingBlocks
+	void FreeAllExistingBlocks()
 	{
-		ExistingBlocks(const char* _id, void* _ptr, size_t _stride, unsigned int _capacity)
+		for (const auto& al : _existingAllocations)
 		{
-			dataId = _id;
-			currentCount = 0;
-			maxCount = _capacity;
-			stride = _stride;
-			dataPointer = _ptr;
+			_pAllocator->Free(al.dataPointer);
 		}
+		_existingAllocations.clear();
+	}
 
-		const char* dataId;
-		unsigned int currentCount;
-		unsigned int maxCount;
-		size_t stride;
-		void* dataPointer;
-	};
+	void InitialiseAllocator(const size_t elementSize, const size_t elementCount)
+	{
+		_pAllocator = std::make_unique<MemoryAllocator>(elementSize, elementCount);
+		_pAllocator->Init();
+	}
 
+	static MemoryManager* _pInstance;
 	std::unique_ptr<MemoryAllocator> _pAllocator;
 	std::vector<ExistingBlocks> _existingAllocations;
+
+	//Used in the addition of objects later on to know how much to allocate
+	size_t _totalObjectCount;
 };
+
+MemoryManager* MemoryManager::_pInstance = nullptr;

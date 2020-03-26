@@ -20,7 +20,7 @@ void MemoryAllocator::Init()
 {
 	if (_memStart != nullptr)
 	{
-		Free(_memStart);
+		free(_memStart);
 	}
 
 	_memStart = malloc(_totalSize);
