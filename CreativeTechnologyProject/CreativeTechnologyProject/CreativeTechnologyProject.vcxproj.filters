@@ -51,13 +51,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\Main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="source\Npc.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\NpcManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\App.cpp">
@@ -129,9 +123,6 @@
     <ClCompile Include="source\MemoryAllocator.cpp">
       <Filter>Source Files\Memory System</Filter>
     </ClCompile>
-    <ClCompile Include="source\MemoryManager.cpp">
-      <Filter>Source Files\Memory System</Filter>
-    </ClCompile>
     <ClCompile Include="source\Timer.cpp">
       <Filter>Source Files\Utilities</Filter>
     </ClCompile>
@@ -141,9 +132,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="includes\Npc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\NpcManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="includes\App.h">
@@ -229,6 +217,9 @@
     </ClInclude>
     <ClInclude Include="includes\PoolableThread.h">
       <Filter>Header Files\Job System</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\AAVariable.h">
+      <Filter>Header Files\Memory System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

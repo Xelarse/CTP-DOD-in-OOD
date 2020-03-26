@@ -43,7 +43,7 @@ namespace AA
 		}
 
 		//Returns the base ptr to the alloc'd block, use this along with get length to scrub through the data
-		inline static const T* GetBasePtr()
+		inline static T* GetBasePtr()
 		{
 			if (MemoryManager::_pInstance != nullptr)
 			{

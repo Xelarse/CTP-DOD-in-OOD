@@ -122,7 +122,7 @@ private:
 
 	int GetIndexOfId(const char* id)
 	{
-		for (size_t i = 0; i < _existingAllocations.size(); i++)
+		for (int i = 0; i < _existingAllocations.size(); i++)
 		{
 			if (_existingAllocations[i].dataId == id)
 			{
@@ -187,7 +187,7 @@ private:
 	std::vector<ExistingBlocks> _existingAllocations;
 
 	//Used in the addition of objects later on to know how much to allocate
-	size_t _totalObjectCount;
+	size_t _totalObjectCount = 0;
 };
 
 MemoryManager* MemoryManager::_pInstance = nullptr;

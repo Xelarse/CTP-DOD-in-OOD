@@ -1,8 +1,8 @@
 #pragma once
 #include "BaseTest.h"
 #include "JobManager.h"
-#include "NpcManager.h"
 #include "MemoryManager.h"
+#include "Npc.h"
 
 class AllSystemsTest : public BaseTest
 {
@@ -25,6 +25,6 @@ private:
 
 	MemoryManager* _memManager = nullptr;
 	JobManager* _jobManager = nullptr;
-	NpcManager* _npcManager = nullptr;
+	std::vector<Npc> _npcs;
 };
 

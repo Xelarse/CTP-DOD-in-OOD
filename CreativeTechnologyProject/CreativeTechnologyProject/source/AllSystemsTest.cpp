@@ -1,13 +1,21 @@
 #include "..\includes\AllSystemsTest.h"
 #include "imgui/imgui.h"
 #include <string>
+#include <random>
 
 AllSystemsTest::AllSystemsTest(int npcMax)
 {
 	//Init the managers for the test
-	_memManager = new MemoryManager(sizeof(Npc), npcMax);
-	_npcManager = new NpcManager(npcMax, _memManager);
+	MemoryManager::InitialiseManager(sizeof(Npc), npcMax);
 	_jobManager = new JobManager(JobManager::JobCpuIntensity::HIGH);
+
+	std::random_device r;
+	std::mt19937 gen(r());
+
+	for (size_t i = 0; i < npcMax; ++i)
+	{
+		_npcs.push_back(Npc(gen));
+	}
 
 	SanityCheckRunCount();
 }
@@ -15,8 +23,7 @@ AllSystemsTest::AllSystemsTest(int npcMax)
 AllSystemsTest::~AllSystemsTest()
 {
 	delete _jobManager;
-	delete _npcManager;
-	delete _memManager;
+	MemoryManager::ReleaseManager();
 }
 
 void AllSystemsTest::PreUpdate(float dt)
@@ -39,36 +46,36 @@ void AllSystemsTest::PostUpdate(float dt)
 
 void AllSystemsTest::NpcShieldTest()
 {
-	for (size_t i = 0; i < _runCount; i++)
+	using NpcShield = AA::Variable<float, Npc::_shieldTag>;
+	for (float* i = NpcShield::GetBasePtr(); i < NpcShield::GetBasePtr() + NpcShield::GetLength(); ++i)
 	{
-		float* npcShield = _npcManager->_npcShieldBase + i;
-		ShieldAdjustment(npcShield);
+		ShieldAdjustment(i);
 	}
 }
 
 void AllSystemsTest::NpcHealthTest()
 {
-	for (size_t i = 0; i < _runCount; i++)
+	using NpcHealth = AA::Variable<float, Npc::_healthTag>;
+	for (float* i = NpcHealth::GetBasePtr(); i < NpcHealth::GetBasePtr() + NpcHealth::GetLength(); ++i)
 	{
-		float* npcHealth = _npcManager->_npcHealthBase + i;
-		HealthAdjustment(npcHealth);
+		HealthAdjustment(i);
 	}
 }
 
 void AllSystemsTest::NpcArmourTest()
 {
-	for (size_t i = 0; i < _runCount; i++)
+	using NpcArmour = AA::Variable<int, Npc::_armourTag>;
+	for (int* i = NpcArmour::GetBasePtr(); i < NpcArmour::GetBasePtr() + NpcArmour::GetLength(); ++i)
 	{
-		int* npcArmour = _npcManager->_npcArmourBase + i;
-		ArmourAdjustment(npcArmour);
+		ArmourAdjustment(i);
 	}
 }
 
 void AllSystemsTest::SanityCheckRunCount()
 {
-	if (_runCount > _npcManager->GetNpcCount())
+	if (_runCount > _npcs.size())
 	{
-		_runCount = _npcManager->GetNpcCount();
+		_runCount = _npcs.size();
 	}
 
 	if (_runCount < 0)
