@@ -53,27 +53,30 @@ void JustMemoryTest::SanityCheckRunCount()
 
 void JustMemoryTest::NpcShieldTest()
 {
-	auto& frontNpcShield = _npcs.front()._shield;
-	for (float* i = frontNpcShield.GetBasePtr(); i < frontNpcShield.GetBasePtr() + _runCount; ++i)
+	float* base = _npcs.front()._shield.GetBasePtr();
+	for (size_t i = 0; i < _runCount; ++i)
 	{
-		ShieldAdjustment(i);
+		float* npcShield = base + i;
+		ShieldAdjustment(npcShield);
 	}
 }
 
 void JustMemoryTest::NpcHealthTest()
 {
-	auto& frontNpcHealth = _npcs.front()._health;
-	for (float* i = frontNpcHealth.GetBasePtr(); i < frontNpcHealth.GetBasePtr() + _runCount; ++i)
+	float* base = _npcs.front()._health.GetBasePtr();
+	for (size_t i = 0; i < _runCount; ++i)
 	{
-		HealthAdjustment(i);
+		float* npcHealth = base + i;
+		HealthAdjustment(npcHealth);
 	}
 }
 
 void JustMemoryTest::NpcArmourTest()
 {
-	auto& frontNpcArmour = _npcs.front()._armour;
-	for (int* i = frontNpcArmour.GetBasePtr(); i < frontNpcArmour.GetBasePtr() + _runCount; ++i)
+	int* base = _npcs.front()._armour.GetBasePtr();
+	for (size_t i = 0; i < _runCount; ++i)
 	{
-		ArmourAdjustment(i);
+		int* npcArmour = base + i;
+		ArmourAdjustment(npcArmour);
 	}
 }

@@ -16,6 +16,7 @@ public:
 	AAVariable(MemoryManager* manRef, const size_t& hashId) : _hashId(hashId), _managerRef(manRef)
 	{
 		Initialise();
+		_ptrToBase = reinterpret_cast<T*>(_managerRef->GetBlockInfo(_hashId).dataPointer);
 	}
 
 	AAVariable(MemoryManager* manRef, const size_t& hashId, const T& rhs) : _hashId(hashId), _managerRef(manRef)
@@ -25,6 +26,7 @@ public:
 		{
 			*_ptrToVar = rhs;
 		}
+		_ptrToBase = reinterpret_cast<T*>(_managerRef->GetBlockInfo(_hashId).dataPointer);
 	}
 
 	~AAVariable()
@@ -40,7 +42,7 @@ public:
 	//Returns the base ptr to the alloc'd block, use this along with get length to scrub through the data
 	inline T* GetBasePtr()
 	{
-		return reinterpret_cast<T*>(_managerRef->GetBlockInfo(_hashId).dataPointer);
+		return _ptrToBase;
 	}
 
 	//Returns the current amount allocated under the given KEY
@@ -63,6 +65,7 @@ private:
 	}
 
 	T* _ptrToVar = nullptr;
+	T* _ptrToBase = nullptr;
 	MemoryManager* _managerRef = nullptr;
 	const size_t _hashId;
 };
