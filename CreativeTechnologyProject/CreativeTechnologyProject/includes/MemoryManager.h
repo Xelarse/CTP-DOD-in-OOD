@@ -7,24 +7,9 @@ class MemoryManager
 	//friend class AAVariable<class T>;
 
 public:
-	inline static void InitialiseManager(const size_t elementSize, const size_t elementCount)
+	MemoryManager(const size_t elementSize, const size_t elementCount) : _totalObjectCount(elementCount)
 	{
-		if (MemoryManager::_pInstance != nullptr)
-		{
-			return;
-		}
-		_pInstance = new MemoryManager();
-		_pInstance->_totalObjectCount = elementCount;
-		_pInstance->InitialiseAllocator(elementSize, elementCount);
-	}
-
-	inline static void ReleaseManager()
-	{
-		if (_pInstance != nullptr)
-		{
-			delete _pInstance;
-			_pInstance = nullptr;
-		}
+		InitialiseAllocator(elementSize, elementCount);
 	}
 
 //private:
@@ -46,15 +31,10 @@ public:
 		void* dataPointer;
 	};
 
-	MemoryManager() = default;
+	MemoryManager() = delete;
 	~MemoryManager()
 	{
 		FreeAllExistingBlocks();
-	}
-
-	static const MemoryManager* GetInstance()
-	{
-		return _pInstance;
 	}
 
 	template <typename T>
@@ -63,7 +43,7 @@ public:
 		//First check if an id exists, if it doesnt, create it
 		if (!CheckIfIdExists(id))
 		{
-			InitialiseNewMemoryBlock(id, _totalObjectCount);
+			InitialiseNewMemoryBlock<T>(id, _totalObjectCount);
 		}
 
 		auto& existingBlock = _existingAllocations[GetIndexOfId(id)];
@@ -186,12 +166,9 @@ public:
 		_pAllocator->Init();
 	}
 
-	static MemoryManager* _pInstance;
 	std::unique_ptr<MemoryAllocator> _pAllocator;
 	std::vector<ExistingBlocks> _existingAllocations;
 
 	//Used in the addition of objects later on to know how much to allocate
 	size_t _totalObjectCount = 0;
 };
-
-MemoryManager* MemoryManager::_pInstance = nullptr;

@@ -24,6 +24,7 @@ private:
 	void SanityCheckRunCount() override;
 
 	JobManager* _jobManager = nullptr;
+	MemoryManager* _memoryManager = nullptr;
 	std::vector<Npc> _npcs;
 };
 

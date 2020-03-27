@@ -1,9 +1,8 @@
 #include "..\includes\JustMemoryTest.h"
 
-JustMemoryTest::JustMemoryTest(int npcMax)
-{
-	MemoryManager::InitialiseManager(sizeof(Npc), npcMax);
-	
+JustMemoryTest::JustMemoryTest(int npcMax) :
+	_memoryManager(new MemoryManager(sizeof(Npc), npcMax))
+{	
 	std::random_device r;
 	std::mt19937 gen(r());
 
@@ -13,7 +12,7 @@ JustMemoryTest::JustMemoryTest(int npcMax)
 
 	for (size_t i = 0; i < npcMax; ++i)
 	{
-		_npcs.push_back(Npc(healthGen(gen), armourGen(gen), shieldGen(gen)));
+		_npcs.push_back(Npc(_memoryManager, healthGen(gen), armourGen(gen), shieldGen(gen)));
 	}
 
 	SanityCheckRunCount();
@@ -21,7 +20,7 @@ JustMemoryTest::JustMemoryTest(int npcMax)
 
 JustMemoryTest::~JustMemoryTest()
 {
-	MemoryManager::ReleaseManager();
+	delete _memoryManager;
 }
 
 void JustMemoryTest::PreUpdate(float dt)
@@ -54,8 +53,8 @@ void JustMemoryTest::SanityCheckRunCount()
 
 void JustMemoryTest::NpcShieldTest()
 {
-	const auto* frontNpcShield = &_npcs.front();
-	for (float* i = frontNpcShield->GetBasePtr(); i < frontNpcShield.GetBasePtr() + frontNpcShield.GetLength(); ++i)
+	auto& frontNpcShield = _npcs.front()._shield;
+	for (float* i = frontNpcShield.GetBasePtr(); i < frontNpcShield.GetBasePtr() + frontNpcShield.GetLength(); ++i)
 	{
 		ShieldAdjustment(i);
 	}
@@ -63,7 +62,7 @@ void JustMemoryTest::NpcShieldTest()
 
 void JustMemoryTest::NpcHealthTest()
 {
-	const auto& frontNpcHealth = _npcs.front()._health;
+	auto& frontNpcHealth = _npcs.front()._health;
 	for (float* i = frontNpcHealth.GetBasePtr(); i < frontNpcHealth.GetBasePtr() + frontNpcHealth.GetLength(); ++i)
 	{
 		HealthAdjustment(i);
@@ -72,7 +71,7 @@ void JustMemoryTest::NpcHealthTest()
 
 void JustMemoryTest::NpcArmourTest()
 {
-	const auto& frontNpcArmour = _npcs.front()._armour;
+	auto& frontNpcArmour = _npcs.front()._armour;
 	for (int* i = frontNpcArmour.GetBasePtr(); i < frontNpcArmour.GetBasePtr() + frontNpcArmour.GetLength(); ++i)
 	{
 		ArmourAdjustment(i);

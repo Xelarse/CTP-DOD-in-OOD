@@ -5,7 +5,7 @@
 class Npc
 {
 public:
-	Npc(float health, int armour, float shield);
+	Npc(MemoryManager* manager, float health, int armour, float shield);
 	Npc() = delete;
 	~Npc() = default;
 

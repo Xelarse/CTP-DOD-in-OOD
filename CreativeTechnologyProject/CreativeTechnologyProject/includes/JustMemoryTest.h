@@ -23,5 +23,6 @@ private:
 	void NpcArmourTest();
 
 	std::vector<Npc> _npcs;
+	MemoryManager* _memoryManager = nullptr;
 };
 

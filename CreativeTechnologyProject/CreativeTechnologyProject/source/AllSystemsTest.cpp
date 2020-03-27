@@ -3,12 +3,10 @@
 #include <string>
 #include <random>
 
-AllSystemsTest::AllSystemsTest(int npcMax)
+AllSystemsTest::AllSystemsTest(int npcMax) :
+	_memoryManager(new MemoryManager(sizeof(Npc), npcMax)), 
+	_jobManager(new JobManager(JobManager::JobCpuIntensity::HIGH))
 {
-	//Init the managers for the test
-	MemoryManager::InitialiseManager(sizeof(Npc), npcMax);
-	_jobManager = new JobManager(JobManager::JobCpuIntensity::HIGH);
-
 	std::random_device r;
 	std::mt19937 gen(r());
 
@@ -18,7 +16,7 @@ AllSystemsTest::AllSystemsTest(int npcMax)
 
 	for (size_t i = 0; i < npcMax; ++i)
 	{
-		_npcs.push_back(Npc(healthGen(gen), armourGen(gen), shieldGen(gen)));
+		_npcs.push_back(Npc(_memoryManager, healthGen(gen), armourGen(gen), shieldGen(gen)));
 	}
 
 	SanityCheckRunCount();
@@ -27,7 +25,7 @@ AllSystemsTest::AllSystemsTest(int npcMax)
 AllSystemsTest::~AllSystemsTest()
 {
 	delete _jobManager;
-	MemoryManager::ReleaseManager();
+	delete _memoryManager;
 }
 
 void AllSystemsTest::PreUpdate(float dt)
@@ -50,7 +48,7 @@ void AllSystemsTest::PostUpdate(float dt)
 
 void AllSystemsTest::NpcShieldTest()
 {
-	const auto& frontNpcShield = _npcs.front()._shield;
+	auto& frontNpcShield = _npcs.front()._shield;
 	for (float* i = frontNpcShield.GetBasePtr(); i < frontNpcShield.GetBasePtr() + frontNpcShield.GetLength(); ++i)
 	{
 		ShieldAdjustment(i);
@@ -59,7 +57,7 @@ void AllSystemsTest::NpcShieldTest()
 
 void AllSystemsTest::NpcHealthTest()
 {
-	const auto& frontNpcHealth = _npcs.front()._health;
+	auto& frontNpcHealth = _npcs.front()._health;
 	for (float* i = frontNpcHealth.GetBasePtr(); i < frontNpcHealth.GetBasePtr() + frontNpcHealth.GetLength(); ++i)
 	{
 		HealthAdjustment(i);
@@ -68,7 +66,7 @@ void AllSystemsTest::NpcHealthTest()
 
 void AllSystemsTest::NpcArmourTest()
 {
-	const auto& frontNpcArmour = _npcs.front()._armour;
+	auto& frontNpcArmour = _npcs.front()._armour;
 	for (int* i = frontNpcArmour.GetBasePtr(); i < frontNpcArmour.GetBasePtr() + frontNpcArmour.GetLength(); ++i)
 	{
 		ArmourAdjustment(i);
