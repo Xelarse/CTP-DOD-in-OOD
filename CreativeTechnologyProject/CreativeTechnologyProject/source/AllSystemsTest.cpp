@@ -12,9 +12,13 @@ AllSystemsTest::AllSystemsTest(int npcMax)
 	std::random_device r;
 	std::mt19937 gen(r());
 
+	std::uniform_real_distribution<float> healthGen(0, 100);
+	std::uniform_real_distribution<float> shieldGen(0, 200);
+	std::uniform_int_distribution<> armourGen(0, 50);
+
 	for (size_t i = 0; i < npcMax; ++i)
 	{
-		_npcs.push_back(Npc(gen));
+		_npcs.push_back(Npc(healthGen(gen), armourGen(gen), shieldGen(gen)));
 	}
 
 	SanityCheckRunCount();
@@ -46,8 +50,8 @@ void AllSystemsTest::PostUpdate(float dt)
 
 void AllSystemsTest::NpcShieldTest()
 {
-	using NpcShield = AA::Variable<float, Npc::_shieldTag>;
-	for (float* i = NpcShield::GetBasePtr(); i < NpcShield::GetBasePtr() + NpcShield::GetLength(); ++i)
+	const auto& frontNpcShield = _npcs.front()._shield;
+	for (float* i = frontNpcShield.GetBasePtr(); i < frontNpcShield.GetBasePtr() + frontNpcShield.GetLength(); ++i)
 	{
 		ShieldAdjustment(i);
 	}
@@ -55,8 +59,8 @@ void AllSystemsTest::NpcShieldTest()
 
 void AllSystemsTest::NpcHealthTest()
 {
-	using NpcHealth = AA::Variable<float, Npc::_healthTag>;
-	for (float* i = NpcHealth::GetBasePtr(); i < NpcHealth::GetBasePtr() + NpcHealth::GetLength(); ++i)
+	const auto& frontNpcHealth = _npcs.front()._health;
+	for (float* i = frontNpcHealth.GetBasePtr(); i < frontNpcHealth.GetBasePtr() + frontNpcHealth.GetLength(); ++i)
 	{
 		HealthAdjustment(i);
 	}
@@ -64,8 +68,8 @@ void AllSystemsTest::NpcHealthTest()
 
 void AllSystemsTest::NpcArmourTest()
 {
-	using NpcArmour = AA::Variable<int, Npc::_armourTag>;
-	for (int* i = NpcArmour::GetBasePtr(); i < NpcArmour::GetBasePtr() + NpcArmour::GetLength(); ++i)
+	const auto& frontNpcArmour = _npcs.front()._armour;
+	for (int* i = frontNpcArmour.GetBasePtr(); i < frontNpcArmour.GetBasePtr() + frontNpcArmour.GetLength(); ++i)
 	{
 		ArmourAdjustment(i);
 	}

@@ -179,6 +179,7 @@
     <ClCompile Include="source\Mouse.cpp" />
     <ClCompile Include="source\NoSystemsTest.cpp" />
     <ClCompile Include="source\Npc.cpp" />
+    <ClCompile Include="source\NpcNoMem.cpp" />
     <ClCompile Include="source\PoolableThread.cpp" />
     <ClCompile Include="source\Timer.cpp" />
     <ClCompile Include="source\Window.cpp" />
@@ -202,6 +203,7 @@
     <ClInclude Include="includes\Mouse.h" />
     <ClInclude Include="includes\NoSystemsTest.h" />
     <ClInclude Include="includes\Npc.h" />
+    <ClInclude Include="includes\NpcNoMem.h" />
     <ClInclude Include="includes\PoolableThread.h" />
     <ClInclude Include="includes\Timer.h" />
     <ClInclude Include="includes\Window.h" />

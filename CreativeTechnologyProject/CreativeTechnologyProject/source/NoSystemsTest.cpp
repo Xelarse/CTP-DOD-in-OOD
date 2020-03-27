@@ -10,7 +10,7 @@ NoSystemsTest::NoSystemsTest(int npcMax)
 
 	for (size_t i = 0; i < npcMax; i++)
 	{
-		_npcVec.emplace_back(std::make_unique<Npc>(generator));
+		_npcVec.emplace_back(std::make_unique<NpcNoMem>(generator));
 	}
 
 	SanityCheckRunCount();
@@ -37,25 +37,25 @@ void NoSystemsTest::PostUpdate(float dt)
 
 void NoSystemsTest::NpcShieldTest()
 {
-	for (size_t i = 0; i < _runCount; i++)
+	for (const auto& npc : _npcVec)
 	{
-		ShieldAdjustment(_npcVec[i]->GetShield());
+		ShieldAdjustment(npc->_shield);
 	}
 }
 
 void NoSystemsTest::NpcHealthTest()
 {
-	for (size_t i = 0; i < _runCount; i++)
+	for (const auto& npc : _npcVec)
 	{
-		HealthAdjustment(_npcVec[i]->GetHealth());
+		HealthAdjustment(npc->_health);
 	}
 }
 
 void NoSystemsTest::NpcArmourTest()
 {
-	for (size_t i = 0; i < _runCount; i++)
+	for (const auto& npc : _npcVec)
 	{
-		ArmourAdjustment(_npcVec[i]->GetArmour());
+		ArmourAdjustment(npc->_armour);
 	}
 }
 

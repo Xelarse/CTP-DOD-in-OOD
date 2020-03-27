@@ -129,6 +129,9 @@
     <ClCompile Include="source\PoolableThread.cpp">
       <Filter>Source Files\Job System</Filter>
     </ClCompile>
+    <ClCompile Include="source\NpcNoMem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="includes\Npc.h">
@@ -220,6 +223,9 @@
     </ClInclude>
     <ClInclude Include="includes\AAVariable.h">
       <Filter>Header Files\Memory System</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\NpcNoMem.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

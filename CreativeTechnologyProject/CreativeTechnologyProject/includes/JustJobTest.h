@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 #include "BaseTest.h"
-#include "Npc.h"
+#include "NpcNoMem.h"
 #include "JobManager.h"
 
 class JustJobTest : public BaseTest
@@ -17,7 +17,6 @@ public:
 	virtual void Update(float dt) override;
 	virtual void PostUpdate(float dt) override;
 
-
 private:
 
 	void NpcShieldTest();
@@ -27,12 +26,6 @@ private:
 	void SanityCheckRunCount() override;
 
 	JobManager* _jobManager = nullptr;
-	std::vector<std::unique_ptr<Npc>> _npcVec;
-
-	std::vector<float*> _npcHealthVec;
-	std::vector<float*> _npcShieldVec;
-	std::vector<int*> _npcArmourVec;
-
-
+	std::vector<std::unique_ptr<NpcNoMem>> _npcVec;
 };
 

@@ -8,8 +8,7 @@ public:
 	NpcNoMem() = delete;
 	~NpcNoMem();
 
-private:
 	float* _health = nullptr;
 	float* _shield = nullptr;
-	int* _armour;
+	int* _armour = nullptr;
 };

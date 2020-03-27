@@ -1,7 +1,7 @@
 #pragma once
-#include "BaseTest.h"
-#include "Npc.h"
 #include <memory>
+#include "BaseTest.h"
+#include "NpcNoMem.h"
 
 class NoSystemsTest : public BaseTest
 {
@@ -25,6 +25,6 @@ private:
 
 	void SanityCheckRunCount() override;
 
-	std::vector<std::unique_ptr<Npc>> _npcVec;
+	std::vector<std::unique_ptr<NpcNoMem>> _npcVec;
 };
 

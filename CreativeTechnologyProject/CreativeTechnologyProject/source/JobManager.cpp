@@ -191,13 +191,16 @@ int JobManager::CalculateThreadCountWithBenchmarking(JobCpuIntensity intensity)
 	switch (intensity)
 	{
 		case JobManager::JobCpuIntensity::LOW:
-			return floor( (currentTotal - _threadsPerStep) * 0.4f);
+			return static_cast<int>(floor( (currentTotal - _threadsPerStep) * 0.4f));
 			break;
 		case JobManager::JobCpuIntensity::MEDIUM:
-			return floor( (currentTotal - _threadsPerStep) * 0.6f);
+			return static_cast<int>(floor((currentTotal - _threadsPerStep) * 0.6f));
 			break;
 		case JobManager::JobCpuIntensity::HIGH:
-			return floor( (currentTotal - _threadsPerStep) * 0.9f);
+			return static_cast<int>(floor((currentTotal - _threadsPerStep) * 0.9f));
+			break;
+		default:
+			return static_cast<int>(floor((currentTotal - _threadsPerStep) * 0.6f));
 			break;
 	}
 }
@@ -207,13 +210,16 @@ int JobManager::CalculateThreadCountWithoutBenchmarking(JobCpuIntensity intensit
 	switch (intensity)
 	{
 		case JobManager::JobCpuIntensity::LOW:
-			return floor(std::thread::hardware_concurrency() * 0.4f);
+			return static_cast<int>(floor(std::thread::hardware_concurrency() * 0.4f));
 			break;
 		case JobManager::JobCpuIntensity::MEDIUM:
-			return floor(std::thread::hardware_concurrency() * 0.6f);
+			return static_cast<int>(floor(std::thread::hardware_concurrency() * 0.6f));
 			break;
 		case JobManager::JobCpuIntensity::HIGH:
-			return floor(std::thread::hardware_concurrency() * 0.9f);
+			return static_cast<int>(floor(std::thread::hardware_concurrency() * 0.9f));
+			break;
+		default:
+			return static_cast<int>(floor(std::thread::hardware_concurrency() * 0.6f));
 			break;
 	}
 }

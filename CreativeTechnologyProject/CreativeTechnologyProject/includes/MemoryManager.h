@@ -4,10 +4,9 @@
 
 class MemoryManager
 {
-public:
-	//This allows the variable to access the existing data struct for referencing data blocks
-	friend class AAVariable;
+	//friend class AAVariable<class T>;
 
+public:
 	inline static void InitialiseManager(const size_t elementSize, const size_t elementCount)
 	{
 		if (MemoryManager::_pInstance != nullptr)
@@ -28,10 +27,10 @@ public:
 		}
 	}
 
-private:
+//private:
 	struct ExistingBlocks
 	{
-		ExistingBlocks(const char* _id, void* _ptr, size_t _stride, unsigned int _capacity)
+		ExistingBlocks(size_t _id, void* _ptr, size_t _stride, unsigned int _capacity)
 		{
 			dataId = _id;
 			currentCount = 0;
@@ -40,7 +39,7 @@ private:
 			dataPointer = _ptr;
 		}
 
-		const char* dataId;
+		size_t dataId;
 		unsigned int currentCount;
 		unsigned int maxCount;
 		size_t stride;
@@ -53,8 +52,13 @@ private:
 		FreeAllExistingBlocks();
 	}
 
+	static const MemoryManager* GetInstance()
+	{
+		return _pInstance;
+	}
+
 	template <typename T>
-	T* InitialiseVariable(const char* id)
+	T* InitialiseVariable(size_t id)
 	{
 		//First check if an id exists, if it doesnt, create it
 		if (!CheckIfIdExists(id))
@@ -84,7 +88,7 @@ private:
 	}
 
 	template<typename T>
-	T* InitialiseVariable(const char* id, T data)
+	T* InitialiseVariable(size_t id, T data)
 	{
 		T* outPtr = InitialiseVariable(id);
 		if (outPtr != nullptr)
@@ -96,19 +100,19 @@ private:
 
 	//Initilises the memory block and returns the base ptr
 	template<typename T>
-	T* InitialiseNewMemoryBlock(const char* id, unsigned int maxCapacity)
+	T* InitialiseNewMemoryBlock(size_t id, unsigned int maxCapacity)
 	{
 		void* dataPtr = _pAllocator->Allocate(sizeof(T) * maxCapacity);
 		_existingAllocations.push_back(ExistingBlocks(id, dataPtr, sizeof(T), maxCapacity));
 		return reinterpret_cast<T*>(dataPtr);
 	}
 
-	const ExistingBlocks& GetBlockInfo(const char* id)
+	const ExistingBlocks& GetBlockInfo(size_t id)
 	{
 		return _existingAllocations[GetIndexOfId(id)];
 	}
 
-	bool CheckIfIdExists(const char* id)
+	bool CheckIfIdExists(size_t id)
 	{
 		for (const auto& ea : _existingAllocations)
 		{
@@ -120,7 +124,7 @@ private:
 		return false;
 	}
 
-	int GetIndexOfId(const char* id)
+	int GetIndexOfId(size_t id)
 	{
 		for (int i = 0; i < _existingAllocations.size(); i++)
 		{
@@ -133,7 +137,7 @@ private:
 		return -1;
 	}
 
-	void FreeExistingBlock(const char* id)
+	void FreeExistingBlock(size_t id)
 	{
 		int index = GetIndexOfId(id);
 

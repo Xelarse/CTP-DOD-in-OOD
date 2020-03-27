@@ -42,7 +42,7 @@ public:
 	void AddJobToQueue(Job job);
 	void ProcessJobs();
 
- 	inline const int GetTotalThreads() { return _threads.size(); }
+ 	inline const int GetTotalThreads() { return static_cast<const int>(_threads.size()); }
 
 private:
 	void OrderedJobComplete();
