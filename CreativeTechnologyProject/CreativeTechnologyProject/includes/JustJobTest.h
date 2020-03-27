@@ -19,9 +19,9 @@ public:
 
 private:
 
-	void NpcShieldTest();
-	void NpcHealthTest();
-	void NpcArmourTest();
+	void NpcShieldTest(int startInd, int endInd);
+	void NpcHealthTest(int startInd, int endInd);
+	void NpcArmourTest(int startInd, int endInd);
 
 	void SanityCheckRunCount() override;
 
