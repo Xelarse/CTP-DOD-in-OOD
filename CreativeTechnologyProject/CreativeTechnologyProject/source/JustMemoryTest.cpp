@@ -54,7 +54,7 @@ void JustMemoryTest::SanityCheckRunCount()
 void JustMemoryTest::NpcShieldTest()
 {
 	auto& frontNpcShield = _npcs.front()._shield;
-	for (float* i = frontNpcShield.GetBasePtr(); i < frontNpcShield.GetBasePtr() + frontNpcShield.GetLength(); ++i)
+	for (float* i = frontNpcShield.GetBasePtr(); i < frontNpcShield.GetBasePtr() + _runCount; ++i)
 	{
 		ShieldAdjustment(i);
 	}
@@ -63,7 +63,7 @@ void JustMemoryTest::NpcShieldTest()
 void JustMemoryTest::NpcHealthTest()
 {
 	auto& frontNpcHealth = _npcs.front()._health;
-	for (float* i = frontNpcHealth.GetBasePtr(); i < frontNpcHealth.GetBasePtr() + frontNpcHealth.GetLength(); ++i)
+	for (float* i = frontNpcHealth.GetBasePtr(); i < frontNpcHealth.GetBasePtr() + _runCount; ++i)
 	{
 		HealthAdjustment(i);
 	}
@@ -72,7 +72,7 @@ void JustMemoryTest::NpcHealthTest()
 void JustMemoryTest::NpcArmourTest()
 {
 	auto& frontNpcArmour = _npcs.front()._armour;
-	for (int* i = frontNpcArmour.GetBasePtr(); i < frontNpcArmour.GetBasePtr() + frontNpcArmour.GetLength(); ++i)
+	for (int* i = frontNpcArmour.GetBasePtr(); i < frontNpcArmour.GetBasePtr() + _runCount; ++i)
 	{
 		ArmourAdjustment(i);
 	}

@@ -9,9 +9,12 @@ JustJobTest::JustJobTest(int npcMax)
 	std::random_device rd;
 	std::mt19937 generator(rd());
 
-	for (size_t i = 0; i < npcMax; i++)
+	for (size_t i = 0; i < npcMax; ++i)
 	{
 		_npcVec.emplace_back(std::make_unique<NpcNoMem>(generator));
+		_npcHealthVec.push_back(_npcVec.back()->_health);
+		_npcShieldVec.push_back(_npcVec.back()->_shield);
+		_npcArmourVec.push_back(_npcVec.back()->_armour);
 	}
 
 	SanityCheckRunCount();
@@ -40,25 +43,25 @@ void JustJobTest::PostUpdate(float dt)
 
 void JustJobTest::NpcShieldTest()
 {
-	for (const auto& npc : _npcVec)
+	for (size_t i = 0; i < _runCount; i++)
 	{
-		ShieldAdjustment(npc->_shield);
+		ShieldAdjustment(_npcShieldVec[i]);
 	}
 }
 
 void JustJobTest::NpcHealthTest()
 {
-	for (const auto& npc : _npcVec)
+	for (size_t i = 0; i < _runCount; i++)
 	{
-		HealthAdjustment(npc->_health);
+		HealthAdjustment(_npcHealthVec[i]);
 	}
 }
 
 void JustJobTest::NpcArmourTest()
 {
-	for (const auto& npc : _npcVec)
+	for (size_t i = 0; i < _runCount; i++)
 	{
-		ArmourAdjustment(npc->_armour);
+		ArmourAdjustment(_npcArmourVec[i]);
 	}
 }
 

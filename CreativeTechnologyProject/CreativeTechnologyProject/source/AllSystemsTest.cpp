@@ -35,7 +35,6 @@ void AllSystemsTest::PreUpdate(float dt)
 void AllSystemsTest::Update(float dt)
 {
 	//Add jobs to do to the queue
-	//TODO ask james if theres a more elegant way to do this or if lambda functions are the way
 	_jobManager->AddJobToQueue(JobManager::Job([&](){ NpcShieldTest(); }));
 	_jobManager->AddJobToQueue(JobManager::Job([&](){ NpcHealthTest(); }));
 	_jobManager->AddJobToQueue(JobManager::Job([&](){ NpcArmourTest(); }));
@@ -49,7 +48,7 @@ void AllSystemsTest::PostUpdate(float dt)
 void AllSystemsTest::NpcShieldTest()
 {
 	auto& frontNpcShield = _npcs.front()._shield;
-	for (float* i = frontNpcShield.GetBasePtr(); i < frontNpcShield.GetBasePtr() + frontNpcShield.GetLength(); ++i)
+	for (float* i = frontNpcShield.GetBasePtr(); i < frontNpcShield.GetBasePtr() + _runCount; ++i)
 	{
 		ShieldAdjustment(i);
 	}
@@ -58,7 +57,7 @@ void AllSystemsTest::NpcShieldTest()
 void AllSystemsTest::NpcHealthTest()
 {
 	auto& frontNpcHealth = _npcs.front()._health;
-	for (float* i = frontNpcHealth.GetBasePtr(); i < frontNpcHealth.GetBasePtr() + frontNpcHealth.GetLength(); ++i)
+	for (float* i = frontNpcHealth.GetBasePtr(); i < frontNpcHealth.GetBasePtr() + _runCount; ++i)
 	{
 		HealthAdjustment(i);
 	}
@@ -67,7 +66,7 @@ void AllSystemsTest::NpcHealthTest()
 void AllSystemsTest::NpcArmourTest()
 {
 	auto& frontNpcArmour = _npcs.front()._armour;
-	for (int* i = frontNpcArmour.GetBasePtr(); i < frontNpcArmour.GetBasePtr() + frontNpcArmour.GetLength(); ++i)
+	for (int* i = frontNpcArmour.GetBasePtr(); i < frontNpcArmour.GetBasePtr() + _runCount; ++i)
 	{
 		ArmourAdjustment(i);
 	}

@@ -26,5 +26,8 @@ private:
 	void SanityCheckRunCount() override;
 
 	std::vector<std::unique_ptr<NpcNoMem>> _npcVec;
+	std::vector<float*> _npcHealthVec;
+	std::vector<float*> _npcShieldVec;
+	std::vector<int*> _npcArmourVec;
 };
 
