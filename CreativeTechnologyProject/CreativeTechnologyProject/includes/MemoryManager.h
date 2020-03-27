@@ -4,7 +4,8 @@
 
 class MemoryManager
 {
-	//friend class AAVariable<class T>;
+	template<class T>
+	friend class AAVariable;
 
 public:
 	MemoryManager(const size_t elementSize, const size_t elementCount) : _totalObjectCount(elementCount)
@@ -12,7 +13,12 @@ public:
 		InitialiseAllocator(elementSize, elementCount);
 	}
 
-//private:
+	~MemoryManager()
+	{
+		FreeAllExistingBlocks();
+	}
+
+private:
 	struct ExistingBlocks
 	{
 		ExistingBlocks(size_t _id, void* _ptr, size_t _stride, unsigned int _capacity)
@@ -32,10 +38,6 @@ public:
 	};
 
 	MemoryManager() = delete;
-	~MemoryManager()
-	{
-		FreeAllExistingBlocks();
-	}
 
 	template <typename T>
 	T* InitialiseVariable(size_t id)
