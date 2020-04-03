@@ -39,6 +39,14 @@ public:
 		return *_ptrToVar;
 	}
 
+	void Set(const T& var)
+	{
+		if (_ptrToVar != nullptr)
+		{
+			*_ptrToVar = var;
+		}
+	}
+
 	//Returns the base ptr to the alloc'd block, use this along with get length to scrub through the data
 	inline T* GetBasePtr()
 	{

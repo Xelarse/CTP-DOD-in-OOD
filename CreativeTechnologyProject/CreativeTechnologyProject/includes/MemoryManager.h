@@ -30,11 +30,11 @@ private:
 			dataPointer = _ptr;
 		}
 
-		size_t dataId;
-		unsigned int currentCount;
-		unsigned int maxCount;
-		size_t stride;
-		void* dataPointer;
+		size_t dataId;					//The Hash id for the Block
+		unsigned int currentCount;		//Current amount of variables stored in block
+		unsigned int maxCount;			//The max capacity the block can hold
+		size_t stride;					//The stride needed to move between variables
+		void* dataPointer;				//The Base Ptr to the block of memory
 	};
 
 	MemoryManager() = delete;

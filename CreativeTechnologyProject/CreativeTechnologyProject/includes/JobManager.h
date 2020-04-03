@@ -32,7 +32,8 @@ public:
 		};
 
 		Job() = delete;
-		Job(std::function<void()> func, JobPriority priority = JobPriority::UNORDERED, int priorityOrder = -1) : _dataProcessingFunction(func),  _priority(priority), _prioritryOrder(priorityOrder){};
+		Job(std::function<void()> func, JobPriority priority = JobPriority::UNORDERED, int priorityOrder = -1) 
+			: _dataProcessingFunction(func),  _priority(priority), _prioritryOrder(priorityOrder){};
 
 		const std::function<void()> _dataProcessingFunction;
 		const JobPriority _priority;

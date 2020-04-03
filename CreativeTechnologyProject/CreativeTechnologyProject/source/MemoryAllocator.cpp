@@ -243,7 +243,8 @@ MemoryAllocator::MemoryBlock* MemoryAllocator::FreeListSearch(size_t size)
 		{
 			continue;
 		}
-		//If we get a block remove it from the list and run list allocate to shrink it
+		//If we get a block remove it from the list and 
+		//run list allocate to shrink it
 		foundBlock = block;
 		_freeList.remove(block);
 		break;
@@ -299,7 +300,8 @@ MemoryAllocator::MemoryBlock* MemoryAllocator::ListAllocate(MemoryBlock* block, 
 MemoryAllocator::MemoryBlock* MemoryAllocator::MergeAdjacentBlocks(MemoryBlock* block)
 {
 	MemoryBlock* mergedBlock = nullptr;
-	//If the next block is not in use and the next block is the top, make this block the top block
+	//If the next block is not in use and the next block is the top,
+	//make this block the top block
 	if (!block->nextBlock->inUse)
 	{
 		if (block->nextBlock == _top)
