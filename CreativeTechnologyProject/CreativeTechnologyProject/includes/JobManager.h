@@ -4,9 +4,6 @@
 #include <mutex>
 #include "PoolableThread.h"
 
-//When switching jobs to a pool of threads look at this https://www.bfilipek.com/2019/12/threading-loopers-cpp17.html
-//For now this will help https://thispointer.com/c11-multithreading-part-2-joining-and-detaching-threads/
-
 class JobManager
 {
 public:

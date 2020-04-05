@@ -66,7 +66,6 @@ public:
 	}
 
 private:
-
 	void Initialise()
 	{
 		_ptrToVar = _managerRef->InitialiseVariable<T>(_hashId);

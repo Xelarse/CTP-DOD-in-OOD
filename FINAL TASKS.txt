@@ -1,0 +1,4 @@
+Make the libs header only,
+Add a cache job capability to the job manager if a job is to be known to run every update,
+Implement a solution of squares moving in ASGE,
+Bring over the implementation to ASGE 
