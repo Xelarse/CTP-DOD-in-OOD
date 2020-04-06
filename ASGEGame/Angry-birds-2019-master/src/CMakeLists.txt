@@ -16,13 +16,15 @@ set(SOURCE_FILES
         "game/main.cpp"
         "game/game.cpp"
         "game/Scenes/SystemsScene.cpp"
-        "game/Scenes/NoSystemsScene.cpp")
+        "game/Scenes/NoSystemsScene.cpp"
+        "game/Scenes/MenuScene.cpp")
 
 set(HEADER_FILES
         "game/game.h"
         "game/Scenes/BaseScene.h"
         "game/Scenes/SystemsScene.h"
-        "game/Scenes/NoSystemsScene.h")
+        "game/Scenes/NoSystemsScene.h"
+        "game/Scenes/MenuScene.h")
 
 ## the executable
 add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES})
