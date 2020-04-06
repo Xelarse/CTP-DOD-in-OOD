@@ -51,9 +51,6 @@ void MyASGEGame::logStartup() const
 MyASGEGame::~MyASGEGame()
 {
   this->inputs->unregisterCallback(static_cast<unsigned int>(key_callback_id));
-
-  this->inputs->unregisterCallback(
-    static_cast<unsigned int>(mouse_callback_id));
 }
 
 bool MyASGEGame::init()
@@ -61,12 +58,11 @@ bool MyASGEGame::init()
   key_callback_id =
     inputs->addCallbackFnc(ASGE::E_KEY, &MyASGEGame::keyHandler, this);
 
-  mouse_callback_id = inputs->addCallbackFnc(
-    ASGE::E_MOUSE_CLICK, &MyASGEGame::clickHandler, this);
-
   _menuScene = std::make_unique<MenuScene>(this);
   _noSysScene = std::make_unique<NoSystemsScene>(this);
   _sysScene = std::make_unique<SystemsScene>(this);
+
+  _activeScene = _menuScene.get();
   return true;
 }
 

@@ -30,7 +30,6 @@ class MyASGEGame : public ASGE::OGLGame
   void update(const ASGE::GameTime&) override;
 
   int key_callback_id           = -1; /**< Key Input Callback ID. */
-  int mouse_callback_id         = -1; /**< Mouse Input Callback ID. */
 
   // ASGEv2 examples
   ASGE::Camera2D camera{};

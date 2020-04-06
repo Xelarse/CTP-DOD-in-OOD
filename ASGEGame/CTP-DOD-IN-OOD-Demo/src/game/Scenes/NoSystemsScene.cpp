@@ -32,7 +32,13 @@ void NoSystemsScene::PostUpdate(double dt)
 
 void NoSystemsScene::Render(ASGE::Renderer *renderer)
 {
-
+    std::string text = "NO SYSTEMS SCENE ACTIVE";
+    renderer->renderText(
+            text,
+            static_cast<int>(ASGE::SETTINGS.window_width * 0.5),
+            static_cast<int >(ASGE::SETTINGS.window_height * 0.5),
+            ASGE::COLOURS::BLACK
+    );
 }
 
 void NoSystemsScene::KeyHandler(const ASGE::SharedEventData &data)
@@ -41,6 +47,6 @@ void NoSystemsScene::KeyHandler(const ASGE::SharedEventData &data)
 
     if (key->key == ASGE::KEYS::KEY_ESCAPE)
     {
-        _gameRef->ChangeScene(MyASGEGame::Scenes::MENU, true);
+        _gameRef->ChangeScene(MyASGEGame::Scenes::MENU);
     }
 }

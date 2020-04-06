@@ -8,7 +8,7 @@ class MenuScene : public BaseScene
 public:
     MenuScene() = delete;
     explicit MenuScene(MyASGEGame* gameRef);
-    ~MenuScene() override;
+    ~MenuScene() override = default;
 
     void PreUpdate(double dt) override;
     void Update(double dt) override;
@@ -22,8 +22,11 @@ private:
     {
         NO_SYSTEMS = 0,
         SYSTEMS = 1,
-        QUIT = 2
+        QUIT = 2,
+        COUNT = 3
     };
+
+    Selection GetCurrentSelection();
 
     int _currentSelection = 0;
 };
