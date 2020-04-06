@@ -3,18 +3,26 @@
 #include <Engine/OGLGame.h>
 #include <string>
 
-/**
- *  An OpenGL Game based on ASGE.
- */
+#include "Scenes/BaseScene.h"
+
 class MyASGEGame : public ASGE::OGLGame
 {
  public:
   explicit MyASGEGame(ASGE::GameSettings settings);
-  ~MyASGEGame();
+  ~MyASGEGame() override;
   bool init();
 
+  enum class Scenes
+  {
+      MENU,
+      NO_SYSTEMS,
+      SYSTEMS
+  };
+
+  void ChangeScene(Scenes sceneToSwitchTo, bool sceneReset = false);
+  void TerminateProgram();
+
  private:
-  void clickHandler(const ASGE::SharedEventData& data);
   void initCamera();
   void keyHandler(const ASGE::SharedEventData& data);
   void logStartup() const;
@@ -23,8 +31,13 @@ class MyASGEGame : public ASGE::OGLGame
 
   int key_callback_id           = -1; /**< Key Input Callback ID. */
   int mouse_callback_id         = -1; /**< Mouse Input Callback ID. */
-  bool in_menu                  = true;
 
   // ASGEv2 examples
   ASGE::Camera2D camera{};
+
+  std::unique_ptr<BaseScene> _menuScene;
+  std::unique_ptr<BaseScene> _noSysScene;
+  std::unique_ptr<BaseScene> _sysScene;
+
+  BaseScene* _activeScene = nullptr;
 };

@@ -7,12 +7,13 @@
 class NoSystemsScene : public BaseScene
 {
 public:
-    NoSystemsScene();
+    NoSystemsScene() = delete;
+    explicit NoSystemsScene(MyASGEGame* gameRef);
     ~NoSystemsScene() override;
 
-    void PreUpdate(float dt) override;
-    void Update(float dt) override;
-    void PostUpdate(float dt) override;
+    void PreUpdate(double dt) override;
+    void Update(double dt) override;
+    void PostUpdate(double dt) override;
     void Render(ASGE::Renderer *renderer) override;
 
     void KeyHandler(const ASGE::SharedEventData &data) override;
