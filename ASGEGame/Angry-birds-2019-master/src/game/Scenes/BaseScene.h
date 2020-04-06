@@ -14,4 +14,5 @@ public:
     virtual void Update(float dt) = 0;
     virtual void PostUpdate(float dt) = 0;
     virtual void Render(ASGE::Renderer* renderer) = 0;
+    virtual void KeyHandler(const ASGE::SharedEventData& data) = 0;
 };

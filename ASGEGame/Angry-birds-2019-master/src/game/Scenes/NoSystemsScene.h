@@ -14,4 +14,6 @@ public:
     void Update(float dt) override;
     void PostUpdate(float dt) override;
     void Render(ASGE::Renderer *renderer) override;
+
+    void KeyHandler(const ASGE::SharedEventData &data) override;
 };

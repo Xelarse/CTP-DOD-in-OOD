@@ -32,3 +32,8 @@ void SystemsScene::Render(ASGE::Renderer *renderer)
 {
 
 }
+
+void SystemsScene::KeyHandler(const ASGE::SharedEventData &data)
+{
+
+}

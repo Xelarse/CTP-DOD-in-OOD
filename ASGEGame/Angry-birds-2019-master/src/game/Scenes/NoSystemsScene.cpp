@@ -33,3 +33,8 @@ void NoSystemsScene::Render(ASGE::Renderer *renderer)
 {
 
 }
+
+void NoSystemsScene::KeyHandler(const ASGE::SharedEventData &data)
+{
+
+}
