@@ -59,8 +59,8 @@ bool MyASGEGame::init()
     inputs->addCallbackFnc(ASGE::E_KEY, &MyASGEGame::keyHandler, this);
 
   _menuScene = std::make_unique<MenuScene>(this);
-  _noSysScene = std::make_unique<NoSystemsScene>(this);
-  _sysScene = std::make_unique<SystemsScene>(this);
+  _noSysScene = std::make_unique<NoSystemsScene>(this, renderer.get());
+  _sysScene = std::make_unique<SystemsScene>(this, renderer.get());
 
   _activeScene = _menuScene.get();
   return true;
@@ -107,11 +107,11 @@ void MyASGEGame::ChangeScene(MyASGEGame::Scenes sceneToSwitchTo, bool sceneReset
             _activeScene = _menuScene.get();
             break;
         case Scenes::NO_SYSTEMS:
-            if(sceneReset) {_noSysScene = std::make_unique<NoSystemsScene>(this);}
+            if(sceneReset) {_noSysScene = std::make_unique<NoSystemsScene>(this, renderer.get());}
             _activeScene = _noSysScene.get();
             break;
         case Scenes::SYSTEMS:
-            if(sceneReset) {_sysScene = std::make_unique<SystemsScene>(this);}
+            if(sceneReset) {_sysScene = std::make_unique<SystemsScene>(this, renderer.get());}
             _activeScene = _sysScene.get();
             break;
     }

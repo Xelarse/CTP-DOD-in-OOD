@@ -2,7 +2,6 @@
 // Created by Alex on 4/4/2020.
 //
 #pragma once
-#include <math.h>
 #include "Engine/OGLGame.h"
 
 class MyASGEGame;

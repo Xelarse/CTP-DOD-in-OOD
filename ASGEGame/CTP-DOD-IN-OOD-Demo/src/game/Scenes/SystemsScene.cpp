@@ -4,7 +4,7 @@
 #include "SystemsScene.h"
 #include "game.h"
 
-SystemsScene::SystemsScene(MyASGEGame *gameRef) : BaseScene(gameRef)
+SystemsScene::SystemsScene(MyASGEGame *gameRef, ASGE::Renderer* renderer) : BaseScene(gameRef)
 {
 
 }

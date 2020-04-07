@@ -3,12 +3,13 @@
 //
 #pragma once
 #include "BaseScene.h"
+#include "GameObjects/Square.h"
 
 class NoSystemsScene : public BaseScene
 {
 public:
     NoSystemsScene() = delete;
-    explicit NoSystemsScene(MyASGEGame* gameRef);
+    explicit NoSystemsScene(MyASGEGame* gameRef, ASGE::Renderer* renderer);
     ~NoSystemsScene() override;
 
     void PreUpdate(double dt) override;
@@ -17,4 +18,7 @@ public:
     void Render(ASGE::Renderer *renderer) override;
 
     void KeyHandler(const ASGE::SharedEventData &data) override;
+
+private:
+    std::unique_ptr<Square> _testSquare;
 };

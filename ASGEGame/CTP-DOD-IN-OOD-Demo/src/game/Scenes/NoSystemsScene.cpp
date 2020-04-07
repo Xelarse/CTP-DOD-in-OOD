@@ -5,9 +5,9 @@
 #include "NoSystemsScene.h"
 #include "game.h"
 
-NoSystemsScene::NoSystemsScene(MyASGEGame *gameRef) : BaseScene(gameRef)
+NoSystemsScene::NoSystemsScene(MyASGEGame *gameRef, ASGE::Renderer* renderer) : BaseScene(gameRef)
 {
-
+    _testSquare = std::make_unique<Square>(renderer);
 }
 
 NoSystemsScene::~NoSystemsScene()
@@ -22,7 +22,7 @@ void NoSystemsScene::PreUpdate(double dt)
 
 void NoSystemsScene::Update(double dt)
 {
-
+    _testSquare->Update(dt);
 }
 
 void NoSystemsScene::PostUpdate(double dt)
@@ -39,6 +39,9 @@ void NoSystemsScene::Render(ASGE::Renderer *renderer)
             static_cast<int >(ASGE::SETTINGS.window_height * 0.5),
             ASGE::COLOURS::BLACK
     );
+
+
+    _testSquare->Render(renderer);
 }
 
 void NoSystemsScene::KeyHandler(const ASGE::SharedEventData &data)
