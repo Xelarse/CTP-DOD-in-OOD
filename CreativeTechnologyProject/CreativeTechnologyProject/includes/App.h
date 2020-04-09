@@ -53,7 +53,7 @@ private:
 	int _imguiActiveTest = 0;
 	ImGuiWindowFlags _guiFlags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse;
 
-	int _maxNpcInstances = 200000;
+	int _maxNpcInstances = 1000000;
 
 	TestTypes _activeTest = TestTypes::NO_SYSTEMS;
 };
