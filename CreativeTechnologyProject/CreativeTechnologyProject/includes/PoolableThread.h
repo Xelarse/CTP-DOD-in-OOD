@@ -20,8 +20,6 @@ public:
 	void RunTaskOnThread(std::function<void()> task, bool orderedTask = false);
 	void WaitForThreadToExit();
 
-	std::atomic<int> _testCounter = 0;
-
 private:
 	void ThreadLoop(std::promise<void> exitPromise);
 

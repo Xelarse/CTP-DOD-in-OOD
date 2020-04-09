@@ -12,11 +12,7 @@ JustJobTest::JustJobTest(int npcMax)
 	for (size_t i = 0; i < npcMax; ++i)
 	{
 		_npcVec.emplace_back(std::make_unique<NpcNoMem>(generator));
-		_npcHealthVec.push_back(_npcVec.back()->_health);
-		_npcShieldVec.push_back(_npcVec.back()->_shield);
-		_npcArmourVec.push_back(_npcVec.back()->_armour);
 	}
-
 	SanityCheckRunCount();
 }
 
@@ -34,7 +30,7 @@ void JustJobTest::Update(float dt)
 	//Get how many threads there are for jobs to be processed on
 	int threadsPerTest = floor(_jobManager->GetTotalThreads() / 3);
 
-	if (_runCount < threadsPerTest)
+	if (_runCount < threadsPerTest || threadsPerTest == 0)
 	{
 		_jobManager->AddJobToQueue(JobManager::Job([&](){ NpcShieldTest(0, _runCount - 1); }));
 		_jobManager->AddJobToQueue(JobManager::Job([&](){ NpcHealthTest(0, _runCount - 1); }));

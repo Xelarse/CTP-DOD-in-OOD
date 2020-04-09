@@ -7,7 +7,6 @@
 
 JobManager::JobManager(JobCpuIntensity intensity, bool quickSetup)
 {
-	
 	const int poolSize = !quickSetup ? CalculateThreadCountWithBenchmarking(intensity) : CalculateThreadCountWithoutBenchmarking(intensity);
 
 	_threads.reserve(poolSize);
@@ -53,7 +52,7 @@ void JobManager::ProcessJobs()
 
 	//Set up the _currentBatch and its count
 	ProgressBatch();
-	
+
 	//Whilst there are still jobs left to send on threads
 	while (unorderedJobs.size() > 0 || _jobQueue.size() > 0)
 	{
@@ -88,13 +87,11 @@ void JobManager::ProcessJobs()
 	while (!doneProcessing)
 	{
 		doneProcessing = true;
-
 		for (auto& thread : _threads)
 		{
 			if (!thread->IsThreadIdle())
 			{
 				doneProcessing = false;
-				break;
 			}
 		}
 	}
@@ -121,17 +118,16 @@ void JobManager::ProgressBatch()
 
 int JobManager::CalculateThreadCountWithBenchmarking(JobCpuIntensity intensity)
 {
-	//Tried this but never seems to give an actual result
 	int currentTotal = std::thread::hardware_concurrency();	//Starts with the max concurrent threads of the CPU
 	double previousTimeTaken = 0;
 	double previousDiff = 0;
 	double currentTimeTaken = 0;
 	double currentDiff = 0;
 
-		//Define the test function to be used on the threads
+	//Define the test function to be used on the threads
 	std::function<void()> testFunc = []()
 	{
-		const int vectorSize = 700000;
+		const int vectorSize = 800000;
 
 		std::random_device gen;
 		std::mt19937 seed(gen());

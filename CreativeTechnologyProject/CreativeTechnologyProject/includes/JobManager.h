@@ -60,6 +60,5 @@ private:
 	//Once the time taken to create the threads gets worse than this it treats the previous value as threadMax
 	const float _performanceThreshold = 0.075f;
 	const int _threadsPerStep = 2;
-
 };
 

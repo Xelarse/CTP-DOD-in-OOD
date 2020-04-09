@@ -37,7 +37,7 @@ void AllSystemsTest::Update(float dt)
 	//Get how many threads there are for jobs to be processed on
 	int threadsPerTest = floor(_jobManager->GetTotalThreads() / 3);
 
-	if (_runCount < threadsPerTest)
+	if (_runCount < threadsPerTest || threadsPerTest == 0)
 	{
 		_jobManager->AddJobToQueue(JobManager::Job([&](){ NpcShieldTest(0, _runCount - 1); }));
 		_jobManager->AddJobToQueue(JobManager::Job([&](){ NpcHealthTest(0, _runCount - 1); }));
