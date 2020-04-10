@@ -1,6 +1,6 @@
 #pragma once
 #include "BaseTest.h"
-#include "JobManager.h"
+#include "JobSystem.hpp"
 #include "MemorySystems.hpp"
 #include "Npc.h"
 
@@ -23,7 +23,7 @@ private:
 
 	void SanityCheckRunCount() override;
 
-	JobManager* _jobManager = nullptr;
+	JobSystem* _jobManager = nullptr;
 	MemoryManager* _memoryManager = nullptr;
 	std::vector<Npc> _npcs;
 };

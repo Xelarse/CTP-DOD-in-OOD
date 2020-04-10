@@ -4,7 +4,7 @@
 
 JustJobTest::JustJobTest(int npcMax)
 {
-	_jobManager = new JobManager(JobManager::JobCpuIntensity::HIGH);
+	_jobManager = new JobSystem(JobSystem::JobCpuIntensity::HIGH);
 	_npcVec.reserve(npcMax);
 	std::random_device rd;
 	std::mt19937 generator(rd());
@@ -32,9 +32,9 @@ void JustJobTest::Update(float dt)
 
 	if (_runCount < threadsPerTest || threadsPerTest == 0)
 	{
-		_jobManager->AddJobToQueue(JobManager::Job([&](){ NpcShieldTest(0, _runCount - 1); }));
-		_jobManager->AddJobToQueue(JobManager::Job([&](){ NpcHealthTest(0, _runCount - 1); }));
-		_jobManager->AddJobToQueue(JobManager::Job([&](){ NpcArmourTest(0, _runCount - 1); }));
+		_jobManager->AddJobToQueue(JobSystem::Job([&](){ NpcShieldTest(0, _runCount - 1); }));
+		_jobManager->AddJobToQueue(JobSystem::Job([&](){ NpcHealthTest(0, _runCount - 1); }));
+		_jobManager->AddJobToQueue(JobSystem::Job([&](){ NpcArmourTest(0, _runCount - 1); }));
 	}
 	else
 	{
@@ -47,9 +47,9 @@ void JustJobTest::Update(float dt)
 			int startVal = stride * i;
 			int endVal = i == threadsPerTest - 1 ? _runCount - 1 : (stride * (i + 1)) - 1;
 
-			_jobManager->AddJobToQueue(JobManager::Job(std::function<void()>(std::bind(&JustJobTest::NpcShieldTest, this, startVal, endVal))));
-			_jobManager->AddJobToQueue(JobManager::Job(std::function<void()>(std::bind(&JustJobTest::NpcHealthTest, this, startVal, endVal))));
-			_jobManager->AddJobToQueue(JobManager::Job(std::function<void()>(std::bind(&JustJobTest::NpcArmourTest, this, startVal, endVal))));
+			_jobManager->AddJobToQueue(JobSystem::Job(std::function<void()>(std::bind(&JustJobTest::NpcShieldTest, this, startVal, endVal))));
+			_jobManager->AddJobToQueue(JobSystem::Job(std::function<void()>(std::bind(&JustJobTest::NpcHealthTest, this, startVal, endVal))));
+			_jobManager->AddJobToQueue(JobSystem::Job(std::function<void()>(std::bind(&JustJobTest::NpcArmourTest, this, startVal, endVal))));
 		}
 	}
 }

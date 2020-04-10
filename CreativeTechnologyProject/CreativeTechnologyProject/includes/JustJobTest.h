@@ -2,7 +2,7 @@
 #include <memory>
 #include "BaseTest.h"
 #include "NpcNoMem.h"
-#include "JobManager.h"
+#include "JobSystem.hpp"
 
 class JustJobTest : public BaseTest
 {
@@ -25,7 +25,7 @@ private:
 
 	void SanityCheckRunCount() override;
 
-	JobManager* _jobManager = nullptr;
+	JobSystem* _jobManager = nullptr;
 	std::vector<std::unique_ptr<NpcNoMem>> _npcVec;
 };
 

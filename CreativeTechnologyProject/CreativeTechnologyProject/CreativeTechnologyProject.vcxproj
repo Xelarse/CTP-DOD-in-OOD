@@ -171,7 +171,6 @@
     <ClCompile Include="source\ExceptionHandler.cpp" />
     <ClCompile Include="source\Graphics.cpp" />
     <ClCompile Include="source\ImguiManager.cpp" />
-    <ClCompile Include="source\JobManager.cpp" />
     <ClCompile Include="source\JustJobTest.cpp" />
     <ClCompile Include="source\JustMemoryTest.cpp" />
     <ClCompile Include="source\Keyboard.cpp" />
@@ -192,7 +191,7 @@
     <ClInclude Include="includes\ExceptionHandler.h" />
     <ClInclude Include="includes\Graphics.h" />
     <ClInclude Include="includes\ImguiManager.h" />
-    <ClInclude Include="includes\JobManager.h" />
+    <ClInclude Include="includes\JobSystem.hpp" />
     <ClInclude Include="includes\JustJobTest.h" />
     <ClInclude Include="includes\JustMemoryTest.h" />
     <ClInclude Include="includes\Keyboard.h" />

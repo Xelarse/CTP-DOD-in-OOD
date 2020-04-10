@@ -114,9 +114,6 @@
     <ClCompile Include="source\JustMemoryTest.cpp">
       <Filter>Source Files\Tests</Filter>
     </ClCompile>
-    <ClCompile Include="source\JobManager.cpp">
-      <Filter>Source Files\Job System</Filter>
-    </ClCompile>
     <ClCompile Include="source\Timer.cpp">
       <Filter>Source Files\Utilities</Filter>
     </ClCompile>
@@ -200,9 +197,6 @@
     <ClInclude Include="includes\JustMemoryTest.h">
       <Filter>Header Files\Tests</Filter>
     </ClInclude>
-    <ClInclude Include="includes\JobManager.h">
-      <Filter>Header Files\Job System</Filter>
-    </ClInclude>
     <ClInclude Include="includes\Timer.h">
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>
@@ -217,6 +211,9 @@
     </ClInclude>
     <ClInclude Include="includes\MemorySystemsInterface.hpp">
       <Filter>Header Files\Memory System</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\JobSystem.hpp">
+      <Filter>Header Files\Job System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
