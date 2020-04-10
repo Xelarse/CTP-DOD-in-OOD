@@ -9,7 +9,7 @@ public:
 	Npc() = delete;
 	~Npc() = default;
 
-	AAVariable<float> _health;
-	AAVariable<float> _shield;
-	AAVariable<int> _armour;
+	AllmanVariable<float> _health;
+	AllmanVariable<float> _shield;
+	AllmanVariable<int> _armour;
 };

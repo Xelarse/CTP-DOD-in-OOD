@@ -2,34 +2,34 @@
 #include "MemorySystems.hpp"
 
 template<class T>
-size_t AAHash(T toHash)
+size_t AllmanHash(T toHash)
 {
 	static std::hash<T> hasher;
 	return hasher(toHash);
 }
 
 template<class T>
-class AAVariable
+class AllmanVariable
 {
 public:
 
 	////---------- Constructors and Destructors ----------////
 
-	AAVariable() = delete;
-	AAVariable(MemoryManager* manRef, const size_t& hashId) : _hashId(hashId), _managerRef(manRef)
+	AllmanVariable() = delete;
+	AllmanVariable(MemoryManager* manRef, const size_t& hashId) : _hashId(hashId), _managerRef(manRef)
 	{
 		Initialise();
 		_ptrToBase = reinterpret_cast<T*>(_managerRef->GetBlockInfo(_hashId).dataPointer);
 	}
 
-	AAVariable(MemoryManager* manRef, const size_t& hashId, const T& rhs) : _hashId(hashId), _managerRef(manRef)
+	AllmanVariable(MemoryManager* manRef, const size_t& hashId, const T& rhs) : _hashId(hashId), _managerRef(manRef)
 	{
 		Initialise();
 		if (_ptrToVar != nullptr) { *_ptrToVar = rhs; }
 		_ptrToBase = reinterpret_cast<T*>(_managerRef->GetBlockInfo(_hashId).dataPointer);
 	}
 
-	~AAVariable()
+	~AllmanVariable()
 	{
 		//Currently cannot free the related data as its stored linearly in the manager
 		T* _ptrToVar = nullptr;

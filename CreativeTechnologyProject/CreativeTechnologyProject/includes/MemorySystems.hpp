@@ -5,7 +5,7 @@
 class MemoryManager
 {
 	template<class T>
-	friend class AAVariable;
+	friend class AllmanVariable;
 
 public:
 	MemoryManager(const size_t elementSize, const size_t elementCount) : _totalObjectCount(elementCount)
