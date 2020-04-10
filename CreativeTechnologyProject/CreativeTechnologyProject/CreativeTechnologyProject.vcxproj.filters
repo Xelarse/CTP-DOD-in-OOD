@@ -40,9 +40,6 @@
     <Filter Include="Header Files\Memory System">
       <UniqueIdentifier>{76e27887-95a6-4b16-a4d4-f41657230161}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Memory System">
-      <UniqueIdentifier>{a1636428-073c-41a8-ab02-8af1ad89e179}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Utilities">
       <UniqueIdentifier>{2e93fb53-8601-4c67-96aa-6782b0536c45}</UniqueIdentifier>
     </Filter>
@@ -209,20 +206,20 @@
     <ClInclude Include="includes\MemoryAllocator.h">
       <Filter>Header Files\Memory System</Filter>
     </ClInclude>
-    <ClInclude Include="includes\MemoryManager.h">
-      <Filter>Header Files\Memory System</Filter>
-    </ClInclude>
     <ClInclude Include="includes\Timer.h">
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="includes\PoolableThread.h">
       <Filter>Header Files\Job System</Filter>
     </ClInclude>
-    <ClInclude Include="includes\AAVariable.h">
-      <Filter>Header Files\Memory System</Filter>
-    </ClInclude>
     <ClInclude Include="includes\NpcNoMem.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\MemorySystems.hpp">
+      <Filter>Header Files\Memory System</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\MemorySystemsInterface.hpp">
+      <Filter>Header Files\Memory System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

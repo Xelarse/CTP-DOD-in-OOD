@@ -185,7 +185,6 @@
     <ClCompile Include="source\WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="includes\AAVariable.h" />
     <ClInclude Include="includes\AllSystemsTest.h" />
     <ClInclude Include="includes\App.h" />
     <ClInclude Include="includes\BaseTest.h" />
@@ -198,7 +197,8 @@
     <ClInclude Include="includes\JustMemoryTest.h" />
     <ClInclude Include="includes\Keyboard.h" />
     <ClInclude Include="includes\MemoryAllocator.h" />
-    <ClInclude Include="includes\MemoryManager.h" />
+    <ClInclude Include="includes\MemorySystems.hpp" />
+    <ClInclude Include="includes\MemorySystemsInterface.hpp" />
     <ClInclude Include="includes\Mouse.h" />
     <ClInclude Include="includes\NoSystemsTest.h" />
     <ClInclude Include="includes\Npc.h" />

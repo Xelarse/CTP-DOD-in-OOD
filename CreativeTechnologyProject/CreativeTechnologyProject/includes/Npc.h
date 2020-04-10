@@ -1,6 +1,6 @@
 #pragma once
 #include <random>
-#include "AAVariable.h"
+#include "MemorySystemsInterface.hpp"
 
 class Npc
 {

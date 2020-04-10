@@ -1,7 +1,7 @@
 #pragma once
 #include "BaseTest.h"
 #include "JobManager.h"
-#include "MemoryManager.h"
+#include "MemorySystems.hpp"
 #include "Npc.h"
 
 class AllSystemsTest : public BaseTest

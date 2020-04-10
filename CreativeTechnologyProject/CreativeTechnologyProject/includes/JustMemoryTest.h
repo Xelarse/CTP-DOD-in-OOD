@@ -1,6 +1,6 @@
 #pragma once
 #include "BaseTest.h"
-#include "MemoryManager.h"
+#include "MemorySystems.hpp"
 #include "Npc.h"
 
 class JustMemoryTest : public BaseTest
