@@ -120,9 +120,6 @@
     <ClCompile Include="source\JobManager.cpp">
       <Filter>Source Files\Job System</Filter>
     </ClCompile>
-    <ClCompile Include="source\MemoryAllocator.cpp">
-      <Filter>Source Files\Memory System</Filter>
-    </ClCompile>
     <ClCompile Include="source\Timer.cpp">
       <Filter>Source Files\Utilities</Filter>
     </ClCompile>
