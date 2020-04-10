@@ -178,7 +178,6 @@
     <ClCompile Include="source\NoSystemsTest.cpp" />
     <ClCompile Include="source\Npc.cpp" />
     <ClCompile Include="source\NpcNoMem.cpp" />
-    <ClCompile Include="source\PoolableThread.cpp" />
     <ClCompile Include="source\Timer.cpp" />
     <ClCompile Include="source\Window.cpp" />
     <ClCompile Include="source\WinMain.cpp" />

@@ -117,9 +117,6 @@
     <ClCompile Include="source\Timer.cpp">
       <Filter>Source Files\Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="source\PoolableThread.cpp">
-      <Filter>Source Files\Job System</Filter>
-    </ClCompile>
     <ClCompile Include="source\NpcNoMem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
