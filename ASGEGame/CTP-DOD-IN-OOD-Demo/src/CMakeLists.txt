@@ -53,6 +53,12 @@ set_target_properties(${PROJECT_NAME}
         LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/build/${CLIENT}/lib"
         RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/build/${CLIENT}/bin")
 
+## Attempt at readding Gamedata
+add_custom_command(
+        OUTPUT "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${GAMEDATA_FOLDER}"
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${CMAKE_CURRENT_SOURCE_DIR}/${GAMEDATA_FOLDER}" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${GAMEDATA_FOLDER}")
+
 ## important build scripts
 include(build/compilation)
 include(libs/asge)

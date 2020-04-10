@@ -27,7 +27,7 @@ void Square::SetPosition(const Vector& newPos)
 void Square::InitSprite(ASGE::Renderer* renderer)
 {
     _sprite = renderer->createUniqueSprite();
-    _sprite->loadTexture("/data/Square5by5.png");    //TODO Fix Sprite here
+    _sprite->loadTexture("/r.png");    //TODO Fix Sprite here
     _sprite->xPos(_position._x);
     _sprite->yPos(_position._y);
     _sprite->scale(1.0f);
