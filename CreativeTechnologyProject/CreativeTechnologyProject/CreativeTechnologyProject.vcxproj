@@ -200,7 +200,6 @@
     <ClInclude Include="includes\NoSystemsTest.h" />
     <ClInclude Include="includes\Npc.h" />
     <ClInclude Include="includes\NpcNoMem.h" />
-    <ClInclude Include="includes\PoolableThread.h" />
     <ClInclude Include="includes\Timer.h" />
     <ClInclude Include="includes\Window.h" />
     <ClInclude Include="includes\WindowsCustomInclude.h" />

@@ -34,9 +34,6 @@
     <Filter Include="Header Files\Job System">
       <UniqueIdentifier>{999da293-cc31-4cc9-b223-4013b547f90f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Job System">
-      <UniqueIdentifier>{b427fb84-1689-4e24-a528-1ecc10f5c41b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Memory System">
       <UniqueIdentifier>{76e27887-95a6-4b16-a4d4-f41657230161}</UniqueIdentifier>
     </Filter>
@@ -196,9 +193,6 @@
     </ClInclude>
     <ClInclude Include="includes\Timer.h">
       <Filter>Header Files\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\PoolableThread.h">
-      <Filter>Header Files\Job System</Filter>
     </ClInclude>
     <ClInclude Include="includes\NpcNoMem.h">
       <Filter>Header Files</Filter>

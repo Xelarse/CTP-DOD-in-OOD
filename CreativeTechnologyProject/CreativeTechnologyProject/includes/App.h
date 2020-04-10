@@ -7,7 +7,6 @@
 #include "NoSystemsTest.h"
 #include "JustJobTest.h"
 #include "JustMemoryTest.h"
-#include "PoolableThread.h"
 
 class App
 {
