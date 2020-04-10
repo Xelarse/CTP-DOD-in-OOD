@@ -196,7 +196,6 @@
     <ClInclude Include="includes\JustJobTest.h" />
     <ClInclude Include="includes\JustMemoryTest.h" />
     <ClInclude Include="includes\Keyboard.h" />
-    <ClInclude Include="includes\MemoryAllocator.h" />
     <ClInclude Include="includes\MemorySystems.hpp" />
     <ClInclude Include="includes\MemorySystemsInterface.hpp" />
     <ClInclude Include="includes\Mouse.h" />

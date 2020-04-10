@@ -203,9 +203,6 @@
     <ClInclude Include="includes\JobManager.h">
       <Filter>Header Files\Job System</Filter>
     </ClInclude>
-    <ClInclude Include="includes\MemoryAllocator.h">
-      <Filter>Header Files\Memory System</Filter>
-    </ClInclude>
     <ClInclude Include="includes\Timer.h">
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>

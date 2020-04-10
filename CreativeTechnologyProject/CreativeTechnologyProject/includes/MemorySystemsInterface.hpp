@@ -1,6 +1,13 @@
 #pragma once
 #include "MemorySystems.hpp"
 
+
+/*
+	Used in init of the AllmanVariable.
+	Its used to determine related variables.
+	if two AllmanVariables share the same HashID 
+	they are related and will be located spatially in memory.
+*/
 template<class T>
 size_t AllmanHash(T toHash)
 {
@@ -8,6 +15,13 @@ size_t AllmanHash(T toHash)
 	return hasher(toHash);
 }
 
+
+/*
+	The AllmanVariable is a frontend for the developer to interact with the MemoryManager.
+	Each instance of AllmanVariable is a wrapper for a variable and some extra features.
+	Those extra features leverage some of Memory Managers metadata.
+	This metadata is used to leverage some data oriented features such as iterating over data with the same HashID.
+*/
 template<class T>
 class AllmanVariable
 {
@@ -65,10 +79,10 @@ public:
 private:
 
 	/*
-		Call on construction of this class
-		Gets a ptr from the Memory manager to store its data at
-		The location of the ptr in memory is related to the HashID
-		Vars with the same HashID are stored locally
+		Called on construction of this class.
+		Gets a ptr from the Memory manager to store its data at.
+		The location of the ptr in memory is related to the HashID.
+		Vars with the same HashID are stored locally.
 	*/
 	void Initialise()
 	{
