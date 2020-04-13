@@ -28,7 +28,6 @@ public:
 private:
     Vector _basePosition;
     Vector _position;
-
     float _posMod = 0.2f;
     bool _posReverse = false;
 

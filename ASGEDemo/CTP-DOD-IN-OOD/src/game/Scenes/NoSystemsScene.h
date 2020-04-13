@@ -20,6 +20,6 @@ public:
     void KeyHandler(const ASGE::SharedEventData &data) override;
 
 private:
-
+    double _squarePadding = 2.5f;
     std::vector<std::unique_ptr<Square>> _squares;
 };

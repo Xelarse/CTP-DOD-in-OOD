@@ -81,7 +81,7 @@ void Square::Render(ASGE::Renderer *renderer)
     int yPos = static_cast<int>(_position._y);
 
     renderer->renderText(
-            "&&",
+            "&",
             xPos,
             yPos,
             _squareCol
