@@ -7,7 +7,8 @@
 
 NoSystemsScene::NoSystemsScene(MyASGEGame *gameRef, ASGE::Renderer* renderer) : BaseScene(gameRef)
 {
-    _testSquare = std::make_unique<Square>(renderer);
+    Vector testPos(static_cast<float>(ASGE::SETTINGS.window_width) * 0.5f, static_cast<float>(ASGE::SETTINGS.window_height) * 0.5f);
+    _testSquare = std::make_unique<Square>(renderer, testPos);
 }
 
 NoSystemsScene::~NoSystemsScene()
@@ -22,7 +23,9 @@ void NoSystemsScene::PreUpdate(double dt)
 
 void NoSystemsScene::Update(double dt)
 {
-    _testSquare->Update(dt);
+    _testSquare->UpdateSpritePosition(dt);
+    _testSquare->UpdateSpriteScale(dt);
+    _testSquare->UpdateSpriteColour(_currentTotalTime);
 }
 
 void NoSystemsScene::PostUpdate(double dt)
@@ -32,15 +35,6 @@ void NoSystemsScene::PostUpdate(double dt)
 
 void NoSystemsScene::Render(ASGE::Renderer *renderer)
 {
-    std::string text = "NO SYSTEMS SCENE ACTIVE";
-    renderer->renderText(
-            text,
-            static_cast<int>(ASGE::SETTINGS.window_width * 0.5),
-            static_cast<int >(ASGE::SETTINGS.window_height * 0.5),
-            ASGE::COLOURS::BLACK
-    );
-
-
     _testSquare->Render(renderer);
 }
 

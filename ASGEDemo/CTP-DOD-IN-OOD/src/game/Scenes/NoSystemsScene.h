@@ -20,5 +20,6 @@ public:
     void KeyHandler(const ASGE::SharedEventData &data) override;
 
 private:
-    std::unique_ptr<Square> _testSquare;
+
+    std::vector<std::unique_ptr<Square>> _squares;
 };

@@ -18,7 +18,9 @@ public:
     virtual void PostUpdate(double dt) = 0;
     virtual void Render(ASGE::Renderer* renderer) = 0;
     virtual void KeyHandler(const ASGE::SharedEventData& data) = 0;
+    void UpdateTotalTime(const double& newTime) { _currentTotalTime = newTime; }
 
 protected:
     MyASGEGame* _gameRef = nullptr;
+    double _currentTotalTime = 0;
 };

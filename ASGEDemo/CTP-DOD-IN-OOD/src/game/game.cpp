@@ -15,7 +15,7 @@
 
 MyASGEGame::MyASGEGame(ASGE::GameSettings settings) : OGLGame(settings)
 {
-  renderer->setClearColour(ASGE::COLOURS::DARKCYAN);
+  renderer->setClearColour(ASGE::COLOURS::DIMGREY);
   inputs->use_threads = false;
   toggleFPS();
   initCamera();
@@ -76,14 +76,15 @@ void MyASGEGame::keyHandler(const ASGE::SharedEventData& data)
 
 void MyASGEGame::update(const ASGE::GameTime& game_time)
 {
-   auto dt_sec = game_time.delta.count();
-  //camera.update(game_time);
+   auto dt = game_time.delta.count();
+   _totalCount = static_cast<double>(game_time.elapsed.count());
 
   if(_activeScene != nullptr)
   {
-      _activeScene->PreUpdate(dt_sec);
-      _activeScene->Update(dt_sec);
-      _activeScene->PostUpdate(dt_sec);
+      _activeScene->UpdateTotalTime(_totalCount);
+      _activeScene->PreUpdate(dt);
+      _activeScene->Update(dt);
+      _activeScene->PostUpdate(dt);
   }
 }
 

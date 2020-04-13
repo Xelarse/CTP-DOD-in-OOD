@@ -39,4 +39,6 @@ class MyASGEGame : public ASGE::OGLGame
   std::unique_ptr<BaseScene> _sysScene;
 
   BaseScene* _activeScene = nullptr;
+
+  double _totalCount = 0;
 };

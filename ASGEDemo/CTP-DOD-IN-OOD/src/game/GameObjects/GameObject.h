@@ -24,7 +24,6 @@ public:
     virtual void SetPosition(const Vector& newPos) = 0;
 
     virtual void InitSprite(ASGE::Renderer* renderer) = 0;
-    virtual void Update(double dt) = 0;
     virtual void Render(ASGE::Renderer* renderer) = 0;
 
 protected:

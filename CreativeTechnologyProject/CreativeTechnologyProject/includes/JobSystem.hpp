@@ -114,8 +114,8 @@ public:
 	};
 
 	/*
-	Small class used to determine how tasks are run in the JobSystem.
-	Has a function ptr, whether the job is ordered or not and what prioity if ordered.
+		Small class used to determine how tasks are run in the JobSystem.
+		Has a function ptr, whether the job is ordered or not and what prioity if ordered.
 	*/
 	class Job
 	{
