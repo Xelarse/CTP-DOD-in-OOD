@@ -46,9 +46,9 @@ public:
 	~AllmanVariable()
 	{
 		//Currently cannot free the related data as its stored linearly in the manager
-		T* _ptrToVar = nullptr;
-		T* _ptrToBase = nullptr;
-		MemoryManager* _managerRef = nullptr;
+		_ptrToVar = nullptr;
+		_ptrToBase = nullptr;
+		_managerRef = nullptr;
 	}
 
 	////---------- Variable related Getter and Setter ----------////

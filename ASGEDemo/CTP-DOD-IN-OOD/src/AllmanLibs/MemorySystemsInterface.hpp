@@ -30,14 +30,14 @@ public:
 	////---------- Constructors and Destructors ----------////
 
 	AllmanVariable() = delete;
-	AllmanVariable(MemoryManager* manRef, const size_t& hashId) : _hashId(hashId), _managerRef(manRef)
+	AllmanVariable(MemoryManager* manRef, const size_t& hashId) : _managerRef(manRef), _hashId(hashId)
 	{
 		Initialise();
 		_ptrToBase = reinterpret_cast<T*>(_managerRef->GetBlockInfo(_hashId).dataPointer);
 	}
 
-	AllmanVariable(MemoryManager* manRef, const size_t& hashId, const T& rhs) : _hashId(hashId), _managerRef(manRef)
-	{
+	AllmanVariable(MemoryManager* manRef, const size_t& hashId, const T& rhs) : _managerRef(manRef), _hashId(hashId)
+    {
 		Initialise();
 		if (_ptrToVar != nullptr) { *_ptrToVar = rhs; }
 		_ptrToBase = reinterpret_cast<T*>(_managerRef->GetBlockInfo(_hashId).dataPointer);
@@ -46,9 +46,9 @@ public:
 	~AllmanVariable()
 	{
 		//Currently cannot free the related data as its stored linearly in the manager
-		T* _ptrToVar = nullptr;
-		T* _ptrToBase = nullptr;
-		MemoryManager* _managerRef = nullptr;
+		_ptrToVar = nullptr;
+		_ptrToBase = nullptr;
+		_managerRef = nullptr;
 	}
 
 	////---------- Variable related Getter and Setter ----------////
@@ -67,14 +67,14 @@ public:
 		Returns the total count for all variables in the alloc'd block
 		The block is the one related to the inputted HashID
 	*/
-	const unsigned int GetLength() { return _managerRef->GetBlockInfo(_hashId).currentCount; }
+	unsigned int GetLength() { return _managerRef->GetBlockInfo(_hashId).currentCount; }
 
 	//Returns the stride, just incase you wanted to scrub via Char* instead of the types Ptr
 	/*
 		Returns the stride required to move from one variable to the next in the alloc'd block
 		The block is the one related to the inputted HashID
 	*/
-	const unsigned int GetStride() { return _managerRef->GetBlockInfo(_hashId).stride; }
+	unsigned int GetStride() { return _managerRef->GetBlockInfo(_hashId).stride; }
 
 private:
 

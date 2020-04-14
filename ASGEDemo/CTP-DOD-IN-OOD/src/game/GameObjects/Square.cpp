@@ -3,7 +3,6 @@
 //
 
 #include "Square.h"
-#include <cmath>
 
 Square::Square(ASGE::Renderer *renderer)
 {

@@ -274,7 +274,7 @@ public:
 private:
 	struct ExistingBlocks
 	{
-		ExistingBlocks(size_t _id, void* _ptr, size_t _stride, unsigned int _capacity)
+		ExistingBlocks(size_t _id, void* _ptr, size_t _stride, size_t _capacity)
 		{
 			dataId = _id;
 			currentCount = 0;
@@ -284,8 +284,8 @@ private:
 		}
 
 		size_t dataId;					//The Hash id for the Block
-		unsigned int currentCount;		//Current amount of variables stored in block
-		unsigned int maxCount;			//The max capacity the block can hold
+		size_t currentCount;		//Current amount of variables stored in block
+		size_t maxCount;			//The max capacity the block can hold
 		size_t stride;					//The stride needed to move between variables
 		void* dataPointer;				//The Base Ptr to the block of memory
 	};
@@ -301,7 +301,7 @@ private:
 			InitialiseNewMemoryBlock<T>(id, _totalObjectCount);
 		}
 
-		auto& existingBlock = _existingAllocations[GetIndexOfId(id)];
+		auto& existingBlock = _existingAllocations[static_cast<size_t>(GetIndexOfId(id))];
 
 		//Check if the block has space for another allocation
 		if (existingBlock.currentCount + 1 > existingBlock.maxCount)
@@ -325,7 +325,7 @@ private:
 	template<typename T>
 	T* InitialiseVariable(size_t id, T data)
 	{
-		T* outPtr = InitialiseVariable(id);
+		T* outPtr = InitialiseVariable<T>(id);
 		if (outPtr != nullptr)
 		{
 			*outPtr = data;
@@ -335,7 +335,7 @@ private:
 
 	//Initilises the memory block and returns the base ptr
 	template<typename T>
-	T* InitialiseNewMemoryBlock(size_t id, unsigned int maxCapacity)
+	T* InitialiseNewMemoryBlock(size_t id, size_t maxCapacity)
 	{
 		void* dataPtr = _pAllocator->Allocate(sizeof(T) * maxCapacity);
 		_existingAllocations.push_back(ExistingBlocks(id, dataPtr, sizeof(T), maxCapacity));
@@ -344,7 +344,7 @@ private:
 
 	const ExistingBlocks& GetBlockInfo(size_t id)
 	{
-		return _existingAllocations[GetIndexOfId(id)];
+		return _existingAllocations[static_cast<size_t>(GetIndexOfId(id))];
 	}
 
 	bool CheckIfIdExists(size_t id)
@@ -361,9 +361,9 @@ private:
 
 	int GetIndexOfId(size_t id)
 	{
-		for (int i = 0; i < _existingAllocations.size(); i++)
+		for (int i = 0; i < static_cast<int>(_existingAllocations.size()); i++)
 		{
-			if (_existingAllocations[i].dataId == id)
+			if (_existingAllocations[static_cast<size_t>(i)].dataId == id)
 			{
 				return i;
 			}
@@ -378,7 +378,7 @@ private:
 
 		if (index != -1)
 		{
-			ExistingBlocks removedAllocation = _existingAllocations[index];
+			ExistingBlocks removedAllocation = _existingAllocations[static_cast<size_t>(index)];
 			void* dataPtr = removedAllocation.dataPointer;
 			_pAllocator->Free(dataPtr);
 

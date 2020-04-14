@@ -19,7 +19,7 @@ set(SOURCE_FILES
         "game/Scenes/NoSystemsScene.cpp"
         "game/Scenes/MenuScene.cpp"
         "game/GameObjects/Square.cpp"
-        )
+        "game/GameObjects/AllmanSquare.cpp")
 
 set(HEADER_FILES
         "game/game.h"
@@ -29,6 +29,7 @@ set(HEADER_FILES
         "game/Scenes/MenuScene.h"
         "game/GameObjects/Square.h"
         "game/GameObjects/GameObject.h"
+        "game/GameObjects/AllmanSquare.h"
         "AllmanLibs/JobSystem.hpp"
         "AllmanLibs/MemorySystems.hpp"
         "AllmanLibs/MemorySystemsInterface.hpp")
