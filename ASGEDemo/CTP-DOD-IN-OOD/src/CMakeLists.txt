@@ -28,7 +28,10 @@ set(HEADER_FILES
         "game/Scenes/NoSystemsScene.h"
         "game/Scenes/MenuScene.h"
         "game/GameObjects/Square.h"
-        "game/GameObjects/GameObject.h")
+        "game/GameObjects/GameObject.h"
+        "AllmanLibs/JobSystem.hpp"
+        "AllmanLibs/MemorySystems.hpp"
+        "AllmanLibs/MemorySystemsInterface.hpp")
 
 ## the executable
 add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES})
