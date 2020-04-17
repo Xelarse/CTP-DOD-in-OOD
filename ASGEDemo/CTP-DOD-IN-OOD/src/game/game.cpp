@@ -11,6 +11,7 @@
 #include "Scenes/MenuScene.h"
 #include "Scenes/NoSystemsScene.h"
 #include "Scenes/SystemsScene.h"
+#include "Timer.h"
 
 
 MyASGEGame::MyASGEGame(ASGE::GameSettings settings) : OGLGame(settings)
@@ -82,9 +83,19 @@ void MyASGEGame::update(const ASGE::GameTime& game_time)
   if(_activeScene != nullptr)
   {
       _activeScene->UpdateTotalTime(_totalCount);
-      _activeScene->PreUpdate(dt);
-      _activeScene->Update(dt);
-      _activeScene->PostUpdate(dt);
+	  {
+//	  	Timer preTimer([](long long dura){Logging::INFO("PreUpdate: " + std::to_string(dura)); });
+        _activeScene->PreUpdate(dt);
+	  }
+	  {
+//		  Timer updateTimer([](long long dura){Logging::INFO("Update: " + std::to_string(dura)); });
+	  	_activeScene->Update(dt);
+      }
+	  {
+//		  Timer postTimer([](long long dura){Logging::INFO("PostUpdate: " + std::to_string(dura)); });
+	  	_activeScene->PostUpdate(dt);
+	  }
+
   }
 }
 

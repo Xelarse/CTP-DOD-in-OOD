@@ -25,5 +25,5 @@ protected:
     double _currentTotalTime = 0;
 	double _squarePadding = 1.5f;
 
-	int _demoSpanMod = 100;
+	int _demoSpanMod = 80;
 };

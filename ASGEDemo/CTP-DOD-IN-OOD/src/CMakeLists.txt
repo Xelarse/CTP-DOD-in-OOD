@@ -19,7 +19,8 @@ set(SOURCE_FILES
         "game/Scenes/NoSystemsScene.cpp"
         "game/Scenes/MenuScene.cpp"
         "game/GameObjects/Square.cpp"
-        "game/GameObjects/AllmanSquare.cpp")
+        "game/GameObjects/AllmanSquare.cpp"
+        "game/Timer.cpp")
 
 set(HEADER_FILES
         "game/game.h"
@@ -32,7 +33,8 @@ set(HEADER_FILES
         "game/GameObjects/AllmanSquare.h"
         "AllmanLibs/JobSystem.hpp"
         "AllmanLibs/MemorySystems.hpp"
-        "AllmanLibs/MemorySystemsInterface.hpp")
+        "AllmanLibs/MemorySystemsInterface.hpp"
+        "game/Timer.h")
 
 ## the executable
 add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES})

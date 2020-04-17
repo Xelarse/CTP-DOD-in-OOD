@@ -8,6 +8,9 @@
 #include <future>
 #include <algorithm>
 
+
+#include "Timer.h"
+#include <Engine/Logger.hpp>
 /*
 	Class that is used to interface with a detached thread.
 	Used by the JobSystem in its thread pool.
@@ -181,6 +184,12 @@ public:
 		_jobQueue.push_back(job);
 	}
 
+	void AddCachedJob(Job job)
+	{
+		std::lock_guard<std::mutex> lock(_cachedJobQueueMutex);
+		_cachedJobs.push_back(job);
+	}
+
 	/*
 		Processes the jobs on the queue.
 		Call this once all jobs in an update have been assigned to the Job System.
@@ -189,55 +198,70 @@ public:
 	*/
 	void ProcessJobs()
 	{
+
 		std::vector<Job> unorderedJobs;
+		//Add the cached jobs to the job queue
+		for(auto &cached : _cachedJobs)
+		{
+			_jobQueue.push_back(cached);
+		}
 		//Sort the jobs from unordered to the lowest priority
-		_jobQueue.sort([](const Job& lhs, const Job& rhs) { return lhs._priorityOrder < rhs._priorityOrder; });
+		_jobQueue.sort(
+				[](const Job &lhs, const Job &rhs)
+				{ return lhs._priorityOrder < rhs._priorityOrder; }
+		);
 
 		//Pop off the unordered jobs and chuck them in a vector, once they're in the vector put the rest in a fifo queue
 		std::list<Job>::iterator jobIter = _jobQueue.begin();
-		while (jobIter != _jobQueue.end())
+		while(jobIter != _jobQueue.end())
 		{
-			if (jobIter->_priority == Job::JobPriority::UNORDERED)
+			if(jobIter->_priority == Job::JobPriority::UNORDERED)
 			{
 				unorderedJobs.emplace_back(jobIter->_dataProcessingFunction, jobIter->_priority);
 				jobIter = _jobQueue.erase(jobIter);
 			}
-			else { ++jobIter; }
+			else
+			{ ++jobIter; }
 		}
 
 		//Set up the _currentBatch and its count
 		ProgressBatch();
 
-		//Whilst there are still jobs left to send on threads
-		while (unorderedJobs.size() > 0 || _jobQueue.size() > 0)
 		{
-			for (auto& thread : _threads)
+//			Timer postTimer([](long long dura){Logging::INFO("Assign Jobs: " + std::to_string(dura)); });
+			//Whilst there are still jobs left to send on threads
+			while(unorderedJobs.size() > 0 || _jobQueue.size() > 0)
 			{
-				if (thread->IsThreadIdle())
+				for(auto &thread : _threads)
 				{
-					//Firstly try and send an ordered job of the current batch
-					//Nameless scope used for the lockguard
+					if(thread->IsThreadIdle())
 					{
-						std::lock_guard<std::mutex> lock(_jobQueueMutex);
-						if (_jobQueue.size() > 0 && _jobQueue.front()._priorityOrder == _currentBatch)
+						//Firstly try and send an ordered job of the current batch
+						//Nameless scope used for the lockguard
 						{
-							thread->RunTaskOnThread(_jobQueue.front()._dataProcessingFunction, true);
-							_jobQueue.pop_front();
+							std::lock_guard<std::mutex> lock(_jobQueueMutex);
+							if(_jobQueue.size() > 0 && _jobQueue.front()._priorityOrder == _currentBatch)
+							{
+								thread->RunTaskOnThread(_jobQueue.front()._dataProcessingFunction, true);
+								_jobQueue.pop_front();
+								continue;
+							}
+						}
+
+						//If theres no jobs or the ones existing arent completed yet but theres a thread free ping an unordered job on it
+						if(unorderedJobs.size() > 0)
+						{
+							thread->RunTaskOnThread(unorderedJobs.back()._dataProcessingFunction);
+							unorderedJobs.pop_back();
 							continue;
 						}
 					}
-
-					//If theres no jobs or the ones existing arent completed yet but theres a thread free ping an unordered job on it
-					if (unorderedJobs.size() > 0)
-					{
-						thread->RunTaskOnThread(unorderedJobs.back()._dataProcessingFunction);
-						unorderedJobs.pop_back();
-						continue;
-					}
 				}
 			}
+
 		}
 
+//		Timer postTimer([](long long dura){Logging::INFO("Waiting for jobs to complete: " + std::to_string(dura)); });
 		//When all threads return to idle then continue processing
 		bool doneProcessing = false;
 		while (!doneProcessing)
@@ -395,6 +419,9 @@ private:
 
 	std::mutex _jobQueueMutex;
 	std::list<Job> _jobQueue;
+
+	std::mutex _cachedJobQueueMutex;
+	std::vector<Job> _cachedJobs;
 
 	std::atomic<int> _currentBatch;
 	std::atomic<int> _currentBatchProgress;
