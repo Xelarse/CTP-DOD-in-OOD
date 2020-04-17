@@ -10,9 +10,6 @@ SystemsScene::SystemsScene(MyASGEGame *gameRef, ASGE::Renderer* renderer) : Base
 	int xCount = static_cast<int>(ASGE::SETTINGS.window_width / offset);
 	int yCount = static_cast<int>(ASGE::SETTINGS.window_height / offset);
 
-	//const size_t elementSize, const size_t elementCount
-	//JobCpuIntensity intensity, bool quickSetup = true
-
 	_memoryManager = std::make_unique<MemoryManager>(sizeof(AllmanSquare), (xCount + 10) * (yCount + 10));
 	_jobSystem = std::make_unique<JobSystem>(JobSystem::JobCpuIntensity::HIGH);
 
@@ -20,7 +17,7 @@ SystemsScene::SystemsScene(MyASGEGame *gameRef, ASGE::Renderer* renderer) : Base
 	{
 		for(int y = -5; y < yCount + 5; ++y)
 		{
-//			_squares.emplace_back(renderer, _memoryManager.get(), Vector(static_cast<float>(x * offset), static_cast<float>(y * offset)));
+			_squares.emplace_back(renderer, _memoryManager.get(), Vector(static_cast<float>(x * offset), static_cast<float>(y * offset)));
 		}
 	}
 }
@@ -37,17 +34,81 @@ void SystemsScene::PreUpdate(double dt)
 
 void SystemsScene::Update(double dt)
 {
-    // Add job for moving all sprites, pri 1
-    // Add job for scaling all sprites, pri 1
-    // Add job to colour all sprites, unordered
+	//Get the total thread count and half it to get how many threads to use per test
+	int threadDivide = static_cast<int>(floor(_jobSystem->GetTotalThreads() / 2));
+	int stride = static_cast<int>(floor(static_cast<double>(_squares.size()) / static_cast<double >(threadDivide)));
 
-    //Add job to check boundaries and if over then flip bool
-    //This applies to scale and position, pri 2
+	//Set up the priority 1 jobs, AKA moving and scaling
+	//Set up the priority 2 jobs, AKA position and scale limit check
+	for(int i = 0; i < threadDivide; ++i)
+	{
+		//Start position is the stride distance based of how many of the items we can process for the given threads
+		//EndVal progresses just before the next startVal
+		int startVal = stride * i;
+		int endVal = i == threadDivide - 1 ? static_cast<int>(_squares.size()) - 1 : (stride * (i + 1)) - 1;
+
+		//Job to update square position and scale with first priority
+		_jobSystem->AddJobToQueue(
+				JobSystem::Job(
+						std::function<void()>(
+							std::bind(&SystemsScene::UpdateSquarePosition, this, startVal, endVal, dt)
+						),
+						JobSystem::Job::JobPriority::ORDERED,
+						1
+					)
+				);
+
+		_jobSystem->AddJobToQueue(
+				JobSystem::Job(
+						std::function<void()>(
+								std::bind(&SystemsScene::UpdateSquareScale, this, startVal, endVal, dt)
+						),
+						JobSystem::Job::JobPriority::ORDERED,
+						1
+				)
+		);
+
+		//Job to check square position and scale bounds with second priority
+		_jobSystem->AddJobToQueue(
+				JobSystem::Job(
+						std::function<void()>(
+								std::bind(&SystemsScene::SquarePositionBoundCheck, this, startVal, endVal)
+						),
+						JobSystem::Job::JobPriority::ORDERED,
+						2
+				)
+		);
+
+		_jobSystem->AddJobToQueue(
+				JobSystem::Job(
+						std::function<void()>(
+								std::bind(&SystemsScene::SquareScaleBoundCheck, this, startVal, endVal)
+						),
+						JobSystem::Job::JobPriority::ORDERED,
+						2
+				)
+		);
+	}
+
+	//Set up the unordered jobs, AKA Colour switching of all sprites
+	for(int j = 0; j < _jobSystem->GetTotalThreads(); ++j)
+	{
+		int startVal = stride * j;
+		int endVal = j == threadDivide - 1 ? static_cast<int>(_squares.size()) - 1 : (stride * (j + 1)) - 1;
+
+		_jobSystem->AddJobToQueue(
+				JobSystem::Job(
+						std::function<void()>(
+								std::bind(&SystemsScene::UpdateSquareColour, this, startVal, endVal, _currentTotalTime)
+						)
+				)
+		);
+	}
 }
 
 void SystemsScene::PostUpdate(double dt)
 {
-    //Invoke the jobs
+	_jobSystem->ProcessJobs();
 }
 
 void SystemsScene::Render(ASGE::Renderer *renderer)

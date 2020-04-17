@@ -9,8 +9,8 @@ class AllmanSquare : public GameObject
 {
 public:
     AllmanSquare() = delete;
-    explicit AllmanSquare(ASGE::Renderer* renderer, MemoryManager* memoryManager);
-    explicit AllmanSquare(ASGE::Renderer* renderer, MemoryManager* memoryManager, const Vector& pos);
+	explicit AllmanSquare(ASGE::Renderer* renderer, MemoryManager* memoryManager);
+	explicit AllmanSquare(ASGE::Renderer* renderer, MemoryManager* memoryManager, const Vector& pos);
     ~AllmanSquare() override = default;
 
     void InitSprite(ASGE::Renderer* renderer) override;

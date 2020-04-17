@@ -18,6 +18,11 @@ class GameObject
 {
 public:
     GameObject() = default;
+    GameObject(const GameObject& copy)
+    {
+        //Cant init the new sprite with renderer so you have to call init sprite again after copy
+        // **Shrugs**
+    }
     virtual ~GameObject() = default;
 
     virtual Vector GetPosition() const = 0;
