@@ -1,7 +1,9 @@
 //
 // Created by Alex on 4/4/2020.
 //
+#pragma once
 #include "BaseScene.h"
+#include "GameObjects/AllmanSquare.h"
 
 class SystemsScene : public BaseScene
 {
@@ -18,6 +20,13 @@ public:
 
 private:
 
+    void UpdateSquarePosition(int startInd, int endInd, double dt);
+    void UpdateSquareScale(int startInd, int endInd, double dt);
+    void UpdateSquareColour(int startInd, int endInd, double totalTime);
+    void SquarePositionBoundCheck(int startInd, int endInd);
+    void SquareScaleBoundCheck(int startInd, int endInd);
+
+    std::vector<AllmanSquare> _squares;
     std::array<ASGE::Colour, 7> _colourChoices = {
             ASGE::Colour(1.0f, 0.058f, 0.039f),         //R
             ASGE::Colour(1.0f, 0.729f, 0.039f),         //O

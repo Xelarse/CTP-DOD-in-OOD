@@ -10,7 +10,8 @@ AllmanSquare::AllmanSquare(ASGE::Renderer *renderer, MemoryManager* memoryManage
         _posReverse(AllmanVariable<bool>(memoryManager, AllmanHash("POSITIONREVERSE"), false)),
         _baseScale(AllmanVariable<float>(memoryManager, AllmanHash("BASESCALE"), 1.0f)),
         _scale(AllmanVariable<float>(memoryManager, AllmanHash("SCALE"), 1.0f)),
-        _scaleReverse(AllmanVariable<bool>(memoryManager, AllmanHash("SCALEREVERSE"), false))
+        _scaleReverse(AllmanVariable<bool>(memoryManager, AllmanHash("SCALEREVERSE"), false)),
+        _squareCol(AllmanVariable<ASGE::Colour>(memoryManager, AllmanHash("SQUARECOLOUR"), ASGE::COLOURS::AZURE))
 {
 //    InitSprite(renderer);
 }
@@ -21,7 +22,8 @@ AllmanSquare::AllmanSquare(ASGE::Renderer* renderer, MemoryManager* memoryManage
     _posReverse(AllmanVariable<bool>(memoryManager, AllmanHash("POSITIONREVERSE"), false)),
     _baseScale(AllmanVariable<float>(memoryManager, AllmanHash("BASESCALE"), 1.0f)),
     _scale(AllmanVariable<float>(memoryManager, AllmanHash("SCALE"), 1.0f)),
-    _scaleReverse(AllmanVariable<bool>(memoryManager, AllmanHash("SCALEREVERSE"), false))
+    _scaleReverse(AllmanVariable<bool>(memoryManager, AllmanHash("SCALEREVERSE"), false)),
+    _squareCol(AllmanVariable<ASGE::Colour>(memoryManager, AllmanHash("SQUARECOLOUR"), ASGE::COLOURS::AZURE))
 {
 //    InitSprite(renderer);
 }
@@ -33,7 +35,7 @@ void AllmanSquare::InitSprite(ASGE::Renderer* renderer)
     _sprite->xPos(_position.Get()._x);
     _sprite->yPos(_position.Get()._y);
     _sprite->scale(_scale.Get());
-    _sprite->colour(_squareCol);
+    _sprite->colour(_squareCol.Get());
 }
 
 void AllmanSquare::Render(ASGE::Renderer *renderer)
@@ -46,11 +48,11 @@ void AllmanSquare::Render(ASGE::Renderer *renderer)
             "&",
             xPos,
             yPos,
-            _squareCol
+            _squareCol.Get()
     );
 }
 
 void AllmanSquare::SetColour(ASGE::Colour col)
 {
-    _squareCol = col;
+    _squareCol.Set(col);
 }

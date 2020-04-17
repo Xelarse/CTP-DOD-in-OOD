@@ -1,7 +1,7 @@
 //
 // Created by Alex on 4/14/2020.
 //
-
+#pragma once
 #include "GameObject.h"
 #include "../AllmanLibs/MemorySystemsInterface.hpp"
 
@@ -20,6 +20,14 @@ public:
     static constexpr double _posLimit = 30.0f;
     static constexpr double _scaleLimit = 0.5f;
 
+    AllmanVariable<Vector>& AllmanPosition() { return _position; }
+    AllmanVariable<Vector>& AllmanBasePosition() { return _basePosition; }
+    AllmanVariable<bool>& AllmanPositionReverse() { return _posReverse; }
+
+    AllmanVariable<float>& AllmanScale() { return _scale; }
+    AllmanVariable<float>& AllmanBaseScale() { return _baseScale; }
+    AllmanVariable<bool>& AllmanScaleReverse() { return _scaleReverse; }
+
 private:
     AllmanVariable<Vector> _basePosition;
     AllmanVariable<Vector> _position;
@@ -29,5 +37,5 @@ private:
     AllmanVariable<float> _scale;
     AllmanVariable<bool> _scaleReverse;
 
-    ASGE::Colour _squareCol = ASGE::COLOURS::AZURE;
+    AllmanVariable<ASGE::Colour> _squareCol;
 };

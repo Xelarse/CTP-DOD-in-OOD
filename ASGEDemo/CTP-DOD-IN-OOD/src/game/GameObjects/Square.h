@@ -1,7 +1,7 @@
 //
 // Created by Alex on 4/6/2020.
 //
-
+#pragma once
 #include "GameObjects/GameObject.h"
 
 class Square : public GameObject

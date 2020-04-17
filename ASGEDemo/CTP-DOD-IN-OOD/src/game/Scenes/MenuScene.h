@@ -1,6 +1,7 @@
 //
 // Created by Alex on 4/6/2020.
 //
+#pragma once
 #include "BaseScene.h"
 
 class MenuScene : public BaseScene
