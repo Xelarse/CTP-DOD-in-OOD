@@ -81,17 +81,66 @@ void SystemsScene::UpdateSquareScale(int startInd, int endInd, double dt)
     }
 }
 
-void SystemsScene::UpdateSquareColour(int startInd, int endInd, double totaltime)
+void SystemsScene::UpdateSquareColour(int startInd, int endInd, double totalTime)
 {
+    const int colourIndex = static_cast<int>(totalTime) % static_cast<int>(_colourChoices.size());
+    const ASGE::Colour outCol = _colourChoices.at(static_cast<unsigned long long int>(colourIndex));
 
+    ASGE::Colour* baseColourPtr = _squares.front().AllmanColour().GetBasePtr();
+
+    for(int i = startInd; i <= endInd; ++i)
+    {
+        ASGE::Colour* currentColourPtr = baseColourPtr + i;
+        *currentColourPtr = outCol;
+    }
 }
 
 void SystemsScene::SquarePositionBoundCheck(int startInd, int endInd)
 {
+    Vector* baseBasePositionPtr = _squares.front().AllmanBasePosition().GetBasePtr();
+    Vector* basePositionPtr = _squares.front().AllmanPosition().GetBasePtr();
+    bool* baseBoolPtr = _squares.front().AllmanPositionReverse().GetBasePtr();
 
+    for(int i = startInd; i <= endInd; ++i)
+    {
+        Vector* currentBasePositionPtr = baseBasePositionPtr + i;
+        Vector* currentPositionPtr = basePositionPtr + i;
+        bool* currentBoolPtr = baseBoolPtr + i;
+
+        if(currentPositionPtr->_x < currentBasePositionPtr->_x - AllmanSquare::_posLimit)
+        {
+            currentPositionPtr->_x = currentBasePositionPtr->_x - AllmanSquare::_posLimit;
+            *currentBoolPtr = !*currentBoolPtr;
+        }
+        else if(currentPositionPtr->_x > currentBasePositionPtr->_x + AllmanSquare::_posLimit)
+        {
+            currentPositionPtr->_x = currentBasePositionPtr->_x + AllmanSquare::_posLimit;
+            *currentBoolPtr = !*currentBoolPtr;
+        }
+    }
 }
 
 void SystemsScene::SquareScaleBoundCheck(int startInd, int endInd)
 {
+    float* baseBaseScalePtr = _squares.front().AllmanBaseScale().GetBasePtr();
+    float* baseScalePtr = _squares.front().AllmanScale().GetBasePtr();
+    bool* baseBoolPtr = _squares.front().AllmanScaleReverse().GetBasePtr();
 
+    for(int i = startInd; i <= endInd; ++i)
+    {
+        float* currentBaseScalePtr = baseBaseScalePtr + i;
+        float* currentScalePtr = baseScalePtr + i;
+        bool* currentBoolPtr = baseBoolPtr + i;
+
+        if(*currentScalePtr < *currentBaseScalePtr - AllmanSquare::_scaleLimit)
+        {
+	        *currentScalePtr = *currentBaseScalePtr - AllmanSquare::_scaleLimit;
+            *currentBoolPtr = !*currentBoolPtr;
+        }
+        else if(*currentScalePtr > *currentBaseScalePtr + AllmanSquare::_scaleLimit)
+        {
+	        *currentScalePtr = *currentBaseScalePtr + AllmanSquare::_scaleLimit;
+            *currentBoolPtr = !*currentBoolPtr;
+        }
+    }
 }

@@ -17,8 +17,8 @@ public:
     void Render(ASGE::Renderer *renderer) override;
     void SetColour(ASGE::Colour col);
 
-    static constexpr double _posLimit = 30.0f;
-    static constexpr double _scaleLimit = 0.5f;
+    static constexpr float _posLimit = 30.0f;
+    static constexpr float _scaleLimit = 0.5f;
 
     AllmanVariable<Vector>& AllmanPosition() { return _position; }
     AllmanVariable<Vector>& AllmanBasePosition() { return _basePosition; }
@@ -27,6 +27,8 @@ public:
     AllmanVariable<float>& AllmanScale() { return _scale; }
     AllmanVariable<float>& AllmanBaseScale() { return _baseScale; }
     AllmanVariable<bool>& AllmanScaleReverse() { return _scaleReverse; }
+
+    AllmanVariable<ASGE::Colour>& AllmanColour() { return _squareCol; }
 
 private:
     AllmanVariable<Vector> _basePosition;
