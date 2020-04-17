@@ -17,7 +17,10 @@ public:
     void Render(ASGE::Renderer *renderer) override;
     void SetColour(ASGE::Colour col);
 
-    static constexpr float _posLimit = 30.0f;
+	Vector GetPosition() const override;
+	void SetPosition(const Vector &newPos) override;
+
+	static constexpr float _posLimit = 30.0f;
     static constexpr float _scaleLimit = 0.5f;
 
     AllmanVariable<Vector>& AllmanPosition() { return _position; }

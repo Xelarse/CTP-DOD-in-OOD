@@ -6,6 +6,7 @@
 #include <thread>
 #include <atomic>
 #include <future>
+#include <algorithm>
 
 /*
 	Class that is used to interface with a detached thread.
@@ -22,7 +23,11 @@ public:
 	PoolableThread& operator= (const PoolableThread& otherCopy) = delete;
 	PoolableThread& operator= (const PoolableThread&& otherMove) = delete;
 
-	PoolableThread(std::function<void()> orderedJobCallback) : _orderedJobComplete(orderedJobCallback)
+	PoolableThread(std::function<void()> orderedJobCallback) :
+	_threadIdle(true),
+	_threadAlive(true),
+	_processingOrderedJob(false),
+	_orderedJobComplete(orderedJobCallback)
 	{
 		std::promise<void> exitPromise;
 		_exitFuture = exitPromise.get_future();
@@ -87,9 +92,9 @@ private:
 	}
 
 	std::thread _thread;
-	std::atomic<bool> _threadIdle = true;
-	std::atomic<bool> _threadAlive = true;
-	std::atomic<bool> _processingOrderedJob = false;
+	std::atomic<bool> _threadIdle;
+	std::atomic<bool> _threadAlive;
+	std::atomic<bool> _processingOrderedJob;
 	const std::function<void()> _orderedJobComplete;
 	std::function<void()> _task = nullptr;
 
@@ -128,13 +133,13 @@ public:
 
 		Job() = delete;
 		Job(std::function<void()> func, JobPriority priority = JobPriority::UNORDERED, int priorityOrder = -1)
-			: _dataProcessingFunction(func), _priority(priority), _prioritryOrder(priorityOrder)
+			: _dataProcessingFunction(func), _priority(priority), _priorityOrder(priorityOrder)
 		{
 		};
 
 		const std::function<void()> _dataProcessingFunction;
 		const JobPriority _priority;
-		const int _prioritryOrder;
+		const int _priorityOrder;
 	};
 
 	////---------- Constructors and Destructors ----------////
@@ -145,13 +150,15 @@ public:
 	JobSystem& operator= (const JobSystem& otherCopy) = delete;
 	JobSystem& operator= (const JobSystem&& otherMove) = delete;
 
-	JobSystem(JobCpuIntensity intensity, bool quickSetup = true)
+	JobSystem(JobCpuIntensity intensity, bool quickSetup = true) :
+	_currentBatch(0),
+	_currentBatchProgress(0)
 	{
 		//Use fast init using hardware_concurrency or full init using benchmark method
 		const int poolSize = !quickSetup ? CalculateThreadCountWithBenchmarking(intensity) : CalculateThreadCountWithoutBenchmarking(intensity);
-		_threads.reserve(poolSize);
+		_threads.reserve(static_cast<unsigned long long int>(poolSize));
 
-		for (size_t i = 0; i < poolSize; ++i)
+		for (int i = 0; i < poolSize; ++i)
 		{
 			_threads.emplace_back(std::make_unique<PoolableThread>([&](){ OrderedJobComplete(); }));
 		}
@@ -184,7 +191,7 @@ public:
 	{
 		std::vector<Job> unorderedJobs;
 		//Sort the jobs from unordered to the lowest priority
-		_jobQueue.sort([](const Job& lhs, const Job& rhs) { return lhs._prioritryOrder < rhs._prioritryOrder; });
+		_jobQueue.sort([](const Job& lhs, const Job& rhs) { return lhs._priorityOrder < rhs._priorityOrder; });
 
 		//Pop off the unordered jobs and chuck them in a vector, once they're in the vector put the rest in a fifo queue
 		std::list<Job>::iterator jobIter = _jobQueue.begin();
@@ -212,7 +219,7 @@ public:
 					//Nameless scope used for the lockguard
 					{
 						std::lock_guard<std::mutex> lock(_jobQueueMutex);
-						if (_jobQueue.size() > 0 && _jobQueue.front()._prioritryOrder == _currentBatch)
+						if (_jobQueue.size() > 0 && _jobQueue.front()._priorityOrder == _currentBatch)
 						{
 							thread->RunTaskOnThread(_jobQueue.front()._dataProcessingFunction, true);
 							_jobQueue.pop_front();
@@ -250,7 +257,7 @@ public:
 		Can be useful if you have more threads than tasks,
 		and you can split a task over multiple threads.
 	*/
-	const int GetTotalThreads() { return static_cast<const int>(_threads.size()); }
+	int GetTotalThreads() { return static_cast<int>(_threads.size()); }
 
 private:
 
@@ -276,8 +283,8 @@ private:
 		std::lock_guard<std::mutex> lock(_jobQueueMutex);
 		if (_jobQueue.size() > 0)
 		{
-			_currentBatch = _jobQueue.front()._prioritryOrder;
-			_currentBatchProgress = std::count_if(_jobQueue.begin(), _jobQueue.end(), [&](const Job& lhs) { return lhs._prioritryOrder == _currentBatch; });
+			_currentBatch = _jobQueue.front()._priorityOrder;
+			_currentBatchProgress = static_cast<int>(std::count_if(_jobQueue.begin(), _jobQueue.end(), [&](const Job& lhs) { return lhs._priorityOrder == _currentBatch; }));
 		}
 	}
 
@@ -287,11 +294,14 @@ private:
 	*/
 	int CalculateThreadsForGivenMax(int threadMax, JobCpuIntensity desiredIntensity)
 	{
-		float modifier = 0.6f;	//The default modifier, AKA JobCpuIntensity::MEDIUM
+		float modifier = 0.0f;
 		switch (desiredIntensity)
 		{
 			case JobSystem::JobCpuIntensity::LOW:
 				modifier = 0.4f;
+				break;
+			case JobCpuIntensity::MEDIUM:
+				modifier = 0.6f;
 				break;
 			case JobSystem::JobCpuIntensity::HIGH:
 				modifier = 0.9f;
@@ -299,7 +309,7 @@ private:
 		}
 		//This is to ensure theres at least 2 threads. Safety check
 		//Every computer this day in age should be able to handle 2 threads
-		int count = static_cast<int>(floor(threadMax * modifier));
+		int count = static_cast<int>(floor(static_cast<float>(threadMax) * modifier));
 		return count < 2 ? 2 : count;
 	}
 
@@ -337,7 +347,7 @@ private:
 	*/
 	int CalculateThreadCountWithBenchmarking(JobCpuIntensity intensity)
 	{
-		int currentTotal = std::thread::hardware_concurrency();	//Starts with the max concurrent threads of the CPU
+		int currentTotal = static_cast<int>(std::thread::hardware_concurrency());	//Starts with the max concurrent threads of the CPU
 		double previousTimeTaken = 0;
 		double previousDiff = 0;
 		double currentTimeTaken = 0;
@@ -351,9 +361,9 @@ private:
 
 			//Create a vector of threads
 			std::vector<std::thread> threads;
-			threads.reserve(currentTotal);
+			threads.reserve(static_cast<unsigned long long int>(currentTotal));
 
-			for (size_t i = 0; i < currentTotal; ++i)
+			for (int i = 0; i < currentTotal; ++i)
 			{
 				threads.emplace_back(std::thread(JobSystem::ThreadBenchmarkTestFunction));
 			}
@@ -361,7 +371,9 @@ private:
 			//Run a job on the threads and benchmark the time taken for the threads to join
 			std::chrono::time_point<std::chrono::high_resolution_clock> timeStamp;
 			std::for_each(threads.begin(), threads.end(), std::mem_fn(&std::thread::join));
-			currentTimeTaken = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - timeStamp).count();
+			currentTimeTaken = static_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(
+					std::chrono::high_resolution_clock::now() - timeStamp
+			).count());
 			currentDiff = currentTimeTaken - previousTimeTaken;
 			previousDiff = previousDiff == 0 ? currentDiff : previousDiff;
 			currentTotal += _threadsPerStep;
@@ -377,15 +389,15 @@ private:
 	*/
 	int CalculateThreadCountWithoutBenchmarking(JobCpuIntensity intensity)
 	{
-		return CalculateThreadsForGivenMax(std::thread::hardware_concurrency(), intensity);
+		return CalculateThreadsForGivenMax(static_cast<int>(std::thread::hardware_concurrency()), intensity);
 	}
 
 
 	std::mutex _jobQueueMutex;
 	std::list<Job> _jobQueue;
 
-	std::atomic<int> _currentBatch = 0;
-	std::atomic<int> _currentBatchProgress = 0;
+	std::atomic<int> _currentBatch;
+	std::atomic<int> _currentBatchProgress;
 
 	std::vector<std::unique_ptr<PoolableThread>> _threads;
 

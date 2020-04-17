@@ -53,7 +53,7 @@ public:
 
 	////---------- Variable related Getter and Setter ----------////
 
-	T& Get() { return *_ptrToVar; }
+	T & Get() const { return *_ptrToVar; }
 	void Set(const T& var) { if (_ptrToVar != nullptr) *_ptrToVar = var; }
 
 	////---------- Memory Manager Meta-data Accessing Functions ----------////

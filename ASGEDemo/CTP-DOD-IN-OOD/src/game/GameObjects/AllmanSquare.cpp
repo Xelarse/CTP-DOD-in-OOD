@@ -56,3 +56,13 @@ void AllmanSquare::SetColour(ASGE::Colour col)
 {
     _squareCol.Set(col);
 }
+
+Vector AllmanSquare::GetPosition() const
+{
+	return _position.Get();
+}
+
+void AllmanSquare::SetPosition(const Vector &newPos)
+{
+	_position.Set(newPos);
+}

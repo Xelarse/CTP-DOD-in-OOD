@@ -6,7 +6,23 @@
 
 SystemsScene::SystemsScene(MyASGEGame *gameRef, ASGE::Renderer* renderer) : BaseScene(gameRef)
 {
+	double offset = AllmanSquare::_posLimit + _squarePadding;
+	int xCount = static_cast<int>(ASGE::SETTINGS.window_width / offset);
+	int yCount = static_cast<int>(ASGE::SETTINGS.window_height / offset);
 
+	//const size_t elementSize, const size_t elementCount
+	//JobCpuIntensity intensity, bool quickSetup = true
+
+	_memoryManager = std::make_unique<MemoryManager>(sizeof(AllmanSquare), (xCount + 10) * (yCount + 10));
+	_jobSystem = std::make_unique<JobSystem>(JobSystem::JobCpuIntensity::HIGH);
+
+	for(int x = -5; x < xCount + 5; ++x)
+	{
+		for(int y = -5; y < yCount + 5; ++y)
+		{
+//			_squares.emplace_back(renderer, _memoryManager.get(), Vector(static_cast<float>(x * offset), static_cast<float>(y * offset)));
+		}
+	}
 }
 
 SystemsScene::~SystemsScene()
