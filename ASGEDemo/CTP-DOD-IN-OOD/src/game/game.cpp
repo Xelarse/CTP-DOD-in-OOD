@@ -19,7 +19,7 @@ MyASGEGame::MyASGEGame(ASGE::GameSettings settings) : OGLGame(settings)
   inputs->use_threads = false;
   toggleFPS();
   initCamera();
-  logStartup();
+//  logStartup();
 }
 
 void MyASGEGame::initCamera()

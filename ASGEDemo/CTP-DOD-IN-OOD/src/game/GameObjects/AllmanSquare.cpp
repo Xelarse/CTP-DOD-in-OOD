@@ -41,8 +41,8 @@ void AllmanSquare::InitSprite(ASGE::Renderer* renderer)
 void AllmanSquare::Render(ASGE::Renderer *renderer)
 {
 //    renderer->renderSprite(*_sprite);
-    int xPos = static_cast<int>(_position.Get()._x);
-    int yPos = static_cast<int>(_position.Get()._y);
+    const int xPos = static_cast<int>(_position.Get()._x);
+    const int yPos = static_cast<int>(_position.Get()._y);
 
     renderer->renderText(
             "&",

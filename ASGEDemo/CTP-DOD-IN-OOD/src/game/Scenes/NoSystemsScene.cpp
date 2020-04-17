@@ -4,6 +4,7 @@
 
 #include "NoSystemsScene.h"
 #include "game.h"
+#include <Engine/Logger.hpp>
 
 NoSystemsScene::NoSystemsScene(MyASGEGame *gameRef, ASGE::Renderer* renderer) : BaseScene(gameRef)
 {
@@ -11,13 +12,16 @@ NoSystemsScene::NoSystemsScene(MyASGEGame *gameRef, ASGE::Renderer* renderer) : 
     int xCount = static_cast<int>(ASGE::SETTINGS.window_width / offset);
     int yCount = static_cast<int>(ASGE::SETTINGS.window_height / offset);
 
-    for(int x = -5; x < xCount + 5; ++x)
+    for(int x = -_demoSpanMod; x < xCount + _demoSpanMod; ++x)
     {
-        for(int y = -5; y < yCount + 5; ++y)
+        for(int y = -_demoSpanMod; y < yCount + _demoSpanMod; ++y)
         {
             _squares.emplace_back(std::make_unique<Square>(renderer, Vector(static_cast<float>(x * offset), static_cast<float>(y * offset))) );
         }
     }
+
+	std::ostringstream ss{ "No System scene square count :" + std::to_string(_squares.size()) };
+	Logging::INFO(ss.str());
 }
 
 NoSystemsScene::~NoSystemsScene()
@@ -47,10 +51,10 @@ void NoSystemsScene::PostUpdate(double dt)
 
 void NoSystemsScene::Render(ASGE::Renderer *renderer)
 {
-    for(auto& square : _squares)
-    {
-        square->Render(renderer);
-    }
+//    for(auto& square : _squares)
+//    {
+//        square->Render(renderer);
+//    }
 }
 
 void NoSystemsScene::KeyHandler(const ASGE::SharedEventData &data)
