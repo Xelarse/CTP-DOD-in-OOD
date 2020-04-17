@@ -11,7 +11,7 @@ SystemsScene::SystemsScene(MyASGEGame *gameRef, ASGE::Renderer* renderer) : Base
 	int xCount = static_cast<int>(ASGE::SETTINGS.window_width / offset);
 	int yCount = static_cast<int>(ASGE::SETTINGS.window_height / offset);
 
-	_memoryManager = std::make_unique<MemoryManager>(sizeof(AllmanSquare), (xCount + 2 *_demoSpanMod) * (yCount + 2 *_demoSpanMod));
+	_memoryManager = std::make_unique<MemoryManager>(sizeof(AllmanSquare), (xCount + 2 *_demoSpanMod) * (yCount + 2 *_demoSpanMod) + 1);
 	_jobSystem = std::make_unique<JobSystem>(JobSystem::JobCpuIntensity::MEDIUM);
 
 	for(int x = -_demoSpanMod; x < xCount + _demoSpanMod; ++x)
@@ -64,10 +64,17 @@ void SystemsScene::PostUpdate(double dt)
 
 void SystemsScene::Render(ASGE::Renderer *renderer)
 {
-//	for(auto& square : _squares)
-//	{
-//		square.Render(renderer);
-//	}
+	for(auto& square : _squares)
+	{
+		//Sorry in advance for this james, Checking in they're in window view for rendering
+		//Yeah might change this to use camera bounds if i mess with the camera view
+		Vector pos = square.AllmanPosition().Get();
+		if(pos._x >= 0 && pos._x <= static_cast<float>(ASGE::SETTINGS.window_width) &&
+			pos._y >= 0 && pos._y <= static_cast<float>(ASGE::SETTINGS.window_height) )
+		{
+			square.Render(renderer);
+		}
+	}
 }
 
 void SystemsScene::KeyHandler(const ASGE::SharedEventData &data)

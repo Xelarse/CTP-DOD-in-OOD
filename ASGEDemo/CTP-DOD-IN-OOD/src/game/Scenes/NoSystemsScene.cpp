@@ -51,10 +51,17 @@ void NoSystemsScene::PostUpdate(double dt)
 
 void NoSystemsScene::Render(ASGE::Renderer *renderer)
 {
-//    for(auto& square : _squares)
-//    {
-//        square->Render(renderer);
-//    }
+    for(auto& square : _squares)
+    {
+	    //Sorry in advance for this james, Checking in they're in window view for rendering
+	    //Yeah might change this to use camera bounds if i mess with the camera view
+	    Vector pos = square->GetPosition();
+	    if(pos._x >= 0 && pos._x <= static_cast<float>(ASGE::SETTINGS.window_width) &&
+	       pos._y >= 0 && pos._y <= static_cast<float>(ASGE::SETTINGS.window_height) )
+	    {
+		    square->Render(renderer);
+	    }
+    }
 }
 
 void NoSystemsScene::KeyHandler(const ASGE::SharedEventData &data)

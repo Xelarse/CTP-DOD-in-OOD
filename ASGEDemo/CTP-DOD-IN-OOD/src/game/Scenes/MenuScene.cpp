@@ -79,10 +79,10 @@ void MenuScene::KeyHandler(const ASGE::SharedEventData &data)
             switch(option)
             {
                 case Selection::NO_SYSTEMS:
-                    _gameRef->ChangeScene(MyASGEGame::Scenes::NO_SYSTEMS, false);
+                    _gameRef->ChangeScene(MyASGEGame::Scenes::NO_SYSTEMS);
                     break;
                 case Selection::SYSTEMS:
-                    _gameRef->ChangeScene(MyASGEGame::Scenes::SYSTEMS, false);
+                    _gameRef->ChangeScene(MyASGEGame::Scenes::SYSTEMS);
                     break;
                 case Selection::QUIT:
                     _gameRef->TerminateProgram();

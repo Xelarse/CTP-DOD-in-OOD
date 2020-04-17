@@ -19,7 +19,7 @@ class MyASGEGame : public ASGE::OGLGame
       SYSTEMS
   };
 
-  void ChangeScene(Scenes sceneToSwitchTo, bool sceneReset = false);
+  void ChangeScene(Scenes sceneToSwitchTo);
   void TerminateProgram();
 
  private:
