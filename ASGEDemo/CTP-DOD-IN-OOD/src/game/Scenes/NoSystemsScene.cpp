@@ -4,7 +4,6 @@
 
 #include "NoSystemsScene.h"
 #include "game.h"
-#include <Engine/Logger.hpp>
 
 NoSystemsScene::NoSystemsScene(MyASGEGame *gameRef, ASGE::Renderer* renderer) : BaseScene(gameRef)
 {
@@ -21,9 +20,6 @@ NoSystemsScene::NoSystemsScene(MyASGEGame *gameRef, ASGE::Renderer* renderer) : 
             _squares.emplace_back(std::make_unique<Square>(renderer, Vector(static_cast<float>(x * offset), static_cast<float>(y * offset))) );
         }
     }
-
-	std::ostringstream ss{ "No System scene square count :" + std::to_string(_squares.size()) };
-	Logging::INFO(ss.str());
 }
 
 NoSystemsScene::~NoSystemsScene()

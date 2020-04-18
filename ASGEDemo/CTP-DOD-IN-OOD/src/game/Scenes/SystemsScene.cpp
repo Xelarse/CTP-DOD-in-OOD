@@ -22,8 +22,12 @@ SystemsScene::SystemsScene(MyASGEGame *gameRef, ASGE::Renderer* renderer) : Base
 		}
 	}
 
-	std::ostringstream ss{ "System scene square count :" + std::to_string(_squares.size()) };
-	Logging::INFO(ss.str());
+	//Setup thread and stride counts used in the update loop based on job system thread count
+	double threadsForTasks = floor(_jobSystem->GetTotalThreads() / 2);
+	_jobPriorityThreadCounts[0] = static_cast<int>(threadsForTasks);
+	_jobPriorityThreadCounts[1] = static_cast<int>(threadsForTasks) - 1;
+	_jobPriorityStrideCounts[0] = static_cast<int>(floor(static_cast<double>(_squares.size()) / static_cast<double>(_jobPriorityThreadCounts[0])));
+	_jobPriorityStrideCounts[1] = static_cast<int>(floor(static_cast<double>(_squares.size()) / static_cast<double>(_jobPriorityThreadCounts[1])));
 }
 
 void SystemsScene::PreUpdate(double dt)
@@ -91,20 +95,13 @@ void SystemsScene::KeyHandler(const ASGE::SharedEventData &data)
 
 void SystemsScene::SetJobsForUpdate(double dt)
 {
-	//Splitting the total job count into chunks to assign to various jobs
-	double threadsForTasks = floor(_jobSystem->GetTotalThreads() / 2);
-	int firstJobs = static_cast<int>(threadsForTasks);
-	int secondJobs = static_cast<int>(threadsForTasks) - 1;
-	int firstStride = static_cast<int>(floor(static_cast<double>(_squares.size()) / static_cast<double >(firstJobs)));
-	int secondStride = static_cast<int>(floor(static_cast<double>(_squares.size()) / static_cast<double >(secondJobs)));
-
 	//Set up the priority 1 jobs, AKA moving and scaling
-	for(int j = 0; j < firstJobs; ++j)
+	for(int j = 0; j < _jobPriorityThreadCounts[0]; ++j)
 	{
 		//Start position is the stride distance based of how many of the items we can process for the given threads
 		//EndVal progresses just before the next startVal
-		int startVal = firstStride * j;
-		int endVal = j == firstJobs - 1 ? static_cast<int>(_squares.size()) - 1 : (firstStride * (j + 1)) - 1;
+		int startVal = _jobPriorityStrideCounts[0] * j;
+		int endVal = j == _jobPriorityThreadCounts[0] - 1 ? static_cast<int>(_squares.size()) - 1 : (_jobPriorityStrideCounts[0] * (j + 1)) - 1;
 
 		//Job to update square position and scale with first priority
 		_jobSystem->AddJobToQueue(
@@ -129,12 +126,12 @@ void SystemsScene::SetJobsForUpdate(double dt)
 	}
 
 	//Set up the priority 2 jobs, AKA position and scale limit check
-	for(int i = 0; i < secondJobs; ++i)
+	for(int i = 0; i < _jobPriorityThreadCounts[1]; ++i)
 	{
 		//Start position is the stride distance based of how many of the items we can process for the given threads
 		//EndVal progresses just before the next startVal
-		int startVal = secondStride * i;
-		int endVal = i == secondJobs - 1 ? static_cast<int>(_squares.size()) - 1 : (secondStride * (i + 1)) - 1;
+		int startVal = _jobPriorityStrideCounts[1] * i;
+		int endVal = i == _jobPriorityThreadCounts[1] - 1 ? static_cast<int>(_squares.size()) - 1 : (_jobPriorityStrideCounts[1] * (i + 1)) - 1;
 
 		//Job to check square position and scale bounds with second priority
 		_jobSystem->AddJobToQueue(

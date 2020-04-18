@@ -33,6 +33,10 @@ private:
 	std::unique_ptr<JobSystem> _jobSystem;
     std::unique_ptr<MemoryManager> _memoryManager;
     std::vector<AllmanSquare> _squares;
+
+    std::array<int, 2> _jobPriorityThreadCounts;
+    std::array<int, 2> _jobPriorityStrideCounts;
+
     std::array<ASGE::Colour, 7> _colourChoices = {
             ASGE::Colour(1.0f, 0.058f, 0.039f),         //R
             ASGE::Colour(1.0f, 0.729f, 0.039f),         //O
