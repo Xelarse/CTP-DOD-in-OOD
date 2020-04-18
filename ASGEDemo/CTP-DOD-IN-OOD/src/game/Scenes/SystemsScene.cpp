@@ -13,6 +13,7 @@ SystemsScene::SystemsScene(MyASGEGame *gameRef, ASGE::Renderer* renderer) : Base
 
 	_memoryManager = std::make_unique<MemoryManager>(sizeof(AllmanSquare), (xCount + 2 *_demoSpanMod) * (yCount + 2 *_demoSpanMod) + 1);
 	_jobSystem = std::make_unique<JobSystem>(JobSystem::JobCpuIntensity::MEDIUM);
+	_squares.reserve(static_cast<unsigned long long int>((xCount + 2 * _demoSpanMod) * (yCount + 2 * _demoSpanMod)));
 
 	for(int x = -_demoSpanMod; x < xCount + _demoSpanMod; ++x)
 	{

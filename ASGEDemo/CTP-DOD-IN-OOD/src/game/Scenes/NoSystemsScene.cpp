@@ -12,6 +12,8 @@ NoSystemsScene::NoSystemsScene(MyASGEGame *gameRef, ASGE::Renderer* renderer) : 
     int xCount = static_cast<int>(ASGE::SETTINGS.window_width / offset);
     int yCount = static_cast<int>(ASGE::SETTINGS.window_height / offset);
 
+	_squares.reserve(static_cast<unsigned long long int>((xCount + 2 * _demoSpanMod) * (yCount + 2 * _demoSpanMod)));
+
     for(int x = -_demoSpanMod; x < xCount + _demoSpanMod; ++x)
     {
         for(int y = -_demoSpanMod; y < yCount + _demoSpanMod; ++y)
