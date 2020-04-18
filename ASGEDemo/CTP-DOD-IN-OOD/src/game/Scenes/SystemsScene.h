@@ -12,7 +12,7 @@ class SystemsScene : public BaseScene
 public:
     SystemsScene() = delete;
     explicit SystemsScene(MyASGEGame* gameRef, ASGE::Renderer* renderer);
-    ~SystemsScene() override;
+    ~SystemsScene() override = default;
 
     void PreUpdate(double dt) override;
     void Update(double dt) override;

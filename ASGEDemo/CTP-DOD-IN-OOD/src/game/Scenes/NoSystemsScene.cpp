@@ -64,6 +64,13 @@ void NoSystemsScene::Render(ASGE::Renderer *renderer)
 		    square->Render(renderer);
 	    }
     }
+
+	renderer->renderText(
+			"Entites updated per tick: " + std::to_string(_squares.size()) + "\nAll entities are updated per tick but\nOnly entities in screen view are rendered",
+			1120,
+			30,
+			ASGE::COLOURS::BLACK
+	);
 }
 
 void NoSystemsScene::KeyHandler(const ASGE::SharedEventData &data)

@@ -3,7 +3,6 @@
 //
 #include "SystemsScene.h"
 #include "game.h"
-#include <Engine/Logger.hpp>
 
 SystemsScene::SystemsScene(MyASGEGame *gameRef, ASGE::Renderer* renderer) : BaseScene(gameRef)
 {
@@ -25,11 +24,6 @@ SystemsScene::SystemsScene(MyASGEGame *gameRef, ASGE::Renderer* renderer) : Base
 
 	std::ostringstream ss{ "System scene square count :" + std::to_string(_squares.size()) };
 	Logging::INFO(ss.str());
-}
-
-SystemsScene::~SystemsScene()
-{
-
 }
 
 void SystemsScene::PreUpdate(double dt)
@@ -76,6 +70,13 @@ void SystemsScene::Render(ASGE::Renderer *renderer)
 			square.Render(renderer);
 		}
 	}
+
+	renderer->renderText(
+			"Entites updated per tick: " + std::to_string(_squares.size()) + "\nAll entities are updated per tick but\nOnly entities in screen view are rendered",
+			1120,
+			30,
+			ASGE::COLOURS::BLACK
+	);
 }
 
 void SystemsScene::KeyHandler(const ASGE::SharedEventData &data)
@@ -109,7 +110,7 @@ void SystemsScene::SetJobsForUpdate(double dt)
 		_jobSystem->AddJobToQueue(
 				JobSystem::Job(
 						std::function<void()>(
-								std::bind(&SystemsScene::UpdateSquarePosition, this, startVal, endVal, dt)
+								[this, startVal, endVal, dt] { UpdateSquarePosition(startVal, endVal, dt); }
 						),
 						JobSystem::Job::JobPriority::ORDERED,
 						1
@@ -119,7 +120,7 @@ void SystemsScene::SetJobsForUpdate(double dt)
 		_jobSystem->AddJobToQueue(
 				JobSystem::Job(
 						std::function<void()>(
-								std::bind(&SystemsScene::UpdateSquareScale, this, startVal, endVal, dt)
+								[this, startVal, endVal, dt] { UpdateSquareScale(startVal, endVal, dt); }
 						),
 						JobSystem::Job::JobPriority::ORDERED,
 						1
@@ -139,7 +140,7 @@ void SystemsScene::SetJobsForUpdate(double dt)
 		_jobSystem->AddJobToQueue(
 				JobSystem::Job(
 						std::function<void()>(
-								std::bind(&SystemsScene::SquarePositionBoundCheck, this, startVal, endVal)
+								[this, startVal, endVal] { SquarePositionBoundCheck(startVal, endVal); }
 						),
 						JobSystem::Job::JobPriority::ORDERED,
 						2
@@ -149,7 +150,7 @@ void SystemsScene::SetJobsForUpdate(double dt)
 		_jobSystem->AddJobToQueue(
 				JobSystem::Job(
 						std::function<void()>(
-								std::bind(&SystemsScene::SquareScaleBoundCheck, this, startVal, endVal)
+								[this, startVal, endVal] { SquareScaleBoundCheck(startVal, endVal); }
 						),
 						JobSystem::Job::JobPriority::ORDERED,
 						2
@@ -161,7 +162,7 @@ void SystemsScene::SetJobsForUpdate(double dt)
 	_jobSystem->AddJobToQueue(
 			JobSystem::Job(
 					std::function<void()>(
-							std::bind(&SystemsScene::UpdateSquareColour, this, 0, _squares.size() - 1, _currentTotalTime)
+							[this, capture0 = static_cast<int>(_squares.size() - 1)] { UpdateSquareColour(0, capture0, _currentTotalTime); }
 					)
 			)
 	);
