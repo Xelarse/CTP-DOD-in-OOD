@@ -24,6 +24,4 @@ protected:
     MyASGEGame* _gameRef = nullptr;
     double _currentTotalTime = 0;
 	double _squarePadding = 1.5f;
-
-	int _demoSpanMod = 500; //500 ~ 1mil, 140 ~ 100k, 32 ~ 10k, 0 ~ 1.4k
 };

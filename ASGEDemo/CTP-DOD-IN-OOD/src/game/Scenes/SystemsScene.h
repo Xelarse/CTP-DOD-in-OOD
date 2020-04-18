@@ -11,7 +11,7 @@ class SystemsScene : public BaseScene
 {
 public:
     SystemsScene() = delete;
-    explicit SystemsScene(MyASGEGame* gameRef, ASGE::Renderer* renderer);
+    explicit SystemsScene(MyASGEGame* gameRef, ASGE::Renderer* renderer, int demoSpan);
     ~SystemsScene() override = default;
 
     void PreUpdate(double dt) override;
@@ -46,4 +46,6 @@ private:
             ASGE::Colour(0.552f, 0.039f, 1.0f),         //I
             ASGE::Colour(0.972f, 0.039f, 1.0f)          //V
     };
+
+	const int _demoSpanMod;
 };

@@ -11,6 +11,7 @@
 #include "Scenes/MenuScene.h"
 #include "Scenes/NoSystemsScene.h"
 #include "Scenes/SystemsScene.h"
+#include "Scenes/ConfigurationScene.h"
 #include "Timer.h"
 
 
@@ -107,7 +108,7 @@ void MyASGEGame::render()
   }
 }
 
-void MyASGEGame::ChangeScene(MyASGEGame::Scenes sceneToSwitchTo)
+void MyASGEGame::ChangeScene(MyASGEGame::Scenes sceneToSwitchTo, int demoCount, Scenes demoScene)
 {
     switch(sceneToSwitchTo)
     {
@@ -116,18 +117,29 @@ void MyASGEGame::ChangeScene(MyASGEGame::Scenes sceneToSwitchTo)
             _activeScene = _menuScene.get();
             _noSysScene = nullptr;
             _sysScene = nullptr;
+            _configScene = nullptr;
             break;
+    	case Scenes::CONFIG:
+    		using CS = ConfigurationScene::SceneToLoad;
+		    _configScene = std::make_unique<ConfigurationScene>(this, demoScene == Scenes::NO_SYSTEMS ? CS::NO_SYSTEMS : CS::ALLMAN_SYSTEMS);
+		    _activeScene = _configScene.get();
+		    _noSysScene = nullptr;
+		    _sysScene = nullptr;
+		    _menuScene = nullptr;
+    		break;
         case Scenes::NO_SYSTEMS:
-            _noSysScene = std::make_unique<NoSystemsScene>(this, renderer.get());
+            _noSysScene = std::make_unique<NoSystemsScene>(this, renderer.get(), demoCount);
             _activeScene = _noSysScene.get();
 		    _menuScene = nullptr;
 		    _sysScene = nullptr;
+		    _configScene = nullptr;
             break;
         case Scenes::SYSTEMS:
-            _sysScene = std::make_unique<SystemsScene>(this, renderer.get());
+            _sysScene = std::make_unique<SystemsScene>(this, renderer.get(), demoCount);
             _activeScene = _sysScene.get();
 		    _menuScene = nullptr;
 		    _noSysScene = nullptr;
+		    _configScene = nullptr;
             break;
     }
 }

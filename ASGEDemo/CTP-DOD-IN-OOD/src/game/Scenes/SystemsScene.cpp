@@ -4,7 +4,7 @@
 #include "SystemsScene.h"
 #include "game.h"
 
-SystemsScene::SystemsScene(MyASGEGame *gameRef, ASGE::Renderer* renderer) : BaseScene(gameRef)
+SystemsScene::SystemsScene(MyASGEGame *gameRef, ASGE::Renderer* renderer, int demoSpan) : BaseScene(gameRef), _demoSpanMod(demoSpan)
 {
 	double offset = AllmanSquare::_posLimit + _squarePadding;
 	int xCount = static_cast<int>(ASGE::SETTINGS.window_width / offset);
@@ -76,7 +76,7 @@ void SystemsScene::Render(ASGE::Renderer *renderer)
 	}
 
 	renderer->renderText(
-			"Entites updated per tick: " + std::to_string(_squares.size()) + "\nAll entities are updated per tick but\nOnly entities in screen view are rendered",
+			"Entites updated per tick: " + std::to_string(_squares.size()) + "\nCurrent Active Demo: Allman Systems\nAll entities are updated per tick but\nOnly entities in screen view are rendered",
 			1120,
 			30,
 			ASGE::COLOURS::BLACK

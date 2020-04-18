@@ -9,7 +9,7 @@ class NoSystemsScene : public BaseScene
 {
 public:
     NoSystemsScene() = delete;
-    explicit NoSystemsScene(MyASGEGame* gameRef, ASGE::Renderer* renderer);
+    explicit NoSystemsScene(MyASGEGame* gameRef, ASGE::Renderer* renderer, int demoSpan);
     ~NoSystemsScene() override;
 
     void PreUpdate(double dt) override;
@@ -21,4 +21,6 @@ public:
 
 private:
     std::vector<std::unique_ptr<Square>> _squares;
+
+	const int _demoSpanMod;
 };

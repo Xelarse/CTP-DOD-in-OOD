@@ -18,6 +18,7 @@ set(SOURCE_FILES
         "game/Scenes/SystemsScene.cpp"
         "game/Scenes/NoSystemsScene.cpp"
         "game/Scenes/MenuScene.cpp"
+        "game/Scenes/ConfigurationScene.cpp"
         "game/GameObjects/Square.cpp"
         "game/GameObjects/AllmanSquare.cpp"
         "game/Timer.cpp")
@@ -25,6 +26,7 @@ set(SOURCE_FILES
 set(HEADER_FILES
         "game/game.h"
         "game/Scenes/BaseScene.h"
+        "game/Scenes/ConfigurationScene.h"
         "game/Scenes/SystemsScene.h"
         "game/Scenes/NoSystemsScene.h"
         "game/Scenes/MenuScene.h"

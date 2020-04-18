@@ -5,7 +5,7 @@
 #include "NoSystemsScene.h"
 #include "game.h"
 
-NoSystemsScene::NoSystemsScene(MyASGEGame *gameRef, ASGE::Renderer* renderer) : BaseScene(gameRef)
+NoSystemsScene::NoSystemsScene(MyASGEGame *gameRef, ASGE::Renderer* renderer, int demoSpan) : BaseScene(gameRef), _demoSpanMod(demoSpan)
 {
     double offset = Square::_posLimit + _squarePadding;
     int xCount = static_cast<int>(ASGE::SETTINGS.window_width / offset);
@@ -62,7 +62,7 @@ void NoSystemsScene::Render(ASGE::Renderer *renderer)
     }
 
 	renderer->renderText(
-			"Entites updated per tick: " + std::to_string(_squares.size()) + "\nAll entities are updated per tick but\nOnly entities in screen view are rendered",
+			"Entites updated per tick: " + std::to_string(_squares.size()) + "\nCurrent Active Demo: No Systems\nAll entities are updated per tick but\nOnly entities in screen view are rendered",
 			1120,
 			30,
 			ASGE::COLOURS::BLACK

@@ -16,10 +16,11 @@ class MyASGEGame : public ASGE::OGLGame
   {
       MENU,
       NO_SYSTEMS,
-      SYSTEMS
+      SYSTEMS,
+      CONFIG
   };
 
-  void ChangeScene(Scenes sceneToSwitchTo);
+  void ChangeScene(Scenes sceneToSwitchTo, int demoCount = 0, Scenes demoScene = Scenes::NO_SYSTEMS);
   void TerminateProgram();
 
  private:
@@ -37,6 +38,7 @@ class MyASGEGame : public ASGE::OGLGame
   std::unique_ptr<BaseScene> _menuScene;
   std::unique_ptr<BaseScene> _noSysScene;
   std::unique_ptr<BaseScene> _sysScene;
+  std::unique_ptr<BaseScene> _configScene;
 
   BaseScene* _activeScene = nullptr;
 
