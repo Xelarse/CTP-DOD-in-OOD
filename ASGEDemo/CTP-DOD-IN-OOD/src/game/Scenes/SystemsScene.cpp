@@ -63,10 +63,12 @@ void SystemsScene::PostUpdate(double dt)
 	{
 		_jobSystem->ProcessJobs();
 	}
-
-	for(auto& square : _squares)
+	else
 	{
-		square.UpdateSprite();
+		for(auto& square : _squares)
+		{
+			square.UpdateSprite();
+		}
 	}
 }
 
@@ -177,6 +179,27 @@ void SystemsScene::SetJobsForUpdate(double dt)
 					)
 			)
 	);
+
+
+	//Now the first lot of jobs are done lets do the sprite update on another batch of jobs
+	const int totalThreads = _jobSystem->GetTotalThreads();
+	const int stride = static_cast<int>(floor(static_cast<double>(_squares.size() /
+	                                                              static_cast<unsigned long long int>(totalThreads))));
+
+	for(int i = 0; i < totalThreads; ++i)
+	{
+		int startInd = stride * i;
+		int endInd = i == totalThreads - 1 ? static_cast<int>(_squares.size()) - 1 : stride * (i + 1) - 1;
+
+		_jobSystem->AddJobToQueue(JobSystem::Job(
+				std::function<void()>(
+						[this, startInd, endInd] { SetSquareSprites(startInd, endInd); }
+				),
+				JobSystem::Job::JobPriority::ORDERED,
+				3
+		                          )
+		);
+	}
 }
 
 void SystemsScene::UpdateSquarePosition(int startInd, int endInd, double dt)
@@ -267,4 +290,12 @@ void SystemsScene::SquareScaleBoundCheck(int startInd, int endInd)
             *currentBoolPtr = !*currentBoolPtr;
         }
     }
+}
+
+void SystemsScene::SetSquareSprites(int startInd, int endInd)
+{
+	for(int i = startInd; i <= endInd; ++i)
+	{
+		_squares[static_cast<unsigned long long int>(i)].UpdateSprite();
+	}
 }

@@ -27,6 +27,7 @@ private:
     void UpdateSquareColour(int startInd, int endInd, double totalTime);
     void SquarePositionBoundCheck(int startInd, int endInd);
     void SquareScaleBoundCheck(int startInd, int endInd);
+    void SetSquareSprites(int startInd, int endInd);
 
 
     bool _jobSystemActive = true;
