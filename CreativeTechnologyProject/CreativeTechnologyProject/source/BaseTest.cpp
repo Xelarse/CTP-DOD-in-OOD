@@ -33,7 +33,7 @@ void BaseTest::RenderImguiWindow()
 		SanityCheckRunCount();
 		std::string desc = "Most recent update: " + std::to_string(results.back()) + "ms";
 		ImGui::Text(desc.c_str());
-		ImGui::PlotLines("Time taken in milliseconds.\nAxis run from 0 to 100 ms", results.data(), results.size(), 0, 0, 0.0f, 100.0f, ImVec2(0, 500));
+		ImGui::PlotLines("Time taken in milliseconds.\nAxis run from 0 to 100 ms", results.data(), results.size(), 0, 0, 0.0f, 200.0f, ImVec2(0, 500));
 	}
 }
 
