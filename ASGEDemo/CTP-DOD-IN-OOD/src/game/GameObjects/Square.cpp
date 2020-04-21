@@ -75,14 +75,14 @@ void Square::UpdateSpriteColour(double totalTime)
 
 void Square::Render(ASGE::Renderer *renderer)
 {
-//    renderer->renderSprite(*_sprite);
+   renderer->renderSprite(*_sprite);
     int xPos = static_cast<int>(_position._x);
     int yPos = static_cast<int>(_position._y);
 
-    renderer->renderText(
-            "&",
-            xPos,
-            yPos,
-            _squareCol
-        );
+//    renderer->renderText(
+//            "&",
+//            xPos,
+//            yPos,
+//            _squareCol
+//        );
 }

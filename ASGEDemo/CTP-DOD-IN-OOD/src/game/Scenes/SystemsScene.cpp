@@ -6,28 +6,32 @@
 
 SystemsScene::SystemsScene(MyASGEGame *gameRef, ASGE::Renderer* renderer, int demoSpan) : BaseScene(gameRef), _demoSpanMod(demoSpan)
 {
-	double offset = AllmanSquare::_posLimit + _squarePadding;
-	int xCount = static_cast<int>(ASGE::SETTINGS.window_width / offset);
-	int yCount = static_cast<int>(ASGE::SETTINGS.window_height / offset);
+      double offset = AllmanSquare::_posLimit + _squarePadding;
+      int xCount = static_cast<int>(ASGE::SETTINGS.window_width / offset);
+      int yCount = static_cast<int>(ASGE::SETTINGS.window_height / offset);
 
-	_memoryManager = std::make_unique<MemoryManager>(sizeof(AllmanSquare), (xCount + 2 *_demoSpanMod) * (yCount + 2 *_demoSpanMod) + 1);
-	_jobSystem = std::make_unique<JobSystem>(JobSystem::JobCpuIntensity::MEDIUM);
-	_squares.reserve(static_cast<unsigned long long int>((xCount + 2 * _demoSpanMod) * (yCount + 2 * _demoSpanMod)));
+      _memoryManager = std::make_unique<MemoryManager>(sizeof(AllmanSquare), (xCount + 2 *_demoSpanMod) * (yCount + 2 *_demoSpanMod) + 1);
+      _jobSystem = std::make_unique<JobSystem>(JobSystem::JobCpuIntensity::MEDIUM);
+      _squares.reserve(static_cast<unsigned long long int>((xCount + 2 * _demoSpanMod) * (yCount + 2 * _demoSpanMod)));
 
-	for(int x = -_demoSpanMod; x < xCount + _demoSpanMod; ++x)
-	{
-		for(int y = -_demoSpanMod; y < yCount + _demoSpanMod; ++y)
-		{
-			_squares.emplace_back(renderer, _memoryManager.get(), Vector(static_cast<float>(x * offset), static_cast<float>(y * offset)));
-		}
-	}
+      for(int x = -_demoSpanMod; x < xCount + _demoSpanMod; ++x)
+      {
+        for(int y = -_demoSpanMod; y < yCount + _demoSpanMod; ++y)
+        {
+          _squares
+              .emplace_back(renderer, _memoryManager.get(),
+                            Vector(static_cast<float>(x * offset),
+                                   static_cast<float>(y * offset)))
+              .InitSprite(renderer);
+        }
+      }
 
-	//Setup thread and stride counts used in the update loop based on job system thread count
-	double threadsForTasks = floor(_jobSystem->GetTotalThreads() / 2);
-	_jobPriorityThreadCounts[0] = static_cast<int>(threadsForTasks);
-	_jobPriorityThreadCounts[1] = static_cast<int>(threadsForTasks) - 1;
-	_jobPriorityStrideCounts[0] = static_cast<int>(floor(static_cast<double>(_squares.size()) / static_cast<double>(_jobPriorityThreadCounts[0])));
-	_jobPriorityStrideCounts[1] = static_cast<int>(floor(static_cast<double>(_squares.size()) / static_cast<double>(_jobPriorityThreadCounts[1])));
+      //Setup thread and stride counts used in the update loop based on job system thread count
+      double threadsForTasks = floor(_jobSystem->GetTotalThreads() / 2);
+      _jobPriorityThreadCounts[0] = static_cast<int>(threadsForTasks);
+      _jobPriorityThreadCounts[1] = static_cast<int>(threadsForTasks) - 1;
+      _jobPriorityStrideCounts[0] = static_cast<int>(floor(static_cast<double>(_squares.size()) / static_cast<double>(_jobPriorityThreadCounts[0])));
+      _jobPriorityStrideCounts[1] = static_cast<int>(floor(static_cast<double>(_squares.size()) / static_cast<double>(_jobPriorityThreadCounts[1])));
 }
 
 void SystemsScene::PreUpdate(double dt)
@@ -68,19 +72,22 @@ void SystemsScene::Render(ASGE::Renderer *renderer)
 		//Sorry in advance for this james, Checking in they're in window view for rendering
 		//Yeah might change this to use camera bounds if i mess with the camera view
 		Vector pos = square.AllmanPosition().Get();
-		if(pos._x >= 0 && pos._x <= static_cast<float>(ASGE::SETTINGS.window_width) &&
-			pos._y >= 0 && pos._y <= static_cast<float>(ASGE::SETTINGS.window_height) )
-		{
-			square.Render(renderer);
-		}
-	}
+                if (pos._x >= 0 &&
+                    pos._x <= static_cast<float>(ASGE::SETTINGS.window_width) &&
+                    pos._y >= 0 &&
+                    pos._y <=
+                        static_cast<float>(ASGE::SETTINGS.window_height))
+                {
+                  square.Render(renderer);
+                }
+        }
 
-	renderer->renderText(
-			"Entites updated per tick: " + std::to_string(_squares.size()) + "\nCurrent Active Demo: Allman Systems\nAll entities are updated per tick but\nOnly entities in screen view are rendered",
-			1120,
-			30,
-			ASGE::COLOURS::BLACK
-	);
+        renderer->renderText(
+            "Entites updated per tick: " + std::to_string(_squares.size()) +
+                "\nCurrent Active Demo: Allman Systems\nAll entities are "
+                "updated per tick but\nOnly entities in screen view are "
+                "rendered",
+            1120, 30, ASGE::COLOURS::BLACK);
 }
 
 void SystemsScene::KeyHandler(const ASGE::SharedEventData &data)
@@ -131,9 +138,11 @@ void SystemsScene::SetJobsForUpdate(double dt)
 		//Start position is the stride distance based of how many of the items we can process for the given threads
 		//EndVal progresses just before the next startVal
 		int startVal = _jobPriorityStrideCounts[1] * i;
-		int endVal = i == _jobPriorityThreadCounts[1] - 1 ? static_cast<int>(_squares.size()) - 1 : (_jobPriorityStrideCounts[1] * (i + 1)) - 1;
+		int endVal = i == _jobPriorityThreadCounts[1] - 1
+                                 ? static_cast<int>(_squares.size()) - 1
+                                 : (_jobPriorityStrideCounts[1] * (i + 1)) - 1;
 
-		//Job to check square position and scale bounds with second priority
+                //Job to check square position and scale bounds with second priority
 		_jobSystem->AddJobToQueue(
 				JobSystem::Job(
 						std::function<void()>(

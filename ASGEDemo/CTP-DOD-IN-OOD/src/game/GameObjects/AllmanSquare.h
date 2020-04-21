@@ -9,18 +9,18 @@ class AllmanSquare : public GameObject
 {
 public:
     AllmanSquare() = delete;
-	explicit AllmanSquare(ASGE::Renderer* renderer, MemoryManager* memoryManager);
-	explicit AllmanSquare(ASGE::Renderer* renderer, MemoryManager* memoryManager, const Vector& pos);
+    explicit AllmanSquare(ASGE::Renderer* renderer, MemoryManager* memoryManager);
+    explicit AllmanSquare(ASGE::Renderer* renderer, MemoryManager* memoryManager, const Vector& pos);
     ~AllmanSquare() override = default;
 
     void InitSprite(ASGE::Renderer* renderer) override;
     void Render(ASGE::Renderer *renderer) override;
     void SetColour(ASGE::Colour col);
 
-	Vector GetPosition() const override;
-	void SetPosition(const Vector &newPos) override;
+    Vector GetPosition() const override;
+    void SetPosition(const Vector &newPos) override;
 
-	static constexpr float _posLimit = 30.0f;
+    static constexpr float _posLimit = 30.0f;
     static constexpr float _scaleLimit = 0.5f;
 
     AllmanVariable<Vector>& AllmanPosition() { return _position; }
