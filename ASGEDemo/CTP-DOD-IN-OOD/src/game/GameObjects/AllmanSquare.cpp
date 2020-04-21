@@ -34,22 +34,15 @@ void AllmanSquare::InitSprite(ASGE::Renderer* renderer)
     _sprite->loadTexture("/data/g.png");    //TODO Fix Sprite here
     _sprite->xPos(_position.Get()._x);
     _sprite->yPos(_position.Get()._y);
-    _sprite->scale(_scale.Get());
+    _sprite->scale(0.1);
     _sprite->colour(_squareCol.Get());
 }
 
 void AllmanSquare::Render(ASGE::Renderer *renderer)
 {
-//    renderer->renderSprite(*_sprite);
+    renderer->renderSprite(*(_sprite.get()));
     const int xPos = static_cast<int>(_position.Get()._x);
     const int yPos = static_cast<int>(_position.Get()._y);
-
-    renderer->renderText(
-            "&",
-            xPos,
-            yPos,
-            _squareCol.Get()
-    );
 }
 
 void AllmanSquare::SetColour(ASGE::Colour col)

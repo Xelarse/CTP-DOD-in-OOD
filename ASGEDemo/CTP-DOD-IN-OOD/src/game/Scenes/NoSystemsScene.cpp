@@ -17,7 +17,12 @@ NoSystemsScene::NoSystemsScene(MyASGEGame *gameRef, ASGE::Renderer* renderer, in
     {
         for(int y = -_demoSpanMod; y < yCount + _demoSpanMod; ++y)
         {
-            _squares.emplace_back(std::make_unique<Square>(renderer, Vector(static_cast<float>(x * offset), static_cast<float>(y * offset))) );
+          _squares.emplace_back(
+              std::make_unique<Square>(
+                  renderer,
+                  Vector(static_cast<float>(x * offset),
+                                static_cast<float>(y * offset))))
+              ->InitSprite(renderer);
         }
     }
 }

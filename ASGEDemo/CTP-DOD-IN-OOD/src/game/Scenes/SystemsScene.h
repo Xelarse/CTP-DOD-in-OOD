@@ -21,7 +21,7 @@ public:
     void KeyHandler(const ASGE::SharedEventData &data) override;
 
 private:
-	void SetJobsForUpdate(double dt);
+    void SetJobsForUpdate(double dt);
     void UpdateSquarePosition(int startInd, int endInd, double dt);
     void UpdateSquareScale(int startInd, int endInd, double dt);
     void UpdateSquareColour(int startInd, int endInd, double totalTime);
@@ -30,7 +30,7 @@ private:
 
 
     bool _jobSystemActive = true;
-	std::unique_ptr<JobSystem> _jobSystem;
+    std::unique_ptr<JobSystem> _jobSystem;
     std::unique_ptr<MemoryManager> _memoryManager;
     std::vector<AllmanSquare> _squares;
 
@@ -47,5 +47,5 @@ private:
             ASGE::Colour(0.972f, 0.039f, 1.0f)          //V
     };
 
-	const int _demoSpanMod;
+    const int _demoSpanMod;
 };
