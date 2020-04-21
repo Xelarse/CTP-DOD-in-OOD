@@ -63,6 +63,11 @@ void SystemsScene::PostUpdate(double dt)
 	{
 		_jobSystem->ProcessJobs();
 	}
+
+	for(auto& square : _squares)
+	{
+		square.UpdateSprite();
+	}
 }
 
 void SystemsScene::Render(ASGE::Renderer *renderer)
@@ -72,24 +77,22 @@ void SystemsScene::Render(ASGE::Renderer *renderer)
 		//Sorry in advance for this james, Checking in they're in window view for rendering
 		//Yeah might change this to use camera bounds if i mess with the camera view
 		Vector pos = square.AllmanPosition().Get();
-                if (pos._x >= 0 &&
-                    pos._x <= static_cast<float>(ASGE::SETTINGS.window_width) &&
-                    pos._y >= 0 &&
-                    pos._y <=
-                        static_cast<float>(ASGE::SETTINGS.window_height))
+                if (pos._x >= -50 &&
+                    pos._x <= static_cast<float>(ASGE::SETTINGS.window_width) + 50 &&
+                    pos._y >= 50 &&
+                    pos._y <= static_cast<float>(ASGE::SETTINGS.window_height) + 50
+                    )
                 {
                   square.Render(renderer);
                 }
         }
 
         renderer->renderText(
-            "Entites updated per tick: " + std::to_string(_squares.size()) +
-                "\nCurrent Active Demo: Allman Systems"
-				"\nAll entities are "
-                "updated per tick but"
-				"\nOnly entities in screen view are "
-                "rendered",
-            1120, 30, ASGE::COLOURS::BLACK);
+            "Entites updated per tick: " + std::to_string(_squares.size()),
+            1120,
+            30,
+            ASGE::COLOURS::BLACK
+        );
 }
 
 void SystemsScene::KeyHandler(const ASGE::SharedEventData &data)
@@ -185,7 +188,7 @@ void SystemsScene::UpdateSquarePosition(int startInd, int endInd, double dt)
     {
         Vector* currentPosPtr = baseVectorPtr + i;
         const bool* currentBoolPtr = baseBoolPtr + i;
-        currentPosPtr->_x += static_cast<float>(*currentBoolPtr ? -dt : dt) * 0.2f;
+        currentPosPtr->_x += static_cast<float>(*currentBoolPtr ? -dt : dt) * 0.05f;
     }
 }
 
@@ -198,13 +201,13 @@ void SystemsScene::UpdateSquareScale(int startInd, int endInd, double dt)
     {
         float* currentScalePtr = baseScalePtr + i;
         const bool* currentBoolPtr = baseBoolPtr + i;
-        *currentScalePtr += static_cast<float>(*currentBoolPtr ? -dt : dt) * 0.01f;
+        *currentScalePtr += static_cast<float>(*currentBoolPtr ? -dt : dt) * 0.00005f;
     }
 }
 
 void SystemsScene::UpdateSquareColour(int startInd, int endInd, double totalTime)
 {
-    const int colourIndex = static_cast<int>(totalTime) % static_cast<int>(_colourChoices.size());
+    const int colourIndex = static_cast<int>(totalTime * 0.001) % static_cast<int>(_colourChoices.size());
     const ASGE::Colour outCol = _colourChoices.at(static_cast<unsigned long long int>(colourIndex));
 
     ASGE::Colour* baseColourPtr = _squares.front().AllmanColour().GetBasePtr();

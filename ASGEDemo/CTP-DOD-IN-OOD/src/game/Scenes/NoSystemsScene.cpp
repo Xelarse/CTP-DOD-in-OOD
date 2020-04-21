@@ -60,7 +60,7 @@ void NoSystemsScene::Render(ASGE::Renderer *renderer)
 	    Vector pos = square->GetPosition();
 	    if( pos._x >= -50 &&
 	        pos._x <= static_cast<float>(ASGE::SETTINGS.window_width) + 50 &&
-	        pos._y >= + 100 &&
+	        pos._y >= 50 &&
 	        pos._y <= static_cast<float>(ASGE::SETTINGS.window_height) + 50
 	        )
 	    {
@@ -69,9 +69,7 @@ void NoSystemsScene::Render(ASGE::Renderer *renderer)
     }
 
 	renderer->renderText(
-			"Entites updated per tick: " +
-			std::to_string(_squares.size()) +
-			"\nCurrent Active Demo: No Systems\nAll entities are updated per tick but\nOnly entities in screen view are rendered",
+			"Entites updated per tick: " + std::to_string(_squares.size()),
 			1120,
 			30,
 			ASGE::COLOURS::BLACK

@@ -4,16 +4,12 @@
 
 #include "Square.h"
 
-#include <Engine/Logger.hpp>
-
 Square::Square(ASGE::Renderer *renderer)
 {
-    InitSprite(renderer);
 }
 
 Square::Square(ASGE::Renderer* renderer, const Vector& pos) : _basePosition(pos), _position(pos)
 {
-    InitSprite(renderer);
 }
 
 Vector Square::GetPosition() const
@@ -29,7 +25,7 @@ void Square::SetPosition(const Vector& newPos)
 void Square::InitSprite(ASGE::Renderer* renderer)
 {
     _sprite = renderer->createUniqueSprite();
-    _sprite->loadTexture("/data/g.png");    //TODO Fix Sprite here
+    _sprite->loadTexture("/data/circle.png");
     _sprite->xPos(_position._x);
     _sprite->yPos(_position._y);
     _sprite->scale(_scale);
@@ -82,5 +78,4 @@ void Square::UpdateSpriteColour(double totalTime)
 void Square::Render(ASGE::Renderer *renderer)
 {
    renderer->renderSprite(*_sprite);
-   Logging::INFO("Square Size: " + std::to_string(_sprite->scale()));
 }

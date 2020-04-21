@@ -20,8 +20,10 @@ public:
     Vector GetPosition() const override;
     void SetPosition(const Vector &newPos) override;
 
+    void UpdateSprite();
+
     static constexpr float _posLimit = 30.0f;
-    static constexpr float _scaleLimit = 0.5f;
+    static constexpr float _scaleLimit = 0.01f;
 
     AllmanVariable<Vector>& AllmanPosition() { return _position; }
     AllmanVariable<Vector>& AllmanBasePosition() { return _basePosition; }
