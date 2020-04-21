@@ -8,9 +8,6 @@
 #include <future>
 #include <algorithm>
 
-
-#include "Timer.h"
-#include <Engine/Logger.hpp>
 /*
 	Class that is used to interface with a detached thread.
 	Used by the JobSystem in its thread pool.
@@ -227,41 +224,36 @@ public:
 		//Set up the _currentBatch and its count
 		ProgressBatch();
 
+		//Whilst there are still jobs left to send on threads
+		while(unorderedJobs.size() > 0 || _jobQueue.size() > 0)
 		{
-//			Timer postTimer([](long long dura){Logging::INFO("Assign Jobs: " + std::to_string(dura)); });
-			//Whilst there are still jobs left to send on threads
-			while(unorderedJobs.size() > 0 || _jobQueue.size() > 0)
+			for(auto &thread : _threads)
 			{
-				for(auto &thread : _threads)
+				if(thread->IsThreadIdle())
 				{
-					if(thread->IsThreadIdle())
+					//Firstly try and send an ordered job of the current batch
+					//Nameless scope used for the lockguard
 					{
-						//Firstly try and send an ordered job of the current batch
-						//Nameless scope used for the lockguard
+						std::lock_guard<std::mutex> lock(_jobQueueMutex);
+						if(_jobQueue.size() > 0 && _jobQueue.front()._priorityOrder == _currentBatch)
 						{
-							std::lock_guard<std::mutex> lock(_jobQueueMutex);
-							if(_jobQueue.size() > 0 && _jobQueue.front()._priorityOrder == _currentBatch)
-							{
-								thread->RunTaskOnThread(_jobQueue.front()._dataProcessingFunction, true);
-								_jobQueue.pop_front();
-								continue;
-							}
-						}
-
-						//If theres no jobs or the ones existing arent completed yet but theres a thread free ping an unordered job on it
-						if(unorderedJobs.size() > 0)
-						{
-							thread->RunTaskOnThread(unorderedJobs.back()._dataProcessingFunction);
-							unorderedJobs.pop_back();
+							thread->RunTaskOnThread(_jobQueue.front()._dataProcessingFunction, true);
+							_jobQueue.pop_front();
 							continue;
 						}
 					}
+
+					//If theres no jobs or the ones existing arent completed yet but theres a thread free ping an unordered job on it
+					if(unorderedJobs.size() > 0)
+					{
+						thread->RunTaskOnThread(unorderedJobs.back()._dataProcessingFunction);
+						unorderedJobs.pop_back();
+						continue;
+					}
 				}
 			}
-
 		}
 
-//		Timer postTimer([](long long dura){Logging::INFO("Waiting for jobs to complete: " + std::to_string(dura)); });
 		//When all threads return to idle then continue processing
 		bool doneProcessing = false;
 		while (!doneProcessing)

@@ -37,7 +37,10 @@ public:
 
 	~MemoryAllocator()
 	{
-		if (_memStart != nullptr) { free(_memStart); }
+		if (_memStart != nullptr)
+		{
+			free(_memStart);
+		}
 	}
 
 	////---------- Public Facing Functions ----------////
@@ -47,7 +50,10 @@ public:
 	*/
 	void Init()
 	{
-		if (_memStart != nullptr) { free(_memStart); }
+		if (_memStart != nullptr)
+		{
+			free(_memStart);
+		}
 		_memStart = malloc(_totalSize);
 	}
 
@@ -62,16 +68,28 @@ public:
 
 		char* nextAddress;
 		//Check if its the first memory allocation and if it is use the start address
-		if (_top == nullptr) { nextAddress = reinterpret_cast<char*>(_memStart); }
+		if (_top == nullptr)
+		{
+			nextAddress = reinterpret_cast<char*>(_memStart);
+		}
 
 		//Check if there is already a block available to use thats been freed
-		else if (auto block = FindBlock(size)) { return block->data; }
+		else if (auto block = FindBlock(size))
+		{
+			return block->data;
+		}
 
 		//Get the next address of allocation by shifting the last pointer along by its allocation size
-		else { nextAddress = reinterpret_cast<char*>(_top) + AllocSize(reinterpret_cast<MemoryBlock*>(_top)->dataSize); }
+		else
+		{
+			nextAddress = reinterpret_cast<char*>(_top) + AllocSize(reinterpret_cast<MemoryBlock*>(_top)->dataSize);
+		}
 
 		//Check if we can fit in another MemBlock of said size 
-		if (_currentlyAllocated + fullSize > _totalSize) { return nullptr; }
+		if (_currentlyAllocated + fullSize > _totalSize)
+		{
+			return nullptr;
+		}
 
 		//cast the current address to a Mem block
 		auto block = reinterpret_cast<MemoryBlock*>(nextAddress);
@@ -80,7 +98,10 @@ public:
 		block->inUse = true;
 
 		//Chain blocks
-		if (_top != nullptr) { reinterpret_cast<MemoryBlock*>(_top)->nextBlock = block; }
+		if (_top != nullptr)
+		{
+			reinterpret_cast<MemoryBlock*>(_top)->nextBlock = block;
+		}
 
 		_top = block;
 		_currentlyAllocated += fullSize;
@@ -97,7 +118,10 @@ public:
 	void Free(void* ptr)
 	{
 		MemoryBlock* block = GetBlockHeader(ptr);
-		if (CanMergeAdjacentBlocks(block)) { block = MergeAdjacentBlocks(block); }
+		if (CanMergeAdjacentBlocks(block))
+		{
+			block = MergeAdjacentBlocks(block);
+		}
 		block->inUse = false;
 		_freeList.push_back(block);
 	}
@@ -119,13 +143,19 @@ private:
 		Aligns the inputted size based upon OS architecture
 		8 bytes on x64 and 4 bytes on x32
 	*/
-	size_t Align(size_t n) { return (n + sizeof(void*) - 1) & ~(sizeof(void*) - 1); }
+	size_t Align(size_t n)
+	{
+		return (n + sizeof(void*) - 1) & ~(sizeof(void*) - 1);
+	}
 
 	/*
 		Returns the total size of an allocation.
 		AKA the size of the header struct + the data to be stored
 	*/
-	size_t AllocSize(size_t size) { return size + sizeof(MemoryBlock) - sizeof(std::declval<MemoryBlock>().data); }
+	size_t AllocSize(size_t size)
+	{
+		return size + sizeof(MemoryBlock) - sizeof(std::declval<MemoryBlock>().data);
+	}
 
 	/*
 		Gets the pointer to the start of a memory block
@@ -147,7 +177,10 @@ private:
 		for (auto& block : _freeList)
 		{
 			//If the block is too small to use then continue searching
-			if (block->dataSize < size) { continue; }
+			if (block->dataSize < size)
+			{
+				continue;
+			}
 
 			//If we get a block remove it from the list and 
 			//run list allocate to shrink it
@@ -155,7 +188,10 @@ private:
 			_freeList.remove(block);
 			break;
 		}
-		if (foundBlock != nullptr) { return ListAllocate(foundBlock, size); }
+		if (foundBlock != nullptr)
+		{
+			return ListAllocate(foundBlock, size);
+		}
 		return nullptr;
 	}
 
@@ -201,7 +237,10 @@ private:
 	*/
 	MemoryBlock* ListAllocate(MemoryBlock* block, size_t size)
 	{
-		if (CanSplit(block, size)) { block = SplitBlock(block, size); }
+		if (CanSplit(block, size))
+		{
+			block = SplitBlock(block, size);
+		}
 		block->inUse = true;
 		block->dataSize = size;
 		return block;
@@ -217,13 +256,19 @@ private:
 		if (!block->nextBlock->inUse)
 		{
 			//If the adjacent block is the top block, make this the new top
-			if (block->nextBlock == _top) { _top = block; }
+			if (block->nextBlock == _top)
+			{
+				_top = block;
+			}
 
 			mergedBlock = block->nextBlock;
 			block->dataSize += block->nextBlock->dataSize;
 			block->nextBlock = block->nextBlock->nextBlock;
 		}
-		if (mergedBlock != nullptr) { _freeList.remove(mergedBlock); }
+		if (mergedBlock != nullptr)
+		{
+			_freeList.remove(mergedBlock);
+		}
 		return block;
 	}
 
@@ -274,7 +319,7 @@ public:
 private:
 	struct ExistingBlocks
 	{
-		ExistingBlocks(size_t _id, void* _ptr, size_t _stride, unsigned int _capacity)
+		ExistingBlocks(size_t _id, void* _ptr, size_t _stride, size_t _capacity)
 		{
 			dataId = _id;
 			currentCount = 0;
@@ -284,8 +329,8 @@ private:
 		}
 
 		size_t dataId;					//The Hash id for the Block
-		unsigned int currentCount;		//Current amount of variables stored in block
-		unsigned int maxCount;			//The max capacity the block can hold
+		size_t currentCount;		//Current amount of variables stored in block
+		size_t maxCount;			//The max capacity the block can hold
 		size_t stride;					//The stride needed to move between variables
 		void* dataPointer;				//The Base Ptr to the block of memory
 	};
@@ -301,7 +346,7 @@ private:
 			InitialiseNewMemoryBlock<T>(id, _totalObjectCount);
 		}
 
-		auto& existingBlock = _existingAllocations[GetIndexOfId(id)];
+		auto& existingBlock = _existingAllocations[static_cast<size_t>(GetIndexOfId(id))];
 
 		//Check if the block has space for another allocation
 		if (existingBlock.currentCount + 1 > existingBlock.maxCount)
@@ -325,7 +370,7 @@ private:
 	template<typename T>
 	T* InitialiseVariable(size_t id, T data)
 	{
-		T* outPtr = InitialiseVariable(id);
+		T* outPtr = InitialiseVariable<T>(id);
 		if (outPtr != nullptr)
 		{
 			*outPtr = data;
@@ -335,7 +380,7 @@ private:
 
 	//Initilises the memory block and returns the base ptr
 	template<typename T>
-	T* InitialiseNewMemoryBlock(size_t id, unsigned int maxCapacity)
+	T* InitialiseNewMemoryBlock(size_t id, size_t maxCapacity)
 	{
 		void* dataPtr = _pAllocator->Allocate(sizeof(T) * maxCapacity);
 		_existingAllocations.push_back(ExistingBlocks(id, dataPtr, sizeof(T), maxCapacity));
@@ -344,7 +389,7 @@ private:
 
 	const ExistingBlocks& GetBlockInfo(size_t id)
 	{
-		return _existingAllocations[GetIndexOfId(id)];
+		return _existingAllocations[static_cast<size_t>(GetIndexOfId(id))];
 	}
 
 	bool CheckIfIdExists(size_t id)
@@ -361,9 +406,9 @@ private:
 
 	int GetIndexOfId(size_t id)
 	{
-		for (int i = 0; i < _existingAllocations.size(); i++)
+		for (int i = 0; i < static_cast<int>(_existingAllocations.size()); i++)
 		{
-			if (_existingAllocations[i].dataId == id)
+			if (_existingAllocations[static_cast<size_t>(i)].dataId == id)
 			{
 				return i;
 			}
@@ -378,7 +423,7 @@ private:
 
 		if (index != -1)
 		{
-			ExistingBlocks removedAllocation = _existingAllocations[index];
+			ExistingBlocks removedAllocation = _existingAllocations[static_cast<size_t>(index)];
 			void* dataPtr = removedAllocation.dataPointer;
 			_pAllocator->Free(dataPtr);
 
