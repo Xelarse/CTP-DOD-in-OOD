@@ -84,8 +84,10 @@ void SystemsScene::Render(ASGE::Renderer *renderer)
 
         renderer->renderText(
             "Entites updated per tick: " + std::to_string(_squares.size()) +
-                "\nCurrent Active Demo: Allman Systems\nAll entities are "
-                "updated per tick but\nOnly entities in screen view are "
+                "\nCurrent Active Demo: Allman Systems"
+				"\nAll entities are "
+                "updated per tick but"
+				"\nOnly entities in screen view are "
                 "rendered",
             1120, 30, ASGE::COLOURS::BLACK);
 }
@@ -196,7 +198,7 @@ void SystemsScene::UpdateSquareScale(int startInd, int endInd, double dt)
     {
         float* currentScalePtr = baseScalePtr + i;
         const bool* currentBoolPtr = baseBoolPtr + i;
-        *currentScalePtr += static_cast<float>(*currentBoolPtr ? -dt : dt) * 0.4f;
+        *currentScalePtr += static_cast<float>(*currentBoolPtr ? -dt : dt) * 0.01f;
     }
 }
 

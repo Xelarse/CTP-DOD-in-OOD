@@ -23,5 +23,5 @@ public:
 protected:
     MyASGEGame* _gameRef = nullptr;
     double _currentTotalTime = 0;
-	double _squarePadding = 1.5f;
+	double _squarePadding = 20.0f;
 };

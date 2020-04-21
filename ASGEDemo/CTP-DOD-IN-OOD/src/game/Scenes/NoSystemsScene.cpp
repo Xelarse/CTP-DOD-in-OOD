@@ -56,18 +56,22 @@ void NoSystemsScene::Render(ASGE::Renderer *renderer)
 {
     for(auto& square : _squares)
     {
-	    //Sorry in advance for this james, Checking in they're in window view for rendering
-	    //Yeah might change this to use camera bounds if i mess with the camera view
+	    //Checking in they're in window view for rendering
 	    Vector pos = square->GetPosition();
-	    if(pos._x >= 0 && pos._x <= static_cast<float>(ASGE::SETTINGS.window_width) &&
-	       pos._y >= 0 && pos._y <= static_cast<float>(ASGE::SETTINGS.window_height) )
+	    if( pos._x >= -50 &&
+	        pos._x <= static_cast<float>(ASGE::SETTINGS.window_width) + 50 &&
+	        pos._y >= + 100 &&
+	        pos._y <= static_cast<float>(ASGE::SETTINGS.window_height) + 50
+	        )
 	    {
 		    square->Render(renderer);
 	    }
     }
 
 	renderer->renderText(
-			"Entites updated per tick: " + std::to_string(_squares.size()) + "\nCurrent Active Demo: No Systems\nAll entities are updated per tick but\nOnly entities in screen view are rendered",
+			"Entites updated per tick: " +
+			std::to_string(_squares.size()) +
+			"\nCurrent Active Demo: No Systems\nAll entities are updated per tick but\nOnly entities in screen view are rendered",
 			1120,
 			30,
 			ASGE::COLOURS::BLACK

@@ -23,18 +23,18 @@ public:
 
     void Render(ASGE::Renderer *renderer) override;
 
-    static constexpr double _posLimit = 30.0f;
+    static constexpr float _posLimit = 30.0f;
 
 private:
     Vector _basePosition;
     Vector _position;
-    float _posMod = 0.2f;
+    float _posMod = 0.05f;
     bool _posReverse = false;
 
-    double _baseScale = 1.0f;
-    double _scale = 1.0f;
-    double _scaleLimit = 0.5f;
-    float _scaleMod = 0.4f;
+    float _baseScale = 0.075f;
+    float _scale = 0.075f;
+    float _scaleLimit = 0.01f;
+    float _scaleMod = 0.00005f;
     bool _scaleReverse = false;
 
     ASGE::Colour _squareCol = ASGE::COLOURS::AZURE;
