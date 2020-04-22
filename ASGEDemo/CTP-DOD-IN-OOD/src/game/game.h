@@ -17,6 +17,7 @@ class MyASGEGame : public ASGE::OGLGame
       MENU,
       NO_SYSTEMS,
       SYSTEMS,
+      JUST_MEM,
       CONFIG
   };
 

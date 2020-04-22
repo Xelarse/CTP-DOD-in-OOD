@@ -11,7 +11,7 @@ class SystemsScene : public BaseScene
 {
 public:
     SystemsScene() = delete;
-    explicit SystemsScene(MyASGEGame* gameRef, ASGE::Renderer* renderer, int demoSpan);
+    explicit SystemsScene(MyASGEGame* gameRef, ASGE::Renderer* renderer, int demoSpan, bool isThreaded);
     ~SystemsScene() override = default;
 
     void PreUpdate(double dt) override;
@@ -30,7 +30,7 @@ private:
     void SetSquareSprites(int startInd, int endInd);
 
 
-    bool _jobSystemActive = true;
+    const bool _jobSystemActive;
     std::unique_ptr<JobSystem> _jobSystem;
     std::unique_ptr<MemoryManager> _memoryManager;
     std::vector<AllmanSquare> _squares;

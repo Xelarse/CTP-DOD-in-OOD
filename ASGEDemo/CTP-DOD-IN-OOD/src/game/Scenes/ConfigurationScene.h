@@ -11,7 +11,8 @@ public:
 	enum class SceneToLoad
 	{
 		NO_SYSTEMS,
-		ALLMAN_SYSTEMS
+		ALLMAN_SYSTEMS,
+		JUST_MEM
 	};
 
 	ConfigurationScene() = delete;
@@ -29,5 +30,6 @@ private:
 	////500 ~ 1mil entities, 140 ~ 100k entities, 32 ~ 10k entities, 0 ~ 1.4k entities
 	std::array<int, 4> _demoCounts = {0, 32, 140, 500};
 	const SceneToLoad _nextScene;
+	std::string _sceneTitle;
 };
 

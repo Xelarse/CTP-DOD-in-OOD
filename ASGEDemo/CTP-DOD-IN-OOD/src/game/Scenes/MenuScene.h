@@ -23,8 +23,9 @@ private:
     {
         NO_SYSTEMS = 0,
         SYSTEMS = 1,
-        QUIT = 2,
-        COUNT = 3
+        JUST_MEM = 2,
+        QUIT = 3,
+        COUNT = 4
     };
 
     Selection GetCurrentSelection();

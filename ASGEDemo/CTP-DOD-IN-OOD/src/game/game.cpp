@@ -81,19 +81,9 @@ void MyASGEGame::update(const ASGE::GameTime& game_time)
   if(_activeScene != nullptr)
   {
       _activeScene->UpdateTotalTime(_totalCount);
-	  {
-//	  	Timer preTimer([](long long dura){Logging::INFO("PreUpdate: " + std::to_string(dura)); });
-        _activeScene->PreUpdate(dt);
-	  }
-	  {
-//		  Timer updateTimer([](long long dura){Logging::INFO("Update: " + std::to_string(dura)); });
-	  	_activeScene->Update(dt);
-      }
-	  {
-//		  Timer postTimer([](long long dura){Logging::INFO("PostUpdate: " + std::to_string(dura)); });
-	  	_activeScene->PostUpdate(dt);
-	  }
-
+      _activeScene->PreUpdate(dt);
+      _activeScene->Update(dt);
+      _activeScene->PostUpdate(dt);
   }
 }
 
@@ -110,6 +100,11 @@ void MyASGEGame::render()
 
 void MyASGEGame::ChangeScene(MyASGEGame::Scenes sceneToSwitchTo, int demoCount, Scenes demoScene)
 {
+	using CS = ConfigurationScene::SceneToLoad;
+	CS sceneAfterConfig = demoScene == Scenes::NO_SYSTEMS ?
+	           CS::NO_SYSTEMS :
+	           (demoScene == Scenes::SYSTEMS ? CS::ALLMAN_SYSTEMS : CS::JUST_MEM);
+
     switch(sceneToSwitchTo)
     {
         case Scenes::MENU:
@@ -120,8 +115,7 @@ void MyASGEGame::ChangeScene(MyASGEGame::Scenes sceneToSwitchTo, int demoCount, 
             _configScene = nullptr;
             break;
     	case Scenes::CONFIG:
-    		using CS = ConfigurationScene::SceneToLoad;
-		    _configScene = std::make_unique<ConfigurationScene>(this, demoScene == Scenes::NO_SYSTEMS ? CS::NO_SYSTEMS : CS::ALLMAN_SYSTEMS);
+		    _configScene = std::make_unique<ConfigurationScene>(this, sceneAfterConfig);
 		    _activeScene = _configScene.get();
 		    _noSysScene = nullptr;
 		    _sysScene = nullptr;
@@ -135,12 +129,19 @@ void MyASGEGame::ChangeScene(MyASGEGame::Scenes sceneToSwitchTo, int demoCount, 
 		    _configScene = nullptr;
             break;
         case Scenes::SYSTEMS:
-            _sysScene = std::make_unique<SystemsScene>(this, renderer.get(), demoCount);
+            _sysScene = std::make_unique<SystemsScene>(this, renderer.get(), demoCount, true);
             _activeScene = _sysScene.get();
 		    _menuScene = nullptr;
 		    _noSysScene = nullptr;
 		    _configScene = nullptr;
             break;
+	    case Scenes::JUST_MEM:
+		    _sysScene = std::make_unique<SystemsScene>(this, renderer.get(), demoCount, false);
+		    _activeScene = _sysScene.get();
+		    _menuScene = nullptr;
+		    _noSysScene = nullptr;
+		    _configScene = nullptr;
+		    break;
     }
 }
 

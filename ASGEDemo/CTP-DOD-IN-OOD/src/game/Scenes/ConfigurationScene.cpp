@@ -7,7 +7,18 @@
 
 ConfigurationScene::ConfigurationScene(MyASGEGame *gameRef, ConfigurationScene::SceneToLoad nextScene) : BaseScene(gameRef), _nextScene(nextScene)
 {
-
+	switch(nextScene)
+	{
+		case SceneToLoad::NO_SYSTEMS:
+			_sceneTitle = "No Systems:";
+			break;
+		case SceneToLoad::ALLMAN_SYSTEMS:
+			_sceneTitle = "Allman Systems:";
+			break;
+		case SceneToLoad::JUST_MEM:
+			_sceneTitle = "Just Memory: ";
+			break;
+	}
 }
 void ConfigurationScene::PreUpdate(double dt)
 {
@@ -60,9 +71,8 @@ void ConfigurationScene::Render(ASGE::Renderer *renderer)
 			_selectionCounter == 3 ? ASGE::COLOURS::DARKGRAY : ASGE::COLOURS::BLACK
 	);
 
-	std::string title = _nextScene == SceneToLoad::NO_SYSTEMS ? "No Systems:" : "Allman Systems:";
 	renderer->renderText(
-			"Entity Test count for " + title,
+			"Entity Test count for " + _sceneTitle,
 			static_cast<int>(ASGE::SETTINGS.window_width * 0.4),
 			static_cast<int >(ASGE::SETTINGS.window_height * 0.025),
 			ASGE::COLOURS::BLACK
@@ -91,7 +101,7 @@ void ConfigurationScene::KeyHandler(const ASGE::SharedEventData &data)
 		{
 			auto sceneToLoad = _nextScene == SceneToLoad::NO_SYSTEMS ?
 					MyASGEGame::Scenes::NO_SYSTEMS :
-					MyASGEGame::Scenes::SYSTEMS;
+		           (_nextScene == SceneToLoad::ALLMAN_SYSTEMS ? MyASGEGame::Scenes::SYSTEMS : MyASGEGame::Scenes::JUST_MEM);
 
 			_gameRef->ChangeScene(sceneToLoad, _demoCounts[static_cast<unsigned long long int>(_selectionCounter)]);
 		}

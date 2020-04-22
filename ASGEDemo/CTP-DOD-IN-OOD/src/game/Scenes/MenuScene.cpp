@@ -30,27 +30,35 @@ void MenuScene::Render(ASGE::Renderer *renderer)
     std::string text;
     const auto curSel = GetCurrentSelection();
 
+	text = curSel == Selection::NO_SYSTEMS ? "! No Systems !" : "No Systems";
+	renderer->renderText(
+			text,
+			static_cast<int>(ASGE::SETTINGS.window_width * 0.44),
+			static_cast<int >(ASGE::SETTINGS.window_height * 0.35),
+			curSel == Selection::NO_SYSTEMS ? ASGE::COLOURS::DARKGRAY : ASGE::COLOURS::BLACK
+	);
+
     text = curSel == Selection::SYSTEMS ? "! Allman Systems !" : "Allman Systems";
     renderer->renderText(
             text,
             static_cast<int>(ASGE::SETTINGS.window_width * 0.43),
-            static_cast<int >(ASGE::SETTINGS.window_height * 0.5),
+            static_cast<int >(ASGE::SETTINGS.window_height * 0.45),
             curSel == Selection::SYSTEMS ? ASGE::COLOURS::DARKGRAY : ASGE::COLOURS::BLACK
     );
 
-    text = curSel == Selection::NO_SYSTEMS ? "! No Systems !" : "No Systems";
-    renderer->renderText(
-            text,
-            static_cast<int>(ASGE::SETTINGS.window_width * 0.44),
-            static_cast<int >(ASGE::SETTINGS.window_height * 0.4),
-            curSel == Selection::NO_SYSTEMS ? ASGE::COLOURS::DARKGRAY : ASGE::COLOURS::BLACK
-    );
+	text = curSel == Selection::JUST_MEM ? "! Just Mem !" : "Just Mem";
+	renderer->renderText(
+			text,
+			static_cast<int>(ASGE::SETTINGS.window_width * 0.44),
+			static_cast<int >(ASGE::SETTINGS.window_height * 0.55),
+			curSel == Selection::JUST_MEM ? ASGE::COLOURS::DARKGRAY : ASGE::COLOURS::BLACK
+	);
 
     text = curSel == Selection::QUIT ? "! Quit !" : "Quit";
     renderer->renderText(
             text,
             static_cast<int>(ASGE::SETTINGS.window_width * 0.46),
-            static_cast<int >(ASGE::SETTINGS.window_height * 0.6),
+            static_cast<int >(ASGE::SETTINGS.window_height * 0.65),
             curSel == Selection::QUIT ? ASGE::COLOURS::DARKGRAY : ASGE::COLOURS::BLACK
     );
 
@@ -91,6 +99,9 @@ void MenuScene::KeyHandler(const ASGE::SharedEventData &data)
                 case Selection::SYSTEMS:
                     _gameRef->ChangeScene(MyASGEGame::Scenes::CONFIG, 0, MyASGEGame::Scenes::SYSTEMS);
                     break;
+            	case Selection::JUST_MEM:
+		            _gameRef->ChangeScene(MyASGEGame::Scenes::CONFIG, 0, MyASGEGame::Scenes::JUST_MEM);
+					break;
                 case Selection::QUIT:
                     _gameRef->TerminateProgram();
                     break;

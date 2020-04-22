@@ -6,7 +6,10 @@
 
 #include <Engine/Logger.hpp>
 
-SystemsScene::SystemsScene(MyASGEGame *gameRef, ASGE::Renderer* renderer, int demoSpan) : BaseScene(gameRef), _demoSpanMod(demoSpan)
+SystemsScene::SystemsScene(MyASGEGame *gameRef, ASGE::Renderer* renderer, int demoSpan, bool isThreaded) :
+BaseScene(gameRef),
+_jobSystemActive(isThreaded),
+_demoSpanMod(demoSpan)
 {
       double offset = AllmanSquare::_posLimit + _squarePadding;
       int xCount = static_cast<int>(ASGE::SETTINGS.window_width / offset);
