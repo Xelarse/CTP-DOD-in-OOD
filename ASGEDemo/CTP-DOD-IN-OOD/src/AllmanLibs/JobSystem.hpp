@@ -8,8 +8,6 @@
 #include <future>
 #include <algorithm>
 
-#include <Engine/Logger.hpp>
-
 /*
 	Class that is used to interface with a detached thread.
 	Used by the JobSystem in its thread pool.
@@ -233,7 +231,7 @@ public:
 		);
 
 		_totalJobsInProgress = static_cast<int>(_jobQueue.size());
-//		Logging::DEBUG("Jobs this run: " + std::to_string(_totalJobsInProgress));
+		_maxBatch = _jobQueue.back()._priorityOrder;
 
 		//Pop off the unordered jobs and chuck them in a vector, once they're in the vector put the rest in a fifo queue
 		std::list<Job>::iterator jobIter = _jobQueue.begin();
@@ -247,9 +245,6 @@ public:
 			else
 			{ ++jobIter; }
 		}
-
-		_maxBatch = _jobQueue.back()._priorityOrder;
-
 
 		//Set up the _currentBatch and its count
 		ProgressBatch();
@@ -282,7 +277,6 @@ public:
 					}
 				}
 			}
-//			Logging::DEBUG("Currently Assigning Jobs");
 		}
 
 		//When all threads are finished processing
@@ -294,8 +288,6 @@ public:
 			{
 				if(!thread->IsThreadIdle()) { doneProcessing = false; }
 			}
-
-//			Logging::DEBUG("WAITING FOR JOBS TO COMPLETE");
 		}
 	}
 

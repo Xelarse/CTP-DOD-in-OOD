@@ -23,11 +23,12 @@ public:
 	PoolableThread& operator= (const PoolableThread& otherCopy) = delete;
 	PoolableThread& operator= (const PoolableThread&& otherMove) = delete;
 
-	PoolableThread(std::function<void()> orderedJobCallback) :
+	PoolableThread(std::function<void()> orderedJobCallback, std::function<void()> jobCompleteCallback) :
 		_threadIdle(true),
 		_threadAlive(true),
 		_processingOrderedJob(false),
-		_orderedJobComplete(orderedJobCallback)
+		_orderedJobComplete(orderedJobCallback),
+		_jobComplete(jobCompleteCallback)
 	{
 		std::promise<void> exitPromise;
 		_exitFuture = exitPromise.get_future();
@@ -57,7 +58,10 @@ public:
 	{
 		_threadIdle = false;
 		_processingOrderedJob = orderedTask;
-		_task = task;
+		{
+			std::lock_guard<std::mutex> lock(_taskMutex);
+			_task = task;
+		}
 	}
 
 private:
@@ -73,12 +77,19 @@ private:
 		{
 			if (_task != nullptr)
 			{
-				_task();
-				_task = nullptr;
+				{
+					std::lock_guard<std::mutex> lock(_taskMutex);
+					_task();
+					_task = nullptr;
+				}
 				_threadIdle = true;
 				if (_processingOrderedJob)
 				{
 					_orderedJobComplete();
+				}
+				else
+				{
+					_jobComplete();
 				}
 			}
 			else
@@ -90,7 +101,7 @@ private:
 	}
 
 	/*
-		Used as a Safety net to ensure the detatched thread is terminated before,
+		Used as a Safety net to ensure the detached thread is terminated before,
 		destruction of this class instance.
 		Utilises the exit future passed into the thread on construction
 	*/
@@ -105,6 +116,9 @@ private:
 	std::atomic<bool> _threadAlive;
 	std::atomic<bool> _processingOrderedJob;
 	const std::function<void()> _orderedJobComplete;
+	const std::function<void()> _jobComplete;
+
+	std::mutex _taskMutex;
 	std::function<void()> _task = nullptr;
 
 	//Future used in conjunction with a promise to terminate the thread in a thread safe manner
@@ -112,7 +126,7 @@ private:
 };
 
 /*
-	This class manages a threadpool which allows the user to run
+	This class manages a thread pool which allows the user to run
 	threaded tasks on it.
 	Nested class job is used to define what tasks can be run on it.
 	tasks to run on the pool must be JOBS.
@@ -129,7 +143,7 @@ public:
 
 	/*
 		Small class used to determine how tasks are run in the JobSystem.
-		Has a function ptr, whether the job is ordered or not and what prioity if ordered.
+		Has a function ptr, whether the job is ordered or not and what priority if ordered.
 	*/
 	class Job
 	{
@@ -169,10 +183,18 @@ public:
 
 		for (int i = 0; i < poolSize; ++i)
 		{
-			_threads.emplace_back(std::make_unique<PoolableThread>([&]()
-				{
-					OrderedJobComplete();
-				}));
+			_threads.emplace_back(
+				std::make_unique<PoolableThread>(
+					[&]()
+					{
+						OrderedJobComplete();
+					},
+					[&]()
+					{
+						JobComplete();
+					}
+						)
+			);
 		}
 	}
 
@@ -202,18 +224,18 @@ public:
 	/*
 		Processes the jobs on the queue.
 		Call this once all jobs in an update have been assigned to the Job System.
-		Prorities processing Ordered jobs over Unordered jobs.
+		Priorities processing Ordered jobs over Unordered jobs.
 		For best performance have as many Unordered jobs as possible
 	*/
 	void ProcessJobs()
 	{
-
 		std::vector<Job> unorderedJobs;
 		//Add the cached jobs to the job queue
 		for (auto& cached : _cachedJobs)
 		{
 			_jobQueue.push_back(cached);
 		}
+
 		//Sort the jobs from unordered to the lowest priority
 		_jobQueue.sort(
 			[](const Job& lhs, const Job& rhs)
@@ -221,6 +243,9 @@ public:
 				return lhs._priorityOrder < rhs._priorityOrder;
 			}
 		);
+
+		_totalJobsInProgress = static_cast<int>(_jobQueue.size());
+		_maxBatch = _jobQueue.back()._priorityOrder;
 
 		//Pop off the unordered jobs and chuck them in a vector, once they're in the vector put the rest in a fifo queue
 		std::list<Job>::iterator jobIter = _jobQueue.begin();
@@ -236,7 +261,7 @@ public:
 				++jobIter;
 			}
 		}
-
+					
 		//Set up the _currentBatch and its count
 		ProgressBatch();
 
@@ -248,7 +273,7 @@ public:
 				if (thread->IsThreadIdle())
 				{
 					//Firstly try and send an ordered job of the current batch
-					//Nameless scope used for the lockguard
+					//Nameless scope used for the lock guard
 					{
 						std::lock_guard<std::mutex> lock(_jobQueueMutex);
 						if (_jobQueue.size() > 0 && _jobQueue.front()._priorityOrder == _currentBatch)
@@ -259,7 +284,7 @@ public:
 						}
 					}
 
-					//If theres no jobs or the ones existing arent completed yet but theres a thread free ping an unordered job on it
+					//If there's no jobs or the ones existing aren't completed yet but there's a thread free ping an unordered job on it
 					if (unorderedJobs.size() > 0)
 					{
 						thread->RunTaskOnThread(unorderedJobs.back()._dataProcessingFunction);
@@ -270,9 +295,9 @@ public:
 			}
 		}
 
-		//When all threads return to idle then continue processing
+		//When all threads are finished processing
 		bool doneProcessing = false;
-		while (!doneProcessing)
+		while (!doneProcessing && _totalJobsInProgress >= 0)
 		{
 			doneProcessing = true;
 			for (auto& thread : _threads)
@@ -308,14 +333,20 @@ private:
 	void OrderedJobComplete()
 	{
 		--_currentBatchProgress;
-		if (_currentBatchProgress == 0)
+		if (_currentBatchProgress <= 0)
 		{
 			ProgressBatch();
 		}
+		JobComplete();
+	}
+
+	void JobComplete()
+	{
+		--_totalJobsInProgress;
 	}
 
 	/*
-		Called when a batch of prioitized jobs are completed.
+		Called when a batch of prioritized jobs are completed.
 		Increments to the next batch and sets the counter to how many jobs there are for that batch.
 		Counter is decremented by OrderedJobComplete().
 	*/
@@ -325,10 +356,16 @@ private:
 		if (_jobQueue.size() > 0)
 		{
 			_currentBatch = _jobQueue.front()._priorityOrder;
-			_currentBatchProgress = static_cast<int>(std::count_if(_jobQueue.begin(), _jobQueue.end(), [&](const Job& lhs)
-				{
-					return lhs._priorityOrder == _currentBatch;
-				}));
+			_currentBatchProgress = static_cast<int>(
+				std::count_if(
+					_jobQueue.begin(),
+					_jobQueue.end(),
+					[&](const Job& lhs)
+					{
+						return lhs._priorityOrder == _currentBatch;
+					}
+				)
+				);
 		}
 	}
 
@@ -445,6 +482,8 @@ private:
 
 	std::atomic<int> _currentBatch;
 	std::atomic<int> _currentBatchProgress;
+	std::atomic<int> _maxBatch;
+	std::atomic<int> _totalJobsInProgress;
 
 	std::vector<std::unique_ptr<PoolableThread>> _threads;
 
