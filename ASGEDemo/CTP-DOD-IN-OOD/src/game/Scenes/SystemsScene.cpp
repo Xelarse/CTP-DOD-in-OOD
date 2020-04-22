@@ -4,6 +4,8 @@
 #include "SystemsScene.h"
 #include "game.h"
 
+#include <Engine/Logger.hpp>
+
 SystemsScene::SystemsScene(MyASGEGame *gameRef, ASGE::Renderer* renderer, int demoSpan) : BaseScene(gameRef), _demoSpanMod(demoSpan)
 {
       double offset = AllmanSquare::_posLimit + _squarePadding;
@@ -11,7 +13,7 @@ SystemsScene::SystemsScene(MyASGEGame *gameRef, ASGE::Renderer* renderer, int de
       int yCount = static_cast<int>(ASGE::SETTINGS.window_height / offset);
 
       _memoryManager = std::make_unique<MemoryManager>(sizeof(AllmanSquare), (xCount + 2 *_demoSpanMod) * (yCount + 2 *_demoSpanMod) + 1);
-      _jobSystem = std::make_unique<JobSystem>(JobSystem::JobCpuIntensity::MEDIUM);
+      _jobSystem = std::make_unique<JobSystem>(JobSystem::JobCpuIntensity::HIGH);
       _squares.reserve(static_cast<unsigned long long int>((xCount + 2 * _demoSpanMod) * (yCount + 2 * _demoSpanMod)));
 
       for(int x = -_demoSpanMod; x < xCount + _demoSpanMod; ++x)
@@ -171,17 +173,6 @@ void SystemsScene::SetJobsForUpdate(double dt)
 		);
 	}
 
-	//Set up the unordered jobs, AKA Colour switching of all sprites
-	_jobSystem->AddJobToQueue(
-			JobSystem::Job(
-					std::function<void()>(
-							[this, capture0 = static_cast<int>(_squares.size() - 1)] { UpdateSquareColour(0, capture0, _currentTotalTime); }
-					)
-			)
-	);
-
-
-	//Now the first lot of jobs are done lets do the sprite update on another batch of jobs
 	const int totalThreads = _jobSystem->GetTotalThreads();
 	const int stride = static_cast<int>(floor(static_cast<double>(_squares.size() /
 	                                                              static_cast<unsigned long long int>(totalThreads))));
@@ -192,12 +183,21 @@ void SystemsScene::SetJobsForUpdate(double dt)
 		int endInd = i == totalThreads - 1 ? static_cast<int>(_squares.size()) - 1 : stride * (i + 1) - 1;
 
 		_jobSystem->AddJobToQueue(JobSystem::Job(
+					std::function<void()>(
+							[this, startInd, endInd] { UpdateSquareColour(startInd, endInd, _currentTotalTime); }
+					),
+					JobSystem::Job::JobPriority::ORDERED,
+					3
+				)
+		);
+
+		_jobSystem->AddJobToQueue(JobSystem::Job(
 				std::function<void()>(
 						[this, startInd, endInd] { SetSquareSprites(startInd, endInd); }
 				),
 				JobSystem::Job::JobPriority::ORDERED,
-				3
-		                          )
+				4
+              )
 		);
 	}
 }
