@@ -261,7 +261,7 @@ public:
 				++jobIter;
 			}
 		}
-					
+
 		//Set up the _currentBatch and its count
 		ProgressBatch();
 
