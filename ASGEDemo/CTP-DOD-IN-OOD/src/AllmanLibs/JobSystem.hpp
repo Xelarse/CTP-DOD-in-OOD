@@ -8,6 +8,8 @@
 #include <future>
 #include <algorithm>
 
+#include <Engine/Logger.hpp>
+
 /*
 	Class that is used to interface with a detached thread.
 	Used by the JobSystem in its thread pool.
@@ -79,6 +81,7 @@ private:
 					_task();
 					_task = nullptr;
 				}
+				_threadIdle = true;
 				if (_processingOrderedJob)
 				{
 					_orderedJobComplete();
@@ -87,7 +90,6 @@ private:
 				{
 					_jobComplete();
 				}
-				_threadIdle = true;
 			}
 			else { std::this_thread::sleep_for(std::chrono::milliseconds(1)); }
 		}
@@ -231,6 +233,7 @@ public:
 		);
 
 		_totalJobsInProgress = static_cast<int>(_jobQueue.size());
+//		Logging::DEBUG("Jobs this run: " + std::to_string(_totalJobsInProgress));
 
 		//Pop off the unordered jobs and chuck them in a vector, once they're in the vector put the rest in a fifo queue
 		std::list<Job>::iterator jobIter = _jobQueue.begin();
@@ -259,7 +262,7 @@ public:
 				if(thread->IsThreadIdle())
 				{
 					//Firstly try and send an ordered job of the current batch
-					//Nameless scope used for the lockguard
+					//Nameless scope used for the lock guard
 					{
 						std::lock_guard<std::mutex> lock(_jobQueueMutex);
 						if(_jobQueue.size() > 0 && _jobQueue.front()._priorityOrder == _currentBatch)
@@ -279,13 +282,20 @@ public:
 					}
 				}
 			}
+//			Logging::DEBUG("Currently Assigning Jobs");
 		}
 
 		//When all threads are finished processing
-		while(_totalJobsInProgress != 0)
+		bool doneProcessing = false;
+		while(!doneProcessing && _totalJobsInProgress >= 0)
 		{
-			//Dont know if there's a more elegant way to hang it
-			//Whilst waiting for the jobs to conclude
+			doneProcessing = true;
+			for(auto& thread : _threads)
+			{
+				if(!thread->IsThreadIdle()) { doneProcessing = false; }
+			}
+
+//			Logging::DEBUG("WAITING FOR JOBS TO COMPLETE");
 		}
 	}
 
@@ -309,7 +319,7 @@ private:
 	void OrderedJobComplete()
 	{
 		--_currentBatchProgress;
-		if (_currentBatchProgress == 0) { ProgressBatch(); }
+		if (_currentBatchProgress <= 0) { ProgressBatch(); }
 		JobComplete();
 	}
 
