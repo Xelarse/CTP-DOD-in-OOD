@@ -26,7 +26,7 @@ To implement these systems into your own project just import the following files
   Below are a few of images of the Demo:
   
   ### Menu screen for demo:
-  ![](https://i.gyazo.com/ef396a202524f02ceeb3278e78b9d422.png)
+  ![](https://i.gyazo.com/5f216c7b6143d29d7d17bcb6a0f17422.png)
   
   ### Selecting how many entities to process in the test:
   ![](https://i.gyazo.com/7e91b98956f1cffc5d06b3990f33bea7.png)
